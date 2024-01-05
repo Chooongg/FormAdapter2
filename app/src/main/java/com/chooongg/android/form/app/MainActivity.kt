@@ -1,4 +1,4 @@
-package com.chooongg.android.formAdapter.app
+package com.chooongg.android.form.app
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

@@ -12,6 +12,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FormAdapter"
         tools:targetApi="31">
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="com.chooongg.android.form.app.FlipperInitializer"
+                android:value="androidx.startup" />
+        </provider>
+
+        <activity
+            android:name="com.facebook.flipper.android.diagnostics.FlipperDiagnosticActivity"
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
