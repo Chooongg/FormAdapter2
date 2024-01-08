@@ -5,7 +5,6 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.chooongg.android.form.item.BaseForm
 import com.chooongg.android.form.part.AbstractPart
-import com.chooongg.android.form.provider.AbstractFormProvider
 import com.chooongg.android.form.style.AbstractStyle
 import com.chooongg.android.form.typeset.AbstractTypeset
 
@@ -89,10 +88,11 @@ abstract class AbstractFormAdapter : RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private val stylePool = ArrayList<AbstractStyle>()
     private val typesetPool = ArrayList<AbstractTypeset>()
-    private val providerPool = ArrayList<AbstractFormProvider<*>>()
+
+    //    private val providerPool = ArrayList<AbstractFormProvider<*>>()
+    private val itemPool = ArrayList<BaseForm<*>>()
     private val itemTypePool = ArrayList<Triple<Int, Int, Int>>()
 
-    @Suppress("DEPRECATION")
     internal fun getItemViewType4Pool(
         style: AbstractStyle,
         item: BaseForm<*>
@@ -110,14 +110,13 @@ abstract class AbstractFormAdapter : RecyclerView.Adapter<RecyclerView.ViewHolde
                 typesetPool.lastIndex
             } else it
         }
-        val providerClass = item.getProviderClass(this)
-        val providerIndex = providerPool.indexOfFirst { it::class == providerClass }.let {
+        val itemIndex = itemPool.indexOfFirst { it::class == item::class }.let {
             if (it < 0) {
-                providerPool.add(providerClass.java.newInstance())
-                providerPool.lastIndex
+                itemPool.add(item.copyEmptyItem())
+                itemPool.lastIndex
             } else it
         }
-        val typeInfo = Triple(styleIndex, typesetIndex, providerIndex)
+        val typeInfo = Triple(styleIndex, typesetIndex, itemIndex)
         return itemTypePool.indexOf(typeInfo).let {
             if (it < 0) {
                 itemTypePool.add(typeInfo)
@@ -134,8 +133,8 @@ abstract class AbstractFormAdapter : RecyclerView.Adapter<RecyclerView.ViewHolde
         return typesetPool[itemTypePool[viewType].second]
     }
 
-    internal fun getProvider4ItemViewType(viewType: Int): AbstractFormProvider<*> {
-        return providerPool[itemTypePool[viewType].third]
+    internal fun getItem4ItemViewType(viewType: Int): BaseForm<*> {
+        return itemPool[itemTypePool[viewType].third]
     }
 
     //</editor-fold>

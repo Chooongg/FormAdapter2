@@ -15,6 +15,7 @@ import com.chooongg.android.form.style.AbstractStyle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 
 abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) :
     RecyclerView.Adapter<FormViewHolder>() {
@@ -35,16 +36,18 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
             notifyItemMoved(fromPosition, toPosition)
 
     }, AsyncDifferConfig.Builder(object : DiffUtil.ItemCallback<BaseForm<*>>() {
-        override fun areContentsTheSame(oldItem: BaseForm<*>, newItem: BaseForm<*>) = true
+        override fun areContentsTheSame(oldItem: BaseForm<*>, newItem: BaseForm<*>) =
+            oldItem.id == newItem.id
+
         override fun areItemsTheSame(oldItem: BaseForm<*>, newItem: BaseForm<*>) =
             oldItem.id == newItem.id && oldItem.typeset == newItem.typeset
     }).build())
 
-    protected val itemList: List<BaseForm<*>> get() = asyncDiffer.currentList
+    protected val showItemList: List<BaseForm<*>> get() = asyncDiffer.currentList
 
-    fun getItem(position: Int) = itemList[position]
+    fun getItem(position: Int) = showItemList[position]
 
-    override fun getItemCount(): Int = itemList.size
+    override fun getItemCount(): Int = showItemList.size
 
     override fun getItemViewType(position: Int): Int =
         adapter.getItemViewType4Pool(style, getItem(position))
@@ -52,7 +55,7 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FormViewHolder {
         val style = adapter.getStyle4ItemViewType(viewType)
         val typeset = adapter.getTypeset4ItemViewType(viewType)
-        val provider = adapter.getProvider4ItemViewType(viewType)
+        val item = adapter.getItem4ItemViewType(viewType)
         val styleLayout = style.onCreateViewHolder(parent)?.apply {
             clipChildren = false
             clipToPadding = false
@@ -61,7 +64,7 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
             clipChildren = false
             clipToPadding = false
         }
-        val view = provider.onCreateViewHolder(style, typesetLayout ?: styleLayout ?: parent)
+        val view = item.onCreateViewHolder(style, typesetLayout ?: styleLayout ?: parent)
         val holder = FormViewHolder(style, styleLayout, typeset, typesetLayout, view)
         holder.itemView.textAlignment = TextView.TEXT_ALIGNMENT_VIEW_START
         holder.itemView.textDirection = TextView.TEXT_DIRECTION_LOCALE
@@ -71,17 +74,23 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
         return holder
     }
 
+    override fun onViewAttachedToWindow(holder: FormViewHolder) {
+        adapter.getStyle4ItemViewType(holder.itemViewType).onViewAttachedToWindow(holder)
+        adapter.getTypeset4ItemViewType(holder.itemViewType).onViewAttachedToWindow(holder)
+        adapter.getItem4ItemViewType(holder.itemViewType).onViewAttachedToWindow(holder)
+    }
+
     override fun onBindViewHolder(holder: FormViewHolder, position: Int) {
         val item = getItem(position)
         val style = adapter.getStyle4ItemViewType(holder.itemViewType)
         val typeset = adapter.getTypeset4ItemViewType(holder.itemViewType)
-        val provider = adapter.getProvider4ItemViewType(holder.itemViewType)
         if (holder.styleLayout != null) {
             style.onBindViewHolder(holder, holder.styleLayout, item)
         }
         if (holder.typesetLayout != null) {
             typeset.onBindViewHolder(holder, holder.typesetLayout, item, adapter.isEnabled)
         }
+        item.onBindViewHolder(adapterScope, holder, adapter.isEnabled)
     }
 
     override fun onBindViewHolder(
@@ -96,7 +105,25 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
         val item = getItem(position)
         val style = adapter.getStyle4ItemViewType(holder.itemViewType)
         val typeset = adapter.getTypeset4ItemViewType(holder.itemViewType)
-        val provider = adapter.getProvider4ItemViewType(holder.itemViewType)
+    }
 
+    override fun onViewDetachedFromWindow(holder: FormViewHolder) {
+        adapter.getStyle4ItemViewType(holder.itemViewType).onViewDetachedFromWindow(holder)
+        adapter.getTypeset4ItemViewType(holder.itemViewType).onViewDetachedFromWindow(holder)
+        adapter.getItem4ItemViewType(holder.itemViewType).onViewDetachedFromWindow(holder)
+    }
+
+    override fun onViewRecycled(holder: FormViewHolder) {
+        adapter.getStyle4ItemViewType(holder.itemViewType).onViewRecycled(holder)
+        adapter.getTypeset4ItemViewType(holder.itemViewType).onViewRecycled(holder)
+        adapter.getItem4ItemViewType(holder.itemViewType).onViewRecycled(holder)
+    }
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        adapterScope.cancel()
+        adapterScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     }
 }

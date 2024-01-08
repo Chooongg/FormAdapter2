@@ -15,7 +15,13 @@ abstract class AbstractStyle {
 
     abstract fun onCreateViewHolder(parent: ViewGroup): ViewGroup?
 
+    open fun onViewAttachedToWindow(holder: FormViewHolder) = Unit
+
     abstract fun onBindViewHolder(holder: FormViewHolder, layout: ViewGroup, item: BaseForm<*>)
+
+    open fun onViewDetachedFromWindow(holder: FormViewHolder) = Unit
+
+    open fun onViewRecycled(holder: FormViewHolder) = Unit
 
     protected abstract fun addView(parent: ViewGroup, child: View)
 
