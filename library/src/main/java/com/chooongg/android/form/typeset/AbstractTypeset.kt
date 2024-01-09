@@ -2,11 +2,17 @@ package com.chooongg.android.form.typeset
 
 import android.view.View
 import android.view.ViewGroup
+import com.chooongg.android.form.FormManager
+import com.chooongg.android.form.enum.FormEmsMode
 import com.chooongg.android.form.holder.FormViewHolder
 import com.chooongg.android.form.item.BaseForm
 import com.chooongg.android.form.style.AbstractStyle
 
 abstract class AbstractTypeset {
+
+    abstract var emsMode: FormEmsMode
+
+    open var emsSize: Int = FormManager.default.emsSize
 
     abstract fun onCreateViewHolder(style: AbstractStyle, parent: ViewGroup): ViewGroup?
 

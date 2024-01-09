@@ -1,7 +1,10 @@
 package com.chooongg.android.form
 
 import android.content.Context
-import com.chooongg.android.form.extractor.AbstractTextExtractor
+import androidx.annotation.IntRange
+import com.chooongg.android.form.extractor.IIconExtractor
+import com.chooongg.android.form.extractor.ITextExtractor
+import com.chooongg.android.form.extractor.NormalIconExtractor
 import com.chooongg.android.form.extractor.NormalTextExtractor
 import com.chooongg.android.form.formatter.name.AbstractNameFormatter
 import com.chooongg.android.form.formatter.name.NormalNameFormatter
@@ -41,7 +44,12 @@ object FormManager {
         /**
          * 文本提取器
          */
-        var textExtractor: AbstractTextExtractor = NormalTextExtractor()
+        var textExtractor: ITextExtractor = NormalTextExtractor()
+
+        /**
+         * 图标提取器
+         */
+        var iconExtractor: IIconExtractor = NormalIconExtractor()
 
         /**
          * 名称格式化程序
@@ -52,6 +60,12 @@ object FormManager {
          * 排版
          */
         var typeset: AbstractTypeset = HorizontalTypeset()
+
+        /**
+         * EMS值
+         */
+        @IntRange(from = 1)
+        var emsSize: Int = 5
     }
 
     /**
