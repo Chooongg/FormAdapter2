@@ -20,6 +20,8 @@ import kotlinx.coroutines.cancel
 abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) :
     RecyclerView.Adapter<FormViewHolder>() {
 
+    private var recyclerView: RecyclerView? = null
+
     var adapterScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
         internal set
 
@@ -44,6 +46,27 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
     }).build())
 
     protected val showItemList: List<BaseForm<*>> get() = asyncDiffer.currentList
+
+    private val updateRunnableList = ArrayList<Runnable>()
+
+    fun update() {
+        val runnable = object : Runnable {
+            override fun run() {
+                internalUpdate()
+                updateRunnableList.remove(this)
+            }
+        }
+        if (recyclerView != null) {
+            updateRunnableList.add(runnable)
+            recyclerView!!.post(runnable)
+        } else {
+            internalUpdate()
+        }
+    }
+
+    fun internalUpdate() {
+
+    }
 
     fun getItem(position: Int) = showItemList[position]
 
@@ -120,10 +143,18 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        this.recyclerView = recyclerView
+        update()
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
         adapterScope.cancel()
         adapterScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+        updateRunnableList.forEach {
+            recyclerView.removeCallbacks(it)
+        }
+        updateRunnableList.clear()
+        asyncDiffer.submitList(emptyList())
+        this.recyclerView = null
     }
 }

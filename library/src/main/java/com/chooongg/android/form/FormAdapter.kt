@@ -2,7 +2,10 @@ package com.chooongg.android.form
 
 import androidx.recyclerview.widget.RecyclerView
 
-class FormAdapter(isEnabled: Boolean = false) : AbstractFormAdapter() {
+class FormAdapter(
+    isEnabled: Boolean = false,
+    val default: FormManager.Default = FormManager.default
+) : AbstractFormAdapter() {
 
     val formPool = RecyclerView.RecycledViewPool()
 
@@ -12,4 +15,6 @@ class FormAdapter(isEnabled: Boolean = false) : AbstractFormAdapter() {
                 field = value
             }
         }
+
+
 }

@@ -44,9 +44,20 @@ abstract class AbstractFormAdapter : RecyclerView.Adapter<RecyclerView.ViewHolde
         concatAdapter.registerAdapterDataObserver(dataObserver)
     }
 
+    //<editor-fold desc="覆写 Overwrite">
+
     val partAdapters get() = concatAdapter.adapters.filterIsInstance<AbstractPart>()
 
-    //<editor-fold desc="覆写 Overwrite">
+    fun getFormItem(position: Int): BaseForm<*>? {
+        val pair = concatAdapter.getWrappedAdapterAndPosition(position)
+        return (pair.first as? AbstractPart)?.getItem(pair.second)
+    }
+
+    override fun getItemCount() =
+        concatAdapter.itemCount
+
+    override fun getItemId(position: Int) =
+        concatAdapter.getItemId(position)
 
     override fun getItemViewType(position: Int) =
         concatAdapter.getItemViewType(position)
@@ -63,12 +74,6 @@ abstract class AbstractFormAdapter : RecyclerView.Adapter<RecyclerView.ViewHolde
         payloads: MutableList<Any>
     ) =
         concatAdapter.onBindViewHolder(holder, position, payloads)
-
-    override fun getItemId(position: Int) =
-        concatAdapter.getItemId(position)
-
-    override fun getItemCount() =
-        concatAdapter.itemCount
 
     override fun onFailedToRecycleView(holder: RecyclerView.ViewHolder) =
         concatAdapter.onFailedToRecycleView(holder)

@@ -34,46 +34,81 @@ object FormManager {
      * 默认值
      */
     open class Default internal constructor() {
-
         /**
          * 居中平滑滚动
          */
         var centerSmoothScroll: Boolean = true
-            internal set
+            protected set
 
         /**
          * 文本提取器
          */
         var textExtractor: ITextExtractor = NormalTextExtractor()
+            protected set
 
         /**
          * 图标提取器
          */
         var iconExtractor: IIconExtractor = NormalIconExtractor()
+            protected set
 
         /**
          * 名称格式化程序
          */
         var nameFormatter: AbstractNameFormatter = NormalNameFormatter()
+            protected set
+
+        /**
+         * 水平中间填充模式
+         */
+        var horizontalMiddlePaddingMode: Int = 0
+            protected set
+
+        /**
+         * EMS值
+         */
+        var emsSize: Int = 5
+            protected set
 
         /**
          * 排版
          */
         var typeset: AbstractTypeset = HorizontalTypeset()
-
-        /**
-         * EMS值
-         */
-        @IntRange(from = 1)
-        var emsSize: Int = 5
+            protected set
     }
 
     /**
      * 默认值配置
      */
     class DefaultConfig internal constructor() : Default() {
+
         fun centerSmoothScroll(boolean: Boolean) {
             centerSmoothScroll = boolean
+        }
+
+
+        fun textExtractor(extractor: ITextExtractor) {
+            textExtractor = extractor
+        }
+
+
+        fun iconExtractor(extractor: IIconExtractor) {
+            iconExtractor = extractor
+        }
+
+
+        fun nameFormatter(formatter: AbstractNameFormatter) {
+            nameFormatter = formatter
+        }
+
+
+        fun emsSize(@IntRange(from = 1, to = 20) size: Int) {
+            emsSize = size
+        }
+
+
+        fun typeset(typeset: AbstractTypeset) {
+            this.typeset = typeset
         }
     }
 }
