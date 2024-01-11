@@ -46,53 +46,53 @@ object FormManager {
     /**
      * 默认值
      */
-    open class Default internal constructor() {
+    open class Default {
         /**
          * 居中平滑滚动
          */
-        var centerSmoothScroll: Boolean = true
+        open var centerSmoothScroll: Boolean = true
             protected set
 
         /**
          * 文本提取器
          */
-        var textExtractor: ITextExtractor = NormalTextExtractor()
+        open var textExtractor: ITextExtractor = NormalTextExtractor()
             protected set
 
         /**
          * 图标提取器
          */
-        var iconExtractor: IIconExtractor = NormalIconExtractor()
+        open var iconExtractor: IIconExtractor = NormalIconExtractor()
             protected set
 
         /**
          * 名称格式化程序
          */
-        var nameFormatter: AbstractNameFormatter = NormalNameFormatter()
+        open var nameFormatter: AbstractNameFormatter = NormalNameFormatter()
             protected set
 
         /**
          * 水平中间填充模式
          */
-        var horizontalMiddlePaddingMode: Int = 0
+        open var horizontalMiddlePaddingMode: Int = 0
             protected set
 
         /**
          * EMS 值
          */
-        var emsSize: FormEmsSize = FormEmsSize(5)
+        open var emsSize: FormEmsSize = FormEmsSize(5)
             protected set
 
         /**
          * 内容重力
          */
-        var contentGravity: FormContentGravity = FormContentGravity()
+        open var contentGravity: FormContentGravity = FormContentGravity()
             protected set
 
         /**
          * 排版
          */
-        var typeset: AbstractTypeset = HorizontalTypeset()
+        open var typeset: AbstractTypeset = HorizontalTypeset()
             protected set
     }
 }
