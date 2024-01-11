@@ -1,6 +1,7 @@
 package com.chooongg.android.form
 
 import androidx.recyclerview.widget.RecyclerView
+import com.chooongg.android.form.listener.FormOnMenuItemClickListener
 
 class FormAdapter(
     isEnabled: Boolean = false,
@@ -9,6 +10,9 @@ class FormAdapter(
 
     val formPool = RecyclerView.RecycledViewPool()
 
+    /**
+     * 是否启用
+     */
     var isEnabled: Boolean = isEnabled
         set(value) {
             if (field != value) {
@@ -16,5 +20,21 @@ class FormAdapter(
             }
         }
 
+    /**
+     * 列数
+     */
+    var columnCount = 1
+        set(value) {
+            if (field != value) {
+                field = value
+            }
+        }
 
+    var onMenuItemClickListener: FormOnMenuItemClickListener? = null
+        private set
+
+
+    fun setOnMenuItemCLickListener(listener: FormOnMenuItemClickListener?) {
+        onMenuItemClickListener = listener
+    }
 }

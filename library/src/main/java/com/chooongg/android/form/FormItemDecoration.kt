@@ -18,30 +18,30 @@ class FormItemDecoration : ItemDecoration() {
         val adapter = parent.adapter as? FormAdapter ?: return
         val style = adapter.getStyle4ItemViewType(holder.itemViewType)
         val item = adapter.getFormItem(holder.absoluteAdapterPosition)
-        val start = if (style.getHorizontalIsSeparateItem()) {
-            when (item.marginBoundary.start) {
-                Boundary.GLOBAL -> 0
-                else -> {
-                    val columns = 27720 / item.spanSize
-                    val index = item.spanIndex / item.spanSize
-                    (style.marginInfo.middleStart + style.marginInfo.middleEnd) / columns * index
-                }
-            }
-        } else 0
-        val end = if (style.getHorizontalIsSeparateItem()) {
-            when (item.marginBoundary.end) {
-                Boundary.GLOBAL -> 0
-                else -> {
-                    val columns = 27720 / item.spanSize
-                    val index = item.spanIndex / item.spanSize
-                    (style.marginInfo.middleStart + style.marginInfo.middleEnd) / columns * (columns - 1 - index)
-                }
-            }
-        } else 0
-        if (view.isLayoutRtl) {
-            outRect.set(end, top, start, bottom)
-        } else {
-            outRect.set(start, top, end, bottom)
-        }
+//        val start = if (style.getHorizontalIsSeparateItem()) {
+//            when (item.marginBoundary.start) {
+//                Boundary.GLOBAL -> 0
+//                else -> {
+//                    val columns = 27720 / item.spanSize
+//                    val index = item.spanIndex / item.spanSize
+//                    (style.marginInfo.middleStart + style.marginInfo.middleEnd) / columns * index
+//                }
+//            }
+//        } else 0
+//        val end = if (style.getHorizontalIsSeparateItem()) {
+//            when (item.marginBoundary.end) {
+//                Boundary.GLOBAL -> 0
+//                else -> {
+//                    val columns = 27720 / item.spanSize
+//                    val index = item.spanIndex / item.spanSize
+//                    (style.marginInfo.middleStart + style.marginInfo.middleEnd) / columns * (columns - 1 - index)
+//                }
+//            }
+//        } else 0
+//        if (view.isLayoutRtl) {
+//            outRect.set(end, top, start, bottom)
+//        } else {
+//            outRect.set(start, top, end, bottom)
+//        }
     }
 }

@@ -1,5 +1,6 @@
 package com.chooongg.android.form.typeset
 
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.LinearLayoutCompat
@@ -12,29 +13,33 @@ import com.chooongg.android.form.style.AbstractStyle
 import com.chooongg.android.form.view.FormMenuView
 import com.google.android.material.textview.MaterialTextView
 
-class HorizontalTypeset : AbstractTypeset() {
+class VerticalTypeset : AbstractTypeset() {
 
-    override var emsMode: FormEmsMode = FormEmsMode(FormEmsMode.FIXED)
+    override var emsMode: FormEmsMode = FormEmsMode(FormEmsMode.NONE)
 
     override fun onCreateViewHolder(style: AbstractStyle, parent: ViewGroup): ViewGroup =
         LinearLayoutCompat(parent.context).also {
-            it.orientation = LinearLayoutCompat.HORIZONTAL
-            it.addView(MaterialTextView(it.context).apply {
-                id = R.id.formInternalNameView
-                setTextAppearance(formTextAppearance(R.attr.formTextAppearanceName))
-//                setPaddingRelative(
-//                    style.insideInfo.middleStart, style.insideInfo.middleTop,
-//                    style.insideInfo.middleEnd, style.insideInfo.middleBottom
-//                )
-            }, LinearLayoutCompat.LayoutParams(-2, -2))
-            it.addView(FormMenuView(it.context, style).apply {
-                id = R.id.formInternalMenuView
-            }, LinearLayoutCompat.LayoutParams(-2, -2))
+            it.orientation = LinearLayoutCompat.VERTICAL
+            it.addView(LinearLayoutCompat(it.context).also { child ->
+                child.orientation = LinearLayoutCompat.HORIZONTAL
+                child.gravity = Gravity.CENTER_VERTICAL
+                child.addView(MaterialTextView(child.context).apply {
+                    id = R.id.formInternalNameView
+                    setTextAppearance(formTextAppearance(R.attr.formTextAppearanceName))
+//                    setPaddingRelative(
+//                        style.insideInfo.middleStart, style.insideInfo.middleTop,
+//                        style.insideInfo.middleEnd, style.insideInfo.middleBottom
+//                    )
+                }, LinearLayoutCompat.LayoutParams(0, -2).apply { weight = 1f })
+                child.addView(FormMenuView(child.context, style).apply {
+                    id = R.id.formInternalMenuView
+                }, LinearLayoutCompat.LayoutParams(-2, -2))
+            }, LinearLayoutCompat.LayoutParams(-1, -2))
         }
 
     override fun addView(style: AbstractStyle, parent: ViewGroup, child: View) {
-        parent.addView(child, 1, LinearLayoutCompat.LayoutParams(0, -2).apply {
-            weight = 1f
+        parent.addView(child, LinearLayoutCompat.LayoutParams(-1, -2).apply {
+//            topMargin = TODO()
         })
     }
 

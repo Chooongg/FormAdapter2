@@ -1,7 +1,10 @@
 package com.chooongg.android.form
 
 import android.content.Context
-import androidx.annotation.IntRange
+import android.util.TypedValue
+import android.widget.TextView
+import com.chooongg.android.form.data.FormContentGravity
+import com.chooongg.android.form.data.FormEmsSize
 import com.chooongg.android.form.extractor.IIconExtractor
 import com.chooongg.android.form.extractor.ITextExtractor
 import com.chooongg.android.form.extractor.NormalIconExtractor
@@ -17,18 +20,28 @@ object FormManager {
     const val FLAG_PAYLOAD_UPDATE_BOUNDARY = "form_flag_update_boundary"
     const val FLAG_PAYLOAD_ERROR_NOTIFY = "form_flag_error_notify"
 
+    /**
+     * 默认值
+     */
     var default: Default = Default()
-        internal set
 
     /**
-     * 配置默认值
+     * 提取文本
      */
-    fun configDefault(block: DefaultConfig.() -> Unit) {
-        default = DefaultConfig().apply(block)
-    }
-
     fun extractText(context: Context, text: Any?): CharSequence? =
         default.textExtractor.extract(context, text)
+
+    /**
+     * 获取字体实际高度
+     */
+    fun getFontRealHeight(textView: TextView): Int {
+        val tempView = TextView(textView.context)
+        tempView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textView.textSize)
+        tempView.measure(0, 0)
+        return tempView.measuredHeight
+//        val fm = textView.paint.fontMetricsInt
+//        return textView.paint.getFontMetricsInt(fm)
+    }
 
     /**
      * 默认值
@@ -65,9 +78,15 @@ object FormManager {
             protected set
 
         /**
-         * EMS值
+         * EMS 值
          */
-        var emsSize: Int = 5
+        var emsSize: FormEmsSize = FormEmsSize(5)
+            protected set
+
+        /**
+         * 内容重力
+         */
+        var contentGravity: FormContentGravity = FormContentGravity()
             protected set
 
         /**
@@ -75,40 +94,5 @@ object FormManager {
          */
         var typeset: AbstractTypeset = HorizontalTypeset()
             protected set
-    }
-
-    /**
-     * 默认值配置
-     */
-    class DefaultConfig internal constructor() : Default() {
-
-        fun centerSmoothScroll(boolean: Boolean) {
-            centerSmoothScroll = boolean
-        }
-
-
-        fun textExtractor(extractor: ITextExtractor) {
-            textExtractor = extractor
-        }
-
-
-        fun iconExtractor(extractor: IIconExtractor) {
-            iconExtractor = extractor
-        }
-
-
-        fun nameFormatter(formatter: AbstractNameFormatter) {
-            nameFormatter = formatter
-        }
-
-
-        fun emsSize(@IntRange(from = 1, to = 20) size: Int) {
-            emsSize = size
-        }
-
-
-        fun typeset(typeset: AbstractTypeset) {
-            this.typeset = typeset
-        }
     }
 }
