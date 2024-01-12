@@ -8,7 +8,10 @@ import com.chooongg.android.form.item.BaseForm
 class EmptyStyle : AbstractStyle() {
     override fun onCreateViewHolder(parent: ViewGroup): ViewGroup? = null
     override fun addView(parent: ViewGroup, child: View) = Unit
-    override fun onBindViewHolder(holder: FormViewHolder, layout: ViewGroup, item: BaseForm<*>) {
-
+    override fun onBindViewHolder(
+        holder: FormViewHolder,
+        item: BaseForm<*>,
+        adapterEnabled: Boolean
+    ) {
     }
 }

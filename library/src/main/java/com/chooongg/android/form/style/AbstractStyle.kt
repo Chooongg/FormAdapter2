@@ -2,10 +2,9 @@ package com.chooongg.android.form.style
 
 import android.view.View
 import android.view.ViewGroup
-import com.chooongg.android.form.formatter.name.AbstractNameFormatter
 import com.chooongg.android.form.holder.FormViewHolder
 import com.chooongg.android.form.item.BaseForm
-import com.chooongg.android.form.provider.AbstractGroupTitleViewProvider
+import com.chooongg.android.form.provider.AbstractGroupTitleProvider
 import com.chooongg.android.form.typeset.AbstractTypeset
 
 /**
@@ -19,9 +18,9 @@ abstract class AbstractStyle {
     open var typeset: AbstractTypeset? = null
 
     /**
-     * 组标题提供器
+     * 组标题视图提供器
      */
-    open var groupTitleViewProvider: AbstractGroupTitleViewProvider? = null
+    open var groupTitleProvider: AbstractGroupTitleProvider? = null
 
     /**
      * 是否为独立的项目
@@ -39,7 +38,11 @@ abstract class AbstractStyle {
 
     open fun onViewAttachedToWindow(holder: FormViewHolder) = Unit
 
-    abstract fun onBindViewHolder(holder: FormViewHolder, layout: ViewGroup, item: BaseForm<*>)
+    abstract fun onBindViewHolder(
+        holder: FormViewHolder,
+        item: BaseForm<*>,
+        adapterEnabled: Boolean
+    )
 
     open fun onViewDetachedFromWindow(holder: FormViewHolder) = Unit
 
@@ -50,7 +53,7 @@ abstract class AbstractStyle {
     override fun equals(other: Any?): Boolean {
         if (other !is AbstractStyle) return false
         if (javaClass != other.javaClass) return false
-        if (groupTitleViewProvider != other.groupTitleViewProvider) return false
+        if (groupTitleProvider != other.groupTitleProvider) return false
 //        if (groupChildNameProvider != other.groupChildNameProvider) return false
         return typeset == other.typeset
     }

@@ -21,6 +21,8 @@ class VerticalTypeset : AbstractTypeset() {
         LinearLayoutCompat(parent.context).also {
             it.orientation = LinearLayoutCompat.VERTICAL
             it.addView(LinearLayoutCompat(it.context).also { child ->
+                child.clipChildren = false
+                child.clipToPadding = false
                 child.orientation = LinearLayoutCompat.HORIZONTAL
                 child.gravity = Gravity.CENTER_VERTICAL
                 child.addView(MaterialTextView(child.context).apply {
@@ -45,15 +47,14 @@ class VerticalTypeset : AbstractTypeset() {
 
     override fun onBindViewHolder(
         holder: FormViewHolder,
-        layout: ViewGroup,
         item: BaseForm<*>,
         adapterEnabled: Boolean
     ) {
-        layout.findViewById<MaterialTextView>(R.id.formInternalNameView)?.apply {
+        holder.typesetLayout!!.findViewById<MaterialTextView>(R.id.formInternalNameView).apply {
             setNameViewEms(holder, this)
             text = (nameFormatter ?: FormManager.default.nameFormatter).format(context, item)
         }
-        layout.findViewById<FormMenuView>(R.id.formInternalMenuView)
-            .configMenu(holder, item, adapterEnabled)
+        holder.typesetLayout.findViewById<FormMenuView>(R.id.formInternalMenuView)
+            ?.configMenu(holder, item, adapterEnabled)
     }
 }

@@ -11,6 +11,8 @@ import com.chooongg.android.form.extractor.NormalIconExtractor
 import com.chooongg.android.form.extractor.NormalTextExtractor
 import com.chooongg.android.form.formatter.name.AbstractNameFormatter
 import com.chooongg.android.form.formatter.name.NormalNameFormatter
+import com.chooongg.android.form.provider.AbstractGroupTitleProvider
+import com.chooongg.android.form.provider.NormalGroupTitleProvider
 import com.chooongg.android.form.typeset.AbstractTypeset
 import com.chooongg.android.form.typeset.HorizontalTypeset
 
@@ -69,6 +71,12 @@ object FormManager {
          * 名称格式化程序
          */
         open var nameFormatter: AbstractNameFormatter = NormalNameFormatter()
+            protected set
+
+        /**
+         * 组标题视图提供器
+         */
+        open var groupTitleProvider: AbstractGroupTitleProvider = NormalGroupTitleProvider()
             protected set
 
         /**

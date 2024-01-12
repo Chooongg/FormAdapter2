@@ -44,13 +44,36 @@ abstract class AbstractFormAdapter : RecyclerView.Adapter<RecyclerView.ViewHolde
         concatAdapter.registerAdapterDataObserver(dataObserver)
     }
 
+    operator fun get(field: String): BaseForm<*>? {
+        partAdapters.forEach {
+            val form = it[field]
+            if (form != null) return form
+        }
+        return null
+    }
+
+    operator fun contains(field: String): Boolean {
+        partAdapters.forEach {
+            if (field in it) return true
+        }
+        return false
+    }
+
+    operator fun contains(item: BaseForm<*>): Boolean {
+        partAdapters.forEach {
+            if (item in it) return true
+        }
+        return false
+    }
+
     //<editor-fold desc="覆写 Overwrite">
 
     val partAdapters get() = concatAdapter.adapters.filterIsInstance<AbstractPart>()
 
     fun getFormItem(position: Int): BaseForm<*>? {
         val pair = concatAdapter.getWrappedAdapterAndPosition(position)
-        return (pair.first as? AbstractPart)?.getItem(pair.second)
+        val part = pair.first as? AbstractPart ?: return null
+        return part[pair.second]
     }
 
     override fun getItemCount() =
@@ -93,8 +116,6 @@ abstract class AbstractFormAdapter : RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private val stylePool = ArrayList<AbstractStyle>()
     private val typesetPool = ArrayList<AbstractTypeset>()
-
-    //    private val providerPool = ArrayList<AbstractFormProvider<*>>()
     private val itemPool = ArrayList<BaseForm<*>>()
     private val itemTypePool = ArrayList<Triple<Int, Int, Int>>()
 

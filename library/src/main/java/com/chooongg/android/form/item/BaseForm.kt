@@ -2,7 +2,12 @@ package com.chooongg.android.form.item
 
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.GravityInt
+import com.chooongg.android.form.FormManager
+import com.chooongg.android.form.data.FormContentGravity
+import com.chooongg.android.form.data.FormExtensionMap
 import com.chooongg.android.form.holder.FormViewHolder
+import com.chooongg.android.form.part.AbstractPart
 import com.chooongg.android.form.style.AbstractStyle
 import com.chooongg.android.form.typeset.AbstractTypeset
 import kotlinx.coroutines.CoroutineScope
@@ -36,6 +41,11 @@ abstract class BaseForm<CONTENT : Any>(
     var content: CONTENT? = null
 
     /**
+     * 扩展内容
+     */
+    val extensionContent = FormExtensionMap()
+
+    /**
      * 是否为必填项
      */
     var required: Boolean = false
@@ -64,52 +74,24 @@ abstract class BaseForm<CONTENT : Any>(
      */
     open var autoFill = true
 
-    //</editor-fold>
-
-    //<editor-fold desc="扩展 Extend">
+    /**
+     * 重力
+     */
+    @GravityInt
+    open var gravity: Int? = null
 
     /**
-     * 扩展字段和内容
+     * 内容重力
      */
-    private var extensionFieldAndContent: HashMap<String, Any?>? = null
-
-    /**
-     * 放置扩展内容
-     */
-    fun putExtensionContent(key: String, value: Any?) {
-        if (value != null) {
-            if (extensionFieldAndContent == null) extensionFieldAndContent = HashMap()
-            extensionFieldAndContent!![key] = value
-        } else if (extensionFieldAndContent != null) {
-            extensionFieldAndContent!!.remove(key)
-            if (extensionFieldAndContent!!.isEmpty()) extensionFieldAndContent = null
-        }
-    }
-
-    /**
-     * 获取扩展内容
-     */
-    fun getExtensionContent(key: String): Any? = extensionFieldAndContent?.get(key)
-
-    /**
-     * 是否有扩展内容
-     */
-    fun hasExtensionContent(key: String) = extensionFieldAndContent?.containsKey(key) ?: false
-
-    /**
-     * 快照扩展字段和内容
-     */
-    fun snapshotExtensionFieldAndContent() = extensionFieldAndContent ?: emptyMap()
-
-    /**
-     * 删除扩展字段
-     */
-    fun removeExtensionContent(key: String) = extensionFieldAndContent?.remove(key)
+    open var contentGravity: FormContentGravity? = null
 
     //</editor-fold>
 
     //<editor-fold desc="视图 View">
 
+    /**
+     * 复制空的项目用于缓存ItemViewType并创建View
+     */
     abstract fun copyEmptyItem(): BaseForm<CONTENT>
 
     abstract fun onCreateViewHolder(style: AbstractStyle, parent: ViewGroup): View
@@ -138,6 +120,22 @@ abstract class BaseForm<CONTENT : Any>(
     open fun onViewDetachedFromWindow(holder: FormViewHolder) = Unit
 
     open fun onViewRecycled(holder: FormViewHolder) = Unit
+
+    /**
+     * 获取内容重力
+     */
+    @GravityInt
+    protected fun obtainContentGravity(holder: FormViewHolder): Int {
+        val columnCount = (holder.bindingAdapter as? AbstractPart)?.adapter?.columnCount ?: 1
+        return if (columnCount > 1) contentGravity?.multiColumnGravity
+            ?: gravity
+            ?: holder.typeset.contentGravity?.multiColumnGravity
+            ?: FormManager.default.contentGravity.multiColumnGravity
+        else contentGravity?.gravity
+            ?: gravity
+            ?: holder.typeset.contentGravity?.gravity
+            ?: FormManager.default.contentGravity.gravity
+    }
 
     //</editor-fold>
 }

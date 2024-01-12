@@ -18,6 +18,7 @@ class HorizontalTypeset : AbstractTypeset() {
 
     override fun onCreateViewHolder(style: AbstractStyle, parent: ViewGroup): ViewGroup =
         LinearLayoutCompat(parent.context).also {
+            it.showDividers
             it.orientation = LinearLayoutCompat.HORIZONTAL
             it.addView(MaterialTextView(it.context).apply {
                 id = R.id.formInternalNameView
@@ -40,15 +41,14 @@ class HorizontalTypeset : AbstractTypeset() {
 
     override fun onBindViewHolder(
         holder: FormViewHolder,
-        layout: ViewGroup,
         item: BaseForm<*>,
         adapterEnabled: Boolean
     ) {
-        layout.findViewById<MaterialTextView>(R.id.formInternalNameView)?.apply {
+        holder.typesetLayout!!.findViewById<MaterialTextView>(R.id.formInternalNameView).apply {
             setNameViewEms(holder, this)
             text = (nameFormatter ?: FormManager.default.nameFormatter).format(context, item)
         }
-        layout.findViewById<FormMenuView>(R.id.formInternalMenuView)
-            .configMenu(holder, item, adapterEnabled)
+        holder.typesetLayout.findViewById<FormMenuView>(R.id.formInternalMenuView)
+            ?.configMenu(holder, item, adapterEnabled)
     }
 }

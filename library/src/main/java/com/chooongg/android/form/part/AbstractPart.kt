@@ -68,12 +68,18 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
 
     }
 
-    fun getItem(position: Int) = showItemList[position]
+    abstract operator fun get(field: String): BaseForm<*>?
+
+    abstract operator fun contains(field: String): Boolean
+
+    abstract operator fun contains(item: BaseForm<*>): Boolean
+
+    operator fun get(position: Int): BaseForm<*> = showItemList[position]
 
     override fun getItemCount(): Int = showItemList.size
 
     override fun getItemViewType(position: Int): Int =
-        adapter.getItemViewType4Pool(style, getItem(position))
+        adapter.getItemViewType4Pool(style, get(position))
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FormViewHolder {
         val style = adapter.getStyle4ItemViewType(viewType)
@@ -98,21 +104,15 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
     }
 
     override fun onViewAttachedToWindow(holder: FormViewHolder) {
-        adapter.getStyle4ItemViewType(holder.itemViewType).onViewAttachedToWindow(holder)
-        adapter.getTypeset4ItemViewType(holder.itemViewType).onViewAttachedToWindow(holder)
-        adapter.getItem4ItemViewType(holder.itemViewType).onViewAttachedToWindow(holder)
+        holder.style.onViewAttachedToWindow(holder)
+        holder.typeset.onViewAttachedToWindow(holder)
+        get(holder.bindingAdapterPosition).onViewAttachedToWindow(holder)
     }
 
     override fun onBindViewHolder(holder: FormViewHolder, position: Int) {
-        val item = getItem(position)
-        val style = adapter.getStyle4ItemViewType(holder.itemViewType)
-        val typeset = adapter.getTypeset4ItemViewType(holder.itemViewType)
-        if (holder.styleLayout != null) {
-            style.onBindViewHolder(holder, holder.styleLayout, item)
-        }
-        if (holder.typesetLayout != null) {
-            typeset.onBindViewHolder(holder, holder.typesetLayout, item, adapter.isEnabled)
-        }
+        val item = get(position)
+        holder.style.onBindViewHolder(holder, item, adapter.isEnabled)
+        holder.typeset.onBindViewHolder(holder, item, adapter.isEnabled)
         item.onBindViewHolder(adapterScope, holder, adapter.isEnabled)
     }
 
@@ -125,21 +125,19 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
             super.onBindViewHolder(holder, position, payloads)
             return
         }
-        val item = getItem(position)
-        val style = adapter.getStyle4ItemViewType(holder.itemViewType)
-        val typeset = adapter.getTypeset4ItemViewType(holder.itemViewType)
+        val item = get(position)
     }
 
     override fun onViewDetachedFromWindow(holder: FormViewHolder) {
-        adapter.getStyle4ItemViewType(holder.itemViewType).onViewDetachedFromWindow(holder)
-        adapter.getTypeset4ItemViewType(holder.itemViewType).onViewDetachedFromWindow(holder)
-        adapter.getItem4ItemViewType(holder.itemViewType).onViewDetachedFromWindow(holder)
+        holder.style.onViewDetachedFromWindow(holder)
+        holder.typeset.onViewDetachedFromWindow(holder)
+        get(holder.bindingAdapterPosition).onViewDetachedFromWindow(holder)
     }
 
     override fun onViewRecycled(holder: FormViewHolder) {
-        adapter.getStyle4ItemViewType(holder.itemViewType).onViewRecycled(holder)
-        adapter.getTypeset4ItemViewType(holder.itemViewType).onViewRecycled(holder)
-        adapter.getItem4ItemViewType(holder.itemViewType).onViewRecycled(holder)
+        holder.style.onViewRecycled(holder)
+        holder.typeset.onViewRecycled(holder)
+        get(holder.bindingAdapterPosition).onViewRecycled(holder)
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
