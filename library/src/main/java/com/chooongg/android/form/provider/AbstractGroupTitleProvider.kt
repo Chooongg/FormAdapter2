@@ -3,7 +3,6 @@ package com.chooongg.android.form.provider
 import android.view.View
 import android.view.ViewGroup
 import com.chooongg.android.form.holder.FormViewHolder
-import com.chooongg.android.form.item.BaseForm
 import com.chooongg.android.form.item.InternalFormGroupTitle
 import com.chooongg.android.form.style.AbstractStyle
 import kotlinx.coroutines.CoroutineScope
