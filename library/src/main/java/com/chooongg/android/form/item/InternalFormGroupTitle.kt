@@ -7,7 +7,7 @@ import com.chooongg.android.form.holder.FormViewHolder
 import com.chooongg.android.form.style.AbstractStyle
 import kotlinx.coroutines.CoroutineScope
 
-class InternalFormGroupTitle(name: CharSequence?) : BaseForm<CharSequence>(name, null) {
+class InternalFormGroupTitle(name: Any?) : BaseForm<CharSequence>(name, null) {
 
     override fun copyEmptyItem() = InternalFormGroupTitle(null)
 

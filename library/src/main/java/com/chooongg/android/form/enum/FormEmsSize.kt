@@ -1,4 +1,4 @@
-package com.chooongg.android.form.data
+package com.chooongg.android.form.enum
 
 import androidx.annotation.IntRange
 

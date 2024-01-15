@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.LinearLayoutCompat
 import com.chooongg.android.form.FormManager
 import com.chooongg.android.form.R
-import com.chooongg.android.form.data.FormEmsMode
+import com.chooongg.android.form.enum.FormEmsMode
 import com.chooongg.android.form.holder.FormViewHolder
 import com.chooongg.android.form.item.BaseForm
 import com.chooongg.android.form.style.AbstractStyle

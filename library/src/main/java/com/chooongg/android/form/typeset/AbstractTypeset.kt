@@ -4,9 +4,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.chooongg.android.form.FormManager
-import com.chooongg.android.form.data.FormContentGravity
-import com.chooongg.android.form.data.FormEmsMode
-import com.chooongg.android.form.data.FormEmsSize
+import com.chooongg.android.form.enum.FormContentGravity
+import com.chooongg.android.form.enum.FormEmsMode
+import com.chooongg.android.form.enum.FormEmsSize
 import com.chooongg.android.form.formatter.name.AbstractNameFormatter
 import com.chooongg.android.form.helper.FormTextAppearanceHelper
 import com.chooongg.android.form.holder.FormViewHolder

@@ -3,14 +3,19 @@ package com.chooongg.android.form.item
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.GravityInt
+import com.chooongg.android.form.FormDataVerificationException
 import com.chooongg.android.form.FormManager
-import com.chooongg.android.form.data.FormContentGravity
 import com.chooongg.android.form.data.FormExtensionMap
+import com.chooongg.android.form.enum.FormContentGravity
+import com.chooongg.android.form.enum.FormOutputMode
+import com.chooongg.android.form.enum.FormValidateMode
+import com.chooongg.android.form.helper.FormTextAppearanceHelper
 import com.chooongg.android.form.holder.FormViewHolder
 import com.chooongg.android.form.part.AbstractPart
 import com.chooongg.android.form.style.AbstractStyle
 import com.chooongg.android.form.typeset.AbstractTypeset
 import kotlinx.coroutines.CoroutineScope
+import org.json.JSONObject
 
 abstract class BaseForm<CONTENT : Any>(
     /**
@@ -21,7 +26,7 @@ abstract class BaseForm<CONTENT : Any>(
      * 字段
      */
     var field: String?,
-) : AbstractForm() {
+) : AbstractForm(), FormTextAppearanceHelper {
 
     //<editor-fold desc="基础 Basic">
 
@@ -84,6 +89,94 @@ abstract class BaseForm<CONTENT : Any>(
      * 内容重力
      */
     open var contentGravity: FormContentGravity? = null
+
+    //</editor-fold>
+
+    //<editor-fold desc="验证 Validate">
+
+    open var validateMode: FormValidateMode = FormValidateMode.OUTPUT
+
+    /**
+     * 执行数据验证
+     */
+    @Throws(FormDataVerificationException::class)
+    fun executeDataVerification(adapterEnabled: Boolean) {
+        when (validateMode) {
+            FormValidateMode.ALWAYS -> Unit
+            FormValidateMode.OUTPUT -> if (!isOutput(adapterEnabled)) return
+            FormValidateMode.NEVER -> return
+        }
+        FormManager.findItemDataActuator(javaClass)?.also {
+            if (it.isOverwriteOriginalDataVerification()) {
+                it.dataVerification(this)
+                return
+            }
+        }
+        dataVerification()
+    }
+
+    /**
+     * 数据验证
+     */
+    @Throws(FormDataVerificationException::class)
+    protected open fun dataVerification() {
+        if (required && content == null) {
+            throw FormDataVerificationException(this, FormDataVerificationException.ErrorType.Empty)
+        }
+    }
+
+    //</editor-fold>
+
+    //<editor-fold desc="输出 Output">
+
+    /**
+     * 输出模式
+     */
+    open var outputMode: FormOutputMode = FormOutputMode.VISIBLE
+
+    /**
+     * 是否输出
+     */
+    fun isOutput(adapterEnabled: Boolean) = when (outputMode) {
+        FormOutputMode.ALWAYS -> true
+        FormOutputMode.VISIBLE -> isVisible(adapterEnabled)
+        FormOutputMode.VISIBLE_ENABLED -> isVisible(adapterEnabled) && isEnable(adapterEnabled)
+        FormOutputMode.VISIBLE_DISABLE -> isVisible(adapterEnabled) && !isEnable(adapterEnabled)
+        FormOutputMode.INVISIBLE -> !isVisible(adapterEnabled)
+        FormOutputMode.INVISIBLE_ENABLE -> !isVisible(adapterEnabled) && isEnable(adapterEnabled)
+        FormOutputMode.INVISIBLE_DISABLE -> !isVisible(adapterEnabled) && !isEnable(adapterEnabled)
+        FormOutputMode.ENABLED -> isEnable(adapterEnabled)
+        FormOutputMode.DISABLE -> !isEnable(adapterEnabled)
+        FormOutputMode.NEVER -> false
+    }
+
+    /**
+     * 执行输出
+     */
+    fun executeOutput(adapterEnabled: Boolean, json: JSONObject) {
+        if (!isOutput(adapterEnabled)) return
+        val actuator = FormManager.findItemDataActuator(javaClass)
+        if (actuator?.isOverwriteOriginalOutputData() == true) {
+            actuator.outputData(this, json)
+        } else outputData(json)
+        if (actuator?.isOverwriteOriginalOutputExtensionData() == true) {
+            actuator.outputExtensionData(this, json)
+        } else outputExtensionData(json)
+    }
+
+    /**
+     * 输出数据
+     */
+    protected open fun outputData(json: JSONObject) {
+        if (field != null && content != null) json.put(field!!, content)
+    }
+
+    /**
+     * 输出扩展数据
+     */
+    protected open fun outputExtensionData(json: JSONObject) {
+        extensionContent.forEach { field, content -> json.putOpt(field, content) }
+    }
 
     //</editor-fold>
 

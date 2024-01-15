@@ -6,6 +6,8 @@ import com.chooongg.android.form.style.AbstractStyle
 
 class NormalPart(adapter: FormAdapter, style: AbstractStyle) : AbstractPart(adapter, style) {
 
+//    internal var data =
+
     override fun get(field: String): BaseForm<*> {
         TODO("Not yet implemented")
     }

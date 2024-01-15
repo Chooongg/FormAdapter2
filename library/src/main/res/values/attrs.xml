@@ -3,16 +3,15 @@
 
     <attr name="formShapeAppearanceCorner" format="reference" />
 
-    <attr name="formTextAppearanceGroupName" format="reference" />
-    <attr name="formTextAppearanceLabel" format="reference" />
+    <attr name="formTextAppearanceGroupTitle" format="reference" />
     <attr name="formTextAppearanceName" format="reference" />
     <attr name="formTextAppearanceContent" format="reference" />
     <attr name="formTextAppearanceHint" format="reference" />
+    <attr name="formTextAppearanceLabel" format="reference" />
     <attr name="formTextAppearanceSearch" format="reference" />
     <attr name="formTextAppearancePrefix" format="reference" />
     <attr name="formTextAppearanceSuffix" format="reference" />
     <attr name="formTextAppearancePlaceholder" format="reference" />
-    <attr name="formTextAppearanceTip" format="reference" />
     <attr name="formTextAppearanceCounter" format="reference" />
 
 <!--    <attr name="formButtonStyle" format="reference" />-->

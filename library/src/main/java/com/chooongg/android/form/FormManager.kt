@@ -3,24 +3,33 @@ package com.chooongg.android.form
 import android.content.Context
 import android.util.TypedValue
 import android.widget.TextView
-import com.chooongg.android.form.data.FormContentGravity
-import com.chooongg.android.form.data.FormEmsSize
+import com.chooongg.android.form.actuator.FormDataActuator
+import com.chooongg.android.form.enum.FormContentGravity
+import com.chooongg.android.form.enum.FormEmsSize
 import com.chooongg.android.form.extractor.IIconExtractor
 import com.chooongg.android.form.extractor.ITextExtractor
 import com.chooongg.android.form.extractor.NormalIconExtractor
 import com.chooongg.android.form.extractor.NormalTextExtractor
 import com.chooongg.android.form.formatter.name.AbstractNameFormatter
 import com.chooongg.android.form.formatter.name.NormalNameFormatter
+import com.chooongg.android.form.item.BaseForm
 import com.chooongg.android.form.provider.AbstractGroupTitleProvider
 import com.chooongg.android.form.provider.NormalGroupTitleProvider
 import com.chooongg.android.form.typeset.AbstractTypeset
 import com.chooongg.android.form.typeset.HorizontalTypeset
+import java.lang.reflect.ParameterizedType
+
 
 object FormManager {
 
     const val FLAG_PAYLOAD_UPDATE_CONTENT = "form_flag_update_content"
     const val FLAG_PAYLOAD_UPDATE_BOUNDARY = "form_flag_update_boundary"
     const val FLAG_PAYLOAD_ERROR_NOTIFY = "form_flag_error_notify"
+
+    /**
+     * 数据执行器
+     */
+    private val itemDataActuators = HashMap<Class<*>, FormDataActuator<*>>()
 
     /**
      * 默认值
@@ -102,5 +111,19 @@ object FormManager {
          */
         open var typeset: AbstractTypeset = HorizontalTypeset()
             protected set
+    }
+
+    fun putItemDataActuator(actuator: FormDataActuator<*>) {
+        val parameterizedType = actuator.javaClass.genericSuperclass as ParameterizedType
+        val clazz = parameterizedType.actualTypeArguments[0] as Class<*>
+        itemDataActuators[clazz] = actuator
+    }
+
+    fun clearItemDataActuator() {
+        itemDataActuators.clear()
+    }
+
+    internal fun findItemDataActuator(clazz: Class<out BaseForm<*>>): FormDataActuator<*>? {
+        return itemDataActuators[clazz]
     }
 }
