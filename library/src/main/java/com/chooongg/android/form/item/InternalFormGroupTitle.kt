@@ -6,8 +6,11 @@ import com.chooongg.android.form.FormManager
 import com.chooongg.android.form.holder.FormViewHolder
 import com.chooongg.android.form.style.AbstractStyle
 import kotlinx.coroutines.CoroutineScope
+import java.util.UUID
 
-class InternalFormGroupTitle(name: Any?) : BaseForm<CharSequence>(name, null) {
+class InternalFormGroupTitle(id: String?) : BaseForm<CharSequence>(null, null) {
+
+    override val id: String = id ?: UUID.randomUUID().toString()
 
     override fun copyEmptyItem() = InternalFormGroupTitle(null)
 

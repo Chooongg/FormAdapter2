@@ -2,12 +2,23 @@ package com.chooongg.android.form.app
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.chooongg.android.form.FormManager
+import androidx.core.view.setPadding
+import com.chooongg.android.form.helper.FormTextAppearanceHelper
 import com.chooongg.android.formAdapter.app.R
+import com.google.android.material.button.MaterialButton
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), FormTextAppearanceHelper {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        findViewById<MaterialButton>(R.id.btn).apply {
+            background = null
+            minWidth = 0
+            minHeight = 0
+            minimumWidth = 0
+            minimumHeight = 0
+            setPadding(0)
+            setTextAppearance(formTextAppearance(com.chooongg.android.form.R.attr.formTextAppearanceName))
+        }
     }
 }

@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.annotation.GravityInt
 import com.chooongg.android.form.FormDataVerificationException
 import com.chooongg.android.form.FormManager
+import com.chooongg.android.form.boundary.Boundary
 import com.chooongg.android.form.data.FormExtensionMap
 import com.chooongg.android.form.enum.FormContentGravity
 import com.chooongg.android.form.enum.FormOutputMode
@@ -92,6 +93,12 @@ abstract class BaseForm<CONTENT : Any>(
 
     //</editor-fold>
 
+    //<editor-fold desc="联动 Linkage">
+
+    var linkageBlock:FormLinkageBlock? = null
+
+    //</editor-fold>
+
     //<editor-fold desc="验证 Validate">
 
     open var validateMode: FormValidateMode = FormValidateMode.OUTPUT
@@ -176,6 +183,43 @@ abstract class BaseForm<CONTENT : Any>(
      */
     protected open fun outputExtensionData(json: JSONObject) {
         extensionContent.forEach { field, content -> json.putOpt(field, content) }
+    }
+
+    //</editor-fold>
+
+    //<editor-fold desc="内部 Internal">
+
+    /**
+     * 边界信息
+     */
+    var boundary: Boundary = Boundary()
+
+    /**
+     * 全局坐标
+     */
+    var globalPosition: Int = -1
+
+    var localPosition: Int = -1
+
+    var groupCount = -1
+
+    var groupIndex = -1
+
+    var countInGroup = -1
+
+    var positionInGroup = -1
+
+    var lastEnabled: Boolean? = null
+
+    var lastBoundary: Boundary? = null
+
+    open fun resetInternalData() {
+        lastBoundary = boundary
+        globalPosition = -1
+        localPosition = -1
+        groupCount = -1
+        countInGroup = -1
+        positionInGroup = -1
     }
 
     //</editor-fold>

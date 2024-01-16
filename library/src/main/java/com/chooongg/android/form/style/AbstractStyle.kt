@@ -2,6 +2,7 @@ package com.chooongg.android.form.style
 
 import android.view.View
 import android.view.ViewGroup
+import com.chooongg.android.form.boundary.FormSizeInfo
 import com.chooongg.android.form.holder.FormViewHolder
 import com.chooongg.android.form.item.BaseForm
 import com.chooongg.android.form.provider.AbstractGroupTitleProvider
@@ -21,6 +22,13 @@ abstract class AbstractStyle {
      * 组标题视图提供器
      */
     open var groupTitleProvider: AbstractGroupTitleProvider? = null
+
+    /**
+     *
+     */
+    var margin: FormSizeInfo = FormSizeInfo()
+
+    var padding: FormSizeInfo = FormSizeInfo()
 
     /**
      * 是否为独立的项目

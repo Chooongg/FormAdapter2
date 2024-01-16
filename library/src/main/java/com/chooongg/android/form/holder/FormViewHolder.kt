@@ -14,6 +14,7 @@ class FormViewHolder(
     val typesetLayout: ViewGroup?,
     val view: View
 ) : RecyclerView.ViewHolder(styleLayout ?: typesetLayout ?: view) {
+
     var job: Job? = null
 
     init {

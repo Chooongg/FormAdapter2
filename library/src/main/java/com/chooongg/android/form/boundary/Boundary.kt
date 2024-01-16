@@ -8,6 +8,9 @@ data class Boundary(
     @BoundaryInt val end: Int,
     @BoundaryInt val bottom: Int
 ) {
+
+    constructor() : this(NONE, NONE, NONE, NONE)
+
     companion object {
         const val NONE = 0
         const val MIDDLE = 2
