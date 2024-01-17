@@ -4,6 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.GravityInt
 import com.chooongg.android.form.FormDataVerificationException
+import com.chooongg.android.form.FormLinkageBlock
 import com.chooongg.android.form.FormManager
 import com.chooongg.android.form.boundary.Boundary
 import com.chooongg.android.form.data.FormExtensionMap
@@ -12,6 +13,7 @@ import com.chooongg.android.form.enum.FormOutputMode
 import com.chooongg.android.form.enum.FormValidateMode
 import com.chooongg.android.form.helper.FormTextAppearanceHelper
 import com.chooongg.android.form.holder.FormViewHolder
+import com.chooongg.android.form.linkage.FormLinkage
 import com.chooongg.android.form.part.AbstractPart
 import com.chooongg.android.form.style.AbstractStyle
 import com.chooongg.android.form.typeset.AbstractTypeset
@@ -95,12 +97,33 @@ abstract class BaseForm<CONTENT : Any>(
 
     //<editor-fold desc="联动 Linkage">
 
-    var linkageBlock:FormLinkageBlock? = null
+    /**
+     * 联动代码块
+     */
+    var linkageBlock: FormLinkageBlock? = null
+        private set
+
+    /**
+     * 设置联动
+     */
+    fun setLinkage(block: FormLinkageBlock?) {
+        linkageBlock = block
+    }
+
+    /**
+     * 触发联动操作
+     */
+    fun triggerLinkage(part: AbstractPart) {
+        linkageBlock?.invoke(FormLinkage(part))
+    }
 
     //</editor-fold>
 
     //<editor-fold desc="验证 Validate">
 
+    /**
+     * 数据验证模式
+     */
     open var validateMode: FormValidateMode = FormValidateMode.OUTPUT
 
     /**
@@ -198,26 +221,33 @@ abstract class BaseForm<CONTENT : Any>(
      * 全局坐标
      */
     var globalPosition: Int = -1
+        internal set
 
     var localPosition: Int = -1
+        internal set
 
     var groupCount = -1
+        internal set
 
     var groupIndex = -1
+        internal set
 
     var countInGroup = -1
+        internal set
 
     var positionInGroup = -1
+        internal set
 
     var lastEnabled: Boolean? = null
+        internal set
 
     var lastBoundary: Boundary? = null
+        internal set
 
     open fun resetInternalData() {
         lastBoundary = boundary
-        globalPosition = -1
-        localPosition = -1
         groupCount = -1
+        groupIndex = -1
         countInGroup = -1
         positionInGroup = -1
     }

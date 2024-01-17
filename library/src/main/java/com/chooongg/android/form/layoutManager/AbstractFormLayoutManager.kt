@@ -5,29 +5,29 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import com.chooongg.android.form.FormManager
-import com.chooongg.android.form.part.AbstractPart
-import kotlin.math.max
 
-open class BaseFormLayoutManager(context: Context) : GridLayoutManager(context, 27720) {
+abstract class AbstractFormLayoutManager(context: Context) : GridLayoutManager(context, 27720) {
 
     protected var adapter: RecyclerView.Adapter<*>? = null
 
     init {
-        configSpanSizeLookup()
-    }
-
-    protected open fun configSpanSizeLookup() {
         spanSizeLookup = object : SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                val part = adapter as? AbstractPart ?: return spanCount
-                return TODO()
-            }
+            override fun getSpanSize(position: Int): Int = onGetSpanSize(position)
 
             override fun getSpanIndex(position: Int, spanCount: Int): Int {
-                return super.getSpanIndex(position, spanCount)
+                val index = onGetSpanIndex(position, spanCount)
+                return if (index < 0) super.getSpanIndex(position, spanCount) else index
+            }
+
+            override fun getSpanGroupIndex(adapterPosition: Int, spanCount: Int): Int {
+                return super.getSpanGroupIndex(adapterPosition, spanCount)
             }
         }
     }
+
+    abstract fun onGetSpanSize(position: Int): Int
+
+    abstract fun onGetSpanIndex(position: Int, spanCount: Int): Int
 
     override fun onAttachedToWindow(view: RecyclerView) {
         super.onAttachedToWindow(view)

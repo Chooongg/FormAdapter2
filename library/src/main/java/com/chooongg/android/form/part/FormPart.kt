@@ -9,15 +9,9 @@ class FormPart(adapter: FormAdapter, style: AbstractStyle) : AbstractPart(adapte
 
     internal var data = FormPartData().apply { partEnabled = false }
 
-    override fun get(field: String): BaseForm<*> {
-        TODO("Not yet implemented")
-    }
+    override fun get(field: String): BaseForm<*>? = data.getItems().find { it.field == field }
 
-    override fun contains(field: String): Boolean {
-        TODO("Not yet implemented")
-    }
+    override fun contains(field: String): Boolean = data.getItems().any { it.field == field }
 
-    override fun contains(item: BaseForm<*>): Boolean {
-        TODO("Not yet implemented")
-    }
+    override fun contains(item: BaseForm<*>): Boolean = data.getItems().contains(item)
 }

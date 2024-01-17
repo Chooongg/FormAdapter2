@@ -10,7 +10,7 @@ import com.chooongg.android.form.typeset.AbstractTypeset
 
 abstract class AbstractFormAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val concatAdapter = ConcatAdapter(
+    protected val concatAdapter = ConcatAdapter(
         ConcatAdapter.Config.Builder().setIsolateViewTypes(false).build()
     )
 
@@ -44,10 +44,10 @@ abstract class AbstractFormAdapter : RecyclerView.Adapter<RecyclerView.ViewHolde
         concatAdapter.registerAdapterDataObserver(dataObserver)
     }
 
-    operator fun get(field: String): BaseForm<*>? {
+    operator fun get(field: String): Pair<AbstractPart, BaseForm<*>>? {
         partAdapters.forEach {
-            val form = it[field]
-            if (form != null) return form
+            val item = it[field]
+            if (item != null) return Pair(it, item)
         }
         return null
     }
@@ -64,6 +64,20 @@ abstract class AbstractFormAdapter : RecyclerView.Adapter<RecyclerView.ViewHolde
             if (item in it) return true
         }
         return false
+    }
+
+    fun findPart(field: String): AbstractPart? {
+        partAdapters.forEach {
+            if (field in it) return it
+        }
+        return null
+    }
+
+    fun findPart(item: BaseForm<*>): AbstractPart? {
+        partAdapters.forEach {
+            if (item in it) return it
+        }
+        return null
     }
 
     //<editor-fold desc="覆写 Overwrite">

@@ -106,7 +106,11 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
     override fun onViewAttachedToWindow(holder: FormViewHolder) {
         holder.style.onViewAttachedToWindow(holder)
         holder.typeset.onViewAttachedToWindow(holder)
-        get(holder.bindingAdapterPosition).onViewAttachedToWindow(holder)
+        get(holder.bindingAdapterPosition).apply {
+            globalPosition = holder.absoluteAdapterPosition
+            localPosition = holder.bindingAdapterPosition
+            onViewAttachedToWindow(holder)
+        }
     }
 
     override fun onBindViewHolder(holder: FormViewHolder, position: Int) {
@@ -131,7 +135,11 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
     override fun onViewDetachedFromWindow(holder: FormViewHolder) {
         holder.style.onViewDetachedFromWindow(holder)
         holder.typeset.onViewDetachedFromWindow(holder)
-        get(holder.bindingAdapterPosition).onViewDetachedFromWindow(holder)
+        get(holder.bindingAdapterPosition).apply {
+            globalPosition = -1
+            localPosition = -1
+            onViewDetachedFromWindow(holder)
+        }
     }
 
     override fun onViewRecycled(holder: FormViewHolder) {
