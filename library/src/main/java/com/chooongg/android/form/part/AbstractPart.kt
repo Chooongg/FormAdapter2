@@ -47,34 +47,57 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
 
     protected val showItemList: List<BaseForm<*>> get() = asyncDiffer.currentList
 
-    private val updateRunnableList = ArrayList<Runnable>()
-
     fun update() {
-        val runnable = object : Runnable {
-            override fun run() {
-                internalUpdate()
-                updateRunnableList.remove(this)
+        executeUpdate()
+    }
+
+    private fun executeUpdate() {
+        val groups = getOriginalItemList()
+        val extraGroups = getExtraItemList()
+        val tempList = ArrayList<ArrayList<BaseForm<*>>>()
+        groups.forEach { group ->
+            val tempGroup = ArrayList<BaseForm<*>>()
+            group.forEach { item ->
+                item.resetInternalData()
+                item.initialize()
+                if (item.isVisible(adapter.isEnabled)) {
+                    when (item) {
+                        else -> tempGroup.add(item)
+                    }
+                }
             }
+            while (tempGroup.firstOrNull()?.showAtEdge == false) {
+                tempGroup.removeFirst()
+            }
+            while (tempGroup.lastOrNull()?.showAtEdge == false) {
+                tempGroup.removeLast()
+            }
+            tempList.add(tempGroup)
         }
-        if (recyclerView != null) {
-            updateRunnableList.add(runnable)
-            recyclerView!!.post(runnable)
-        } else {
-            internalUpdate()
+        val tempList2 = ArrayList<List<BaseForm<*>>>()
+        tempList.forEach {
+            tempList2.add(it)
+//            val tempGroup = ArrayList<BaseForm<*>>()
+
+        }
+        asyncDiffer.submitList(ArrayList<BaseForm<*>>().apply { tempList2.forEach { addAll(it) } }) {
+
         }
     }
 
-    fun internalUpdate() {
+    protected abstract fun getOriginalItemList(): List<List<BaseForm<*>>>
 
-    }
+    protected open fun getExtraItemList(): List<List<BaseForm<*>>>? = null
+
+    abstract fun executeLinkage(isIgnoreUpdate: Boolean = false)
+
+    operator fun get(position: Int): BaseForm<*> = showItemList[position]
 
     abstract operator fun get(field: String): BaseForm<*>?
 
     abstract operator fun contains(field: String): Boolean
 
     abstract operator fun contains(item: BaseForm<*>): Boolean
-
-    operator fun get(position: Int): BaseForm<*> = showItemList[position]
 
     override fun getItemCount(): Int = showItemList.size
 
@@ -106,15 +129,13 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
     override fun onViewAttachedToWindow(holder: FormViewHolder) {
         holder.style.onViewAttachedToWindow(holder)
         holder.typeset.onViewAttachedToWindow(holder)
-        get(holder.bindingAdapterPosition).apply {
-            globalPosition = holder.absoluteAdapterPosition
-            localPosition = holder.bindingAdapterPosition
-            onViewAttachedToWindow(holder)
-        }
+        adapter.getItem4ItemViewType(holder.itemViewType).onViewAttachedToWindow(holder)
     }
 
     override fun onBindViewHolder(holder: FormViewHolder, position: Int) {
         val item = get(position)
+        item.globalPosition = holder.absoluteAdapterPosition
+        item.localPosition = holder.bindingAdapterPosition
         holder.style.onBindViewHolder(holder, item, adapter.isEnabled)
         holder.typeset.onBindViewHolder(holder, item, adapter.isEnabled)
         item.onBindViewHolder(adapterScope, holder, adapter.isEnabled)
@@ -130,22 +151,20 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
             return
         }
         val item = get(position)
+        item.globalPosition = holder.absoluteAdapterPosition
+        item.localPosition = holder.bindingAdapterPosition
     }
 
     override fun onViewDetachedFromWindow(holder: FormViewHolder) {
         holder.style.onViewDetachedFromWindow(holder)
         holder.typeset.onViewDetachedFromWindow(holder)
-        get(holder.bindingAdapterPosition).apply {
-            globalPosition = -1
-            localPosition = -1
-            onViewDetachedFromWindow(holder)
-        }
+        adapter.getItem4ItemViewType(holder.itemViewType).onViewDetachedFromWindow(holder)
     }
 
     override fun onViewRecycled(holder: FormViewHolder) {
         holder.style.onViewRecycled(holder)
         holder.typeset.onViewRecycled(holder)
-        get(holder.bindingAdapterPosition).onViewRecycled(holder)
+        adapter.getItem4ItemViewType(holder.itemViewType).onViewRecycled(holder)
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
@@ -156,10 +175,6 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
         adapterScope.cancel()
         adapterScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
-        updateRunnableList.forEach {
-            recyclerView.removeCallbacks(it)
-        }
-        updateRunnableList.clear()
         asyncDiffer.submitList(emptyList())
         this.recyclerView = null
     }

@@ -213,6 +213,11 @@ abstract class BaseForm<CONTENT : Any>(
     //<editor-fold desc="内部 Internal">
 
     /**
+     * 真实的启用状态
+     */
+    internal var enabled: Boolean? = null
+
+    /**
      * 边界信息
      */
     var boundary: Boundary = Boundary()
@@ -245,6 +250,7 @@ abstract class BaseForm<CONTENT : Any>(
         internal set
 
     open fun resetInternalData() {
+        lastEnabled = enabled
         lastBoundary = boundary
         groupCount = -1
         groupIndex = -1

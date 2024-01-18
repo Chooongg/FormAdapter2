@@ -4,11 +4,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.chooongg.android.form.item.BaseForm
+import com.chooongg.android.form.layoutManager.FormLayoutManager
 import com.chooongg.android.form.part.AbstractPart
 import com.chooongg.android.form.style.AbstractStyle
 import com.chooongg.android.form.typeset.AbstractTypeset
 
-abstract class AbstractFormAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+abstract class AbstractFormAdapter internal constructor() :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     protected val concatAdapter = ConcatAdapter(
         ConcatAdapter.Config.Builder().setIsolateViewTypes(false).build()
@@ -90,6 +92,9 @@ abstract class AbstractFormAdapter : RecyclerView.Adapter<RecyclerView.ViewHolde
         return part[pair.second]
     }
 
+    fun getWrappedAdapterAndPosition(globalPosition: Int) =
+        concatAdapter.getWrappedAdapterAndPosition(globalPosition)
+
     override fun getItemCount() =
         concatAdapter.itemCount
 
@@ -123,6 +128,13 @@ abstract class AbstractFormAdapter : RecyclerView.Adapter<RecyclerView.ViewHolde
 
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) =
         concatAdapter.onViewRecycled(holder)
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        if (recyclerView.layoutManager !is FormLayoutManager) {
+            recyclerView.layoutManager = FormLayoutManager(recyclerView.context)
+        }
+    }
 
     //</editor-fold>
 

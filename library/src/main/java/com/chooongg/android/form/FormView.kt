@@ -11,6 +11,8 @@ class FormView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : RecyclerView(ContextThemeWrapper(context, R.style.FormView), attrs, defStyleAttr) {
 
+    override fun onMeasure(widthSpec: Int, heightSpec: Int) {
+        super.onMeasure(widthSpec, heightSpec)
 
-
+    }
 }
