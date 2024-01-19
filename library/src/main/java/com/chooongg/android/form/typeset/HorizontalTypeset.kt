@@ -64,10 +64,7 @@ class HorizontalTypeset : AbstractTypeset() {
             if (item.nameIcon != null) {
                 val drawable = resDrawable(item.nameIcon!!)
                 icon = drawable
-//                if (drawable != null) {
-//                    val filter = DrawableCompat.getColorFilter(drawable)
-//                }
-//                iconTint = item.nameIconTint?.invoke(context) ?: textColors
+                iconTint = item.nameIconTint?.invoke(context) ?: textColors
             } else icon = null
             setNameViewEms(holder, this)
             text = (nameFormatter ?: FormManager.default.nameFormatter).format(context, item)
