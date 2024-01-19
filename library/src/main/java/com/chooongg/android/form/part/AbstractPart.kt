@@ -106,6 +106,7 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FormViewHolder {
         val style = adapter.getStyle4ItemViewType(viewType)
+        style.createSizeInfo(parent.context)
         val typeset = adapter.getTypeset4ItemViewType(viewType)
         val item = adapter.getItem4ItemViewType(viewType)
         val styleLayout = style.onCreateViewHolder(parent)?.apply {
@@ -136,8 +137,12 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
         val item = get(position)
         item.globalPosition = holder.absoluteAdapterPosition
         item.localPosition = holder.bindingAdapterPosition
-        holder.style.onBindViewHolder(holder, item, adapter.isEnabled)
-        holder.typeset.onBindViewHolder(holder, item, adapter.isEnabled)
+        if (holder.styleLayout != null) {
+            holder.style.onBindViewHolder(holder, item, holder.styleLayout, adapter.isEnabled)
+        }
+        if (holder.typesetLayout != null) {
+            holder.typeset.onBindViewHolder(holder, item, holder.typesetLayout, adapter.isEnabled)
+        }
         item.onBindViewHolder(adapterScope, holder, adapter.isEnabled)
     }
 

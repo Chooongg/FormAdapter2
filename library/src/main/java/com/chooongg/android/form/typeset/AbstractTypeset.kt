@@ -45,6 +45,7 @@ abstract class AbstractTypeset : FormTextAppearanceHelper {
     abstract fun onBindViewHolder(
         holder: FormViewHolder,
         item: BaseForm<*>,
+        layout: ViewGroup,
         adapterEnabled: Boolean
     )
 

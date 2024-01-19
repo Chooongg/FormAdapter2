@@ -28,8 +28,12 @@ class MainActivity : AppCompatActivity(), FormTextAppearanceHelper {
             setTextAppearance(formTextAppearance(com.chooongg.android.form.R.attr.formTextAppearanceName))
         }
         formAdapter.addPart {
+            addText("Text") {
+                content = "Test"
+            }
             for (i in 0..50) {
                 addText("Text") {
+                    nameIcon = com.chooongg.android.form.R.drawable.ic_form_add
                     content = "Test"
                 }
             }

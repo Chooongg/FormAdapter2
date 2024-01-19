@@ -1,9 +1,10 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Base.Theme.FormAdapter" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 
-    <style name="Theme.FormAdapter" parent="Base.Theme.FormAdapter" />
+    <style name="Theme.FormAdapter" parent="Base.Theme.FormAdapter">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
 </resources>

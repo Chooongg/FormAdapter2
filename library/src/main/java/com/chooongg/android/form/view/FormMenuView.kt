@@ -111,10 +111,10 @@ class FormMenuView(
                 minimumHeight = 0
                 iconPadding = 0
                 setTextAppearance(formTextAppearance(R.attr.formTextAppearanceContent))
-//                setPaddingRelative(
-//                    style.insideInfo.middleStart, style.insideInfo.middleTop,
-//                    style.insideInfo.middleEnd, style.insideInfo.middleBottom
-//                )
+                setPaddingRelative(
+                    style.padding.startMedium, style.padding.topMedium,
+                    style.padding.endMedium, style.padding.bottomMedium
+                )
                 iconSize = FormManager.getFontRealHeight(this)
             })
 

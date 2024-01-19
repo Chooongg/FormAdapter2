@@ -1,9 +1,13 @@
 package com.chooongg.android.form.typeset
 
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.VectorDrawable
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.core.view.setPadding
+import androidx.appcompat.widget.Toolbar
+import androidx.core.graphics.drawable.DrawableCompat
 import com.chooongg.android.form.FormManager
 import com.chooongg.android.form.R
 import com.chooongg.android.form.enum.FormEmsMode
@@ -11,7 +15,9 @@ import com.chooongg.android.form.holder.FormViewHolder
 import com.chooongg.android.form.item.BaseForm
 import com.chooongg.android.form.style.AbstractStyle
 import com.chooongg.android.form.view.FormMenuView
+import com.chooongg.android.ktx.resDrawable
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.drawable.DrawableUtils
 
 class HorizontalTypeset : AbstractTypeset() {
 
@@ -19,22 +25,22 @@ class HorizontalTypeset : AbstractTypeset() {
 
     override fun onCreateViewHolder(style: AbstractStyle, parent: ViewGroup): ViewGroup =
         LinearLayoutCompat(parent.context).also {
-            it.showDividers
             it.orientation = LinearLayoutCompat.HORIZONTAL
             it.addView(MaterialButton(it.context).apply {
                 id = R.id.formInternalNameView
+                gravity = Gravity.NO_GRAVITY
                 background = null
                 minWidth = 0
                 minHeight = 0
                 minimumWidth = 0
                 minimumHeight = 0
-                setPadding(0)
                 setTextAppearance(formTextAppearance(R.attr.formTextAppearanceName))
                 iconSize = FormManager.getFontRealHeight(this)
-//                setPaddingRelative(
-//                    style.insideInfo.middleStart, style.insideInfo.middleTop,
-//                    style.insideInfo.middleEnd, style.insideInfo.middleBottom
-//                )
+                iconPadding = 0
+                setPaddingRelative(
+                    style.padding.startMedium, style.padding.topMedium,
+                    style.padding.endMedium, style.padding.bottomMedium
+                )
             }, LinearLayoutCompat.LayoutParams(-2, -2))
             it.addView(FormMenuView(it.context, style).apply {
                 id = R.id.formInternalMenuView
@@ -50,13 +56,23 @@ class HorizontalTypeset : AbstractTypeset() {
     override fun onBindViewHolder(
         holder: FormViewHolder,
         item: BaseForm<*>,
+        layout: ViewGroup,
         adapterEnabled: Boolean
     ) {
-        holder.typesetLayout!!.findViewById<MaterialButton>(R.id.formInternalNameView).apply {
+        layout.findViewById<MaterialButton>(R.id.formInternalNameView).apply {
+            iconGravity = item.nameIconGravity
+            if (item.nameIcon != null) {
+                val drawable = resDrawable(item.nameIcon!!)
+                icon = drawable
+//                if (drawable != null) {
+//                    val filter = DrawableCompat.getColorFilter(drawable)
+//                }
+//                iconTint = item.nameIconTint?.invoke(context) ?: textColors
+            } else icon = null
             setNameViewEms(holder, this)
             text = (nameFormatter ?: FormManager.default.nameFormatter).format(context, item)
         }
-        holder.typesetLayout.findViewById<FormMenuView>(R.id.formInternalMenuView)
+        layout.findViewById<FormMenuView>(R.id.formInternalMenuView)
             ?.configMenu(holder, item, adapterEnabled)
     }
 }

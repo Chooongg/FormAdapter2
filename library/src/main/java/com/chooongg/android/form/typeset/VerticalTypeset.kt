@@ -28,10 +28,10 @@ class VerticalTypeset : AbstractTypeset() {
                 child.addView(MaterialTextView(child.context).apply {
                     id = R.id.formInternalNameView
                     setTextAppearance(formTextAppearance(R.attr.formTextAppearanceName))
-//                    setPaddingRelative(
-//                        style.insideInfo.middleStart, style.insideInfo.middleTop,
-//                        style.insideInfo.middleEnd, style.insideInfo.middleBottom
-//                    )
+                    setPaddingRelative(
+                        style.padding.startMedium, style.padding.topMedium,
+                        style.padding.endMedium, style.padding.bottomMedium
+                    )
                 }, LinearLayoutCompat.LayoutParams(0, -2).apply { weight = 1f })
                 child.addView(FormMenuView(child.context, style).apply {
                     id = R.id.formInternalMenuView
@@ -48,13 +48,14 @@ class VerticalTypeset : AbstractTypeset() {
     override fun onBindViewHolder(
         holder: FormViewHolder,
         item: BaseForm<*>,
+        layout: ViewGroup,
         adapterEnabled: Boolean
     ) {
-        holder.typesetLayout!!.findViewById<MaterialTextView>(R.id.formInternalNameView).apply {
+        layout.findViewById<MaterialTextView>(R.id.formInternalNameView).apply {
             setNameViewEms(holder, this)
             text = (nameFormatter ?: FormManager.default.nameFormatter).format(context, item)
         }
-        holder.typesetLayout.findViewById<FormMenuView>(R.id.formInternalMenuView)
+        layout.findViewById<FormMenuView>(R.id.formInternalMenuView)
             ?.configMenu(holder, item, adapterEnabled)
     }
 }

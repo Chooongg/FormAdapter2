@@ -11,6 +11,7 @@ class EmptyStyle : AbstractStyle() {
     override fun onBindViewHolder(
         holder: FormViewHolder,
         item: BaseForm<*>,
+        layout: ViewGroup,
         adapterEnabled: Boolean
     ) {
     }

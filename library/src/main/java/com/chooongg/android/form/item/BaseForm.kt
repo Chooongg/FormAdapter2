@@ -2,7 +2,9 @@ package com.chooongg.android.form.item
 
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.DrawableRes
 import androidx.annotation.GravityInt
+import com.chooongg.android.form.FormColorStateListBlock
 import com.chooongg.android.form.FormDataVerificationException
 import com.chooongg.android.form.FormLinkageBlock
 import com.chooongg.android.form.FormManager
@@ -17,6 +19,7 @@ import com.chooongg.android.form.linkage.FormLinkage
 import com.chooongg.android.form.part.AbstractPart
 import com.chooongg.android.form.style.AbstractStyle
 import com.chooongg.android.form.typeset.AbstractTypeset
+import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.CoroutineScope
 import org.json.JSONObject
 
@@ -37,6 +40,23 @@ abstract class BaseForm<CONTENT : Any>(
      * 初始化
      */
     open fun initialize() = Unit
+
+    /**
+     * 图标
+     */
+    @DrawableRes
+    open var nameIcon: Int? = null
+
+    /**
+     * 图标着色
+     */
+    open var nameIconTint: FormColorStateListBlock? = null
+
+    /**
+     * 图标重力
+     */
+    @MaterialButton.IconGravity
+    open var nameIconGravity: Int = MaterialButton.ICON_GRAVITY_TEXT_START
 
     /**
      * 提示: Int(StringRes), String, CharSequence

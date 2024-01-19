@@ -1,12 +1,15 @@
 package com.chooongg.android.form.style
 
+import android.content.Context
 import android.view.View
 import android.view.ViewGroup
+import com.chooongg.android.form.R
 import com.chooongg.android.form.boundary.FormSizeInfo
 import com.chooongg.android.form.holder.FormViewHolder
 import com.chooongg.android.form.item.BaseForm
 import com.chooongg.android.form.provider.AbstractGroupTitleProvider
 import com.chooongg.android.form.typeset.AbstractTypeset
+import com.chooongg.android.ktx.resDimensionPixelSize
 
 /**
  * 样式
@@ -40,6 +43,37 @@ abstract class AbstractStyle {
      */
     open fun isDecorateNoneItem(): Boolean = true
 
+    private var isInstanceSizeInfo: Boolean = false
+
+    internal fun createSizeInfo(context: Context) {
+        if (isInstanceSizeInfo) return
+        margin = onCreateMarginSize(context)
+        padding = onCreatePaddingSize(context)
+        isInstanceSizeInfo = true
+    }
+
+    protected fun onCreateMarginSize(context: Context): FormSizeInfo = FormSizeInfo(
+        context.resDimensionPixelSize(R.dimen.formMarginStart),
+        context.resDimensionPixelSize(R.dimen.formMarginTop),
+        context.resDimensionPixelSize(R.dimen.formMarginEnd),
+        context.resDimensionPixelSize(R.dimen.formMarginBottom),
+        context.resDimensionPixelSize(R.dimen.formMarginStartMedium),
+        context.resDimensionPixelSize(R.dimen.formMarginTopMedium),
+        context.resDimensionPixelSize(R.dimen.formMarginEndMedium),
+        context.resDimensionPixelSize(R.dimen.formMarginBottomMedium),
+    )
+
+    protected fun onCreatePaddingSize(context: Context): FormSizeInfo = FormSizeInfo(
+        context.resDimensionPixelSize(R.dimen.formPaddingStart),
+        context.resDimensionPixelSize(R.dimen.formPaddingTop),
+        context.resDimensionPixelSize(R.dimen.formPaddingEnd),
+        context.resDimensionPixelSize(R.dimen.formPaddingBottom),
+        context.resDimensionPixelSize(R.dimen.formPaddingStartMedium),
+        context.resDimensionPixelSize(R.dimen.formPaddingTopMedium),
+        context.resDimensionPixelSize(R.dimen.formPaddingEndMedium),
+        context.resDimensionPixelSize(R.dimen.formPaddingBottomMedium),
+    )
+
     abstract fun onCreateViewHolder(parent: ViewGroup): ViewGroup?
 
     protected abstract fun addView(parent: ViewGroup, child: View)
@@ -49,6 +83,7 @@ abstract class AbstractStyle {
     abstract fun onBindViewHolder(
         holder: FormViewHolder,
         item: BaseForm<*>,
+        layout: ViewGroup,
         adapterEnabled: Boolean
     )
 
