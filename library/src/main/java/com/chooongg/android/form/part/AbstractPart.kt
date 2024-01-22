@@ -11,7 +11,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.chooongg.android.form.FormAdapter
 import com.chooongg.android.form.holder.FormViewHolder
 import com.chooongg.android.form.item.BaseForm
+import com.chooongg.android.form.item.InternalFormNone
 import com.chooongg.android.form.style.AbstractStyle
+import com.chooongg.android.ktx.logE
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -20,7 +22,16 @@ import kotlinx.coroutines.cancel
 abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) :
     RecyclerView.Adapter<FormViewHolder>() {
 
+    protected open var needBlankFill: Boolean = true
+
+    private val spanCount = 27720
+
     private var recyclerView: RecyclerView? = null
+
+    internal var columnCount: Int = 0
+        get() {
+            return if (field <= 0) adapter.columnCount else field
+        }
 
     var adapterScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
         internal set
@@ -75,11 +86,47 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
             tempList.add(tempGroup)
         }
         val tempList2 = ArrayList<List<BaseForm<*>>>()
-        tempList.forEach {
-            tempList2.add(it)
-//            val tempGroup = ArrayList<BaseForm<*>>()
+        tempList.forEach { group ->
+            val tempGroup = ArrayList<BaseForm<*>>()
+            var spanIndex = 0
+            group.forEachIndexed { position, item ->
+                item.spanIndex = spanIndex
+                item.spanSize = when {
+                    item.loneLine -> {
+                        spanIndex = 0
+                        item.spanIndex = 0
+                        spanCount
+                    }
 
+                    else -> spanCount / columnCount
+                }
+                if (position > 0 && item.spanIndex == 0) {
+                    val lastItem = group[position - 1]
+                    if (lastItem.spanIndex + lastItem.spanSize < spanCount) {
+                        if (lastItem.autoFill) {
+                            lastItem.spanSize = spanCount - lastItem.spanIndex
+                        } else if (style.isDecorateNoneItem()) {
+                            val noneIndex = lastItem.spanIndex + lastItem.spanSize
+                            tempGroup.add(InternalFormNone(noneIndex, spanCount - noneIndex))
+                        }
+                    }
+                }
+                spanIndex = if (spanIndex + item.spanSize < spanCount) {
+                    spanIndex + item.spanSize
+                } else 0
+                tempGroup.add(item)
+                if (position == group.lastIndex && item.spanIndex + item.spanSize < spanCount) {
+                    if (item.autoFill) {
+                        item.spanSize = spanCount - item.spanIndex
+                    } else if (needBlankFill) {
+                        val noneIndex = item.spanIndex + item.spanSize
+                        tempGroup.add(InternalFormNone(noneIndex, spanCount - noneIndex))
+                    }
+                }
+            }
+            tempList2.add(tempGroup)
         }
+        var localPosition = 0
         asyncDiffer.submitList(ArrayList<BaseForm<*>>().apply { tempList2.forEach { addAll(it) } }) {
 
         }
@@ -143,7 +190,7 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
         if (holder.typesetLayout != null) {
             holder.typeset.onBindViewHolder(holder, item, holder.typesetLayout, adapter.isEnabled)
         }
-        item.onBindViewHolder(adapterScope, holder, adapter.isEnabled)
+        item.onBindViewHolder(adapterScope, holder, holder.view, adapter.isEnabled)
     }
 
     override fun onBindViewHolder(
@@ -164,6 +211,7 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
         holder.style.onViewDetachedFromWindow(holder)
         holder.typeset.onViewDetachedFromWindow(holder)
         adapter.getItem4ItemViewType(holder.itemViewType).onViewDetachedFromWindow(holder)
+        logE("Form","bPosition:${holder.bindingAdapterPosition}, aPosition:${holder.absoluteAdapterPosition}, lPosition:${holder.layoutPosition}")
     }
 
     override fun onViewRecycled(holder: FormViewHolder) {

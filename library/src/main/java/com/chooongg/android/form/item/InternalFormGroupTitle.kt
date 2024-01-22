@@ -22,9 +22,10 @@ class InternalFormGroupTitle(id: String?) : BaseForm<CharSequence>(null, null) {
     override fun onBindViewHolder(
         scope: CoroutineScope,
         holder: FormViewHolder,
+        view: View,
         adapterEnabled: Boolean
     ) {
         val provider = holder.style.groupTitleProvider ?: FormManager.default.groupTitleProvider
-        provider.onBindViewHolder(scope, holder, this, adapterEnabled)
+        provider.onBindViewHolder(scope, holder, view, this, adapterEnabled)
     }
 }

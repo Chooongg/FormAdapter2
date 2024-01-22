@@ -16,6 +16,7 @@ abstract class AbstractGroupTitleProvider {
     abstract fun onBindViewHolder(
         scope: CoroutineScope,
         holder: FormViewHolder,
+        view: View,
         item: InternalFormGroupTitle,
         adapterEnabled: Boolean
     )

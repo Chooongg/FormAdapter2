@@ -1,13 +1,9 @@
 package com.chooongg.android.form.typeset
 
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.VectorDrawable
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.appcompat.widget.Toolbar
-import androidx.core.graphics.drawable.DrawableCompat
 import com.chooongg.android.form.FormManager
 import com.chooongg.android.form.R
 import com.chooongg.android.form.enum.FormEmsMode
@@ -17,7 +13,6 @@ import com.chooongg.android.form.style.AbstractStyle
 import com.chooongg.android.form.view.FormMenuView
 import com.chooongg.android.ktx.resDrawable
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.drawable.DrawableUtils
 
 class HorizontalTypeset : AbstractTypeset() {
 
@@ -60,11 +55,11 @@ class HorizontalTypeset : AbstractTypeset() {
         adapterEnabled: Boolean
     ) {
         layout.findViewById<MaterialButton>(R.id.formInternalNameView).apply {
-            iconGravity = item.nameIconGravity
-            if (item.nameIcon != null) {
-                val drawable = resDrawable(item.nameIcon!!)
+            iconGravity = item.iconGravity
+            if (item.icon != null) {
+                val drawable = resDrawable(item.icon!!)
                 icon = drawable
-                iconTint = item.nameIconTint?.invoke(context) ?: textColors
+                iconTint = item.iconTint?.invoke(context) ?: textColors
             } else icon = null
             setNameViewEms(holder, this)
             text = (nameFormatter ?: FormManager.default.nameFormatter).format(context, item)

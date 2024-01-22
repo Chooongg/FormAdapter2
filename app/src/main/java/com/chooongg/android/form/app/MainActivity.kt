@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity(), FormTextAppearanceHelper {
             }
             for (i in 0..50) {
                 addText("Text") {
-                    nameIcon = com.chooongg.android.form.R.drawable.ic_form_add
+                    icon = com.chooongg.android.form.R.drawable.ic_form_add
                     content = "Test"
                 }
             }

@@ -45,18 +45,20 @@ abstract class BaseForm<CONTENT : Any>(
      * 图标
      */
     @DrawableRes
-    open var nameIcon: Int? = null
+    open var icon: Int? = null
 
     /**
      * 图标着色
      */
-    open var nameIconTint: FormColorStateListBlock? = null
+    open var iconTint: FormColorStateListBlock? = null
 
     /**
      * 图标重力
      */
     @MaterialButton.IconGravity
-    open var nameIconGravity: Int = MaterialButton.ICON_GRAVITY_TEXT_START
+    open var iconGravity: Int = MaterialButton.ICON_GRAVITY_TEXT_START
+
+    open var iconSize: Int? = null
 
     /**
      * 提示: Int(StringRes), String, CharSequence
@@ -136,6 +138,15 @@ abstract class BaseForm<CONTENT : Any>(
     fun triggerLinkage(part: AbstractPart) {
         linkageBlock?.invoke(FormLinkage(part))
     }
+
+    //</editor-fold>
+
+    //<editor-fold desc="交互 Interactive">
+
+    /**
+     * 是否响应点击事件
+     */
+    open var isRespondToClickEvents: Boolean = false
 
     //</editor-fold>
 
@@ -263,6 +274,12 @@ abstract class BaseForm<CONTENT : Any>(
     var positionInGroup = -1
         internal set
 
+    var spanIndex: Int = -1
+        internal set
+
+    var spanSize: Int = -1
+        internal set
+
     var lastEnabled: Boolean? = null
         internal set
 
@@ -294,18 +311,21 @@ abstract class BaseForm<CONTENT : Any>(
     abstract fun onBindViewHolder(
         scope: CoroutineScope,
         holder: FormViewHolder,
+        view: View,
         adapterEnabled: Boolean
     )
 
     open fun onBindViewHolderErrorNotify(
         scope: CoroutineScope,
         holder: FormViewHolder,
+        view: View,
         adapterEnabled: Boolean
     ) = Unit
 
     open fun onBindViewHolderOther(
         scope: CoroutineScope,
         holder: FormViewHolder,
+        view: View,
         adapterEnabled: Boolean,
         payload: Any,
     ) = Unit
