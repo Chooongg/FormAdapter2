@@ -1,9 +1,11 @@
 package com.chooongg.android.form
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.util.TypedValue
 import android.widget.TextView
 import com.chooongg.android.form.actuator.FormDataActuator
+import com.chooongg.android.form.boundary.Boundary
 import com.chooongg.android.form.enum.FormContentGravity
 import com.chooongg.android.form.enum.FormEmsSize
 import com.chooongg.android.form.extractor.IIconExtractor
@@ -27,6 +29,16 @@ object FormManager {
     const val FLAG_PAYLOAD_ERROR_NOTIFY = "form_flag_error_notify"
 
     /**
+     * 文本提取器
+     */
+    private var textExtractor: ITextExtractor = NormalTextExtractor()
+
+    /**
+     * 图标提取器
+     */
+    private var iconExtractor: IIconExtractor = NormalIconExtractor()
+
+    /**
      * 数据执行器
      */
     private val itemDataActuators = HashMap<Class<*>, FormDataActuator<*>>()
@@ -35,12 +47,6 @@ object FormManager {
      * 默认值
      */
     var default: Default = Default()
-
-    /**
-     * 提取文本
-     */
-    fun extractText(context: Context, text: Any?): CharSequence? =
-        default.textExtractor.extract(context, text)
 
     /**
      * 获取字体实际高度
@@ -54,6 +60,17 @@ object FormManager {
 //        return textView.paint.getFontMetricsInt(fm)
     }
 
+    internal class Config {
+        var centerSmoothScroll: Boolean = false
+        var nameFormatter: AbstractNameFormatter = NormalNameFormatter()
+
+        override fun equals(other: Any?): Boolean {
+            return super.equals(other)
+        }
+
+        override fun hashCode(): Int = javaClass.hashCode()
+    }
+
     /**
      * 默认值
      */
@@ -62,18 +79,6 @@ object FormManager {
          * 居中平滑滚动
          */
         open var centerSmoothScroll: Boolean = true
-            protected set
-
-        /**
-         * 文本提取器
-         */
-        open var textExtractor: ITextExtractor = NormalTextExtractor()
-            protected set
-
-        /**
-         * 图标提取器
-         */
-        open var iconExtractor: IIconExtractor = NormalIconExtractor()
             protected set
 
         /**
@@ -91,7 +96,7 @@ object FormManager {
         /**
          * 水平中间填充模式
          */
-        open var horizontalMiddlePaddingMode: Int = 0
+        open var horizontalMiddlePaddingMode: Int = Boundary.MIDDLE
             protected set
 
         /**
@@ -112,6 +117,31 @@ object FormManager {
         open var typeset: AbstractTypeset = HorizontalTypeset()
             protected set
     }
+
+    /**
+     * 设置文本提取器
+     */
+    fun setTextExtractor(textExtractor: ITextExtractor) {
+        this.textExtractor = textExtractor
+    }
+
+    /**
+     * 提取文本
+     */
+    fun extractText(context: Context, text: Any?): CharSequence? =
+        textExtractor.extract(context, text)
+
+    /**
+     * 设置图标提取器
+     */
+    fun setIconExtractor(iconExtractor: IIconExtractor) {
+        this.iconExtractor = iconExtractor
+    }
+
+    /**
+     * 提取图标
+     */
+    fun extractIcon(context: Context, icon: Any?): Drawable? = iconExtractor.extract(context, icon)
 
     fun putItemDataActuator(actuator: FormDataActuator<*>) {
         val parameterizedType = actuator.javaClass.genericSuperclass as ParameterizedType

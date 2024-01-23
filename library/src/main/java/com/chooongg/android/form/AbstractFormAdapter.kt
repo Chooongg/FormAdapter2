@@ -155,7 +155,7 @@ abstract class AbstractFormAdapter internal constructor() :
                 stylePool.lastIndex
             } else it
         }
-        val typeset = item.typeset ?: style.typeset ?: FormManager.default.typeset
+        val typeset = item.typeset ?: style.default.typeset
         val typesetIndex = typesetPool.indexOf(typeset).let {
             if (it < 0) {
                 typesetPool.add(typeset)

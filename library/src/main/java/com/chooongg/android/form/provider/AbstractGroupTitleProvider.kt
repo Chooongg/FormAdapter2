@@ -2,12 +2,13 @@ package com.chooongg.android.form.provider
 
 import android.view.View
 import android.view.ViewGroup
+import com.chooongg.android.form.helper.FormTextAppearanceHelper
 import com.chooongg.android.form.holder.FormViewHolder
 import com.chooongg.android.form.item.InternalFormGroupTitle
 import com.chooongg.android.form.style.AbstractStyle
 import kotlinx.coroutines.CoroutineScope
 
-abstract class AbstractGroupTitleProvider {
+abstract class AbstractGroupTitleProvider : FormTextAppearanceHelper {
 
     abstract fun onCreateViewHolder(style: AbstractStyle, parent: ViewGroup): View
 

@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.setPadding
 import com.chooongg.android.form.FormAdapter
+import com.chooongg.android.form.FormManager
 import com.chooongg.android.form.FormView
 import com.chooongg.android.form.addText
 import com.chooongg.android.form.helper.FormTextAppearanceHelper

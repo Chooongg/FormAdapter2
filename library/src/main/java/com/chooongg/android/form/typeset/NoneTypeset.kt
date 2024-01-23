@@ -7,7 +7,7 @@ import com.chooongg.android.form.holder.FormViewHolder
 import com.chooongg.android.form.item.BaseForm
 import com.chooongg.android.form.style.AbstractStyle
 
-object NoneTypeset : AbstractTypeset() {
+class NoneTypeset : AbstractTypeset() {
 
     override var emsMode: FormEmsMode = FormEmsMode(FormEmsMode.NONE)
 

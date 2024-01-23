@@ -3,6 +3,7 @@ package com.chooongg.android.form.style
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
+import com.chooongg.android.form.FormManager
 import com.chooongg.android.form.R
 import com.chooongg.android.form.boundary.FormSizeInfo
 import com.chooongg.android.form.holder.FormViewHolder
@@ -15,6 +16,8 @@ import com.chooongg.android.ktx.resDimensionPixelSize
  * 样式
  */
 abstract class AbstractStyle {
+
+    var default: FormManager.Default = FormManager.default
 
     /**
      * 排版
@@ -97,7 +100,6 @@ abstract class AbstractStyle {
         if (other !is AbstractStyle) return false
         if (javaClass != other.javaClass) return false
         if (groupTitleProvider != other.groupTitleProvider) return false
-//        if (groupChildNameProvider != other.groupChildNameProvider) return false
         return typeset == other.typeset
     }
 

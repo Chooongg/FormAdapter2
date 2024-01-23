@@ -11,6 +11,7 @@ import com.chooongg.android.form.holder.FormViewHolder
 import com.chooongg.android.form.item.BaseForm
 import com.chooongg.android.form.style.AbstractStyle
 import com.chooongg.android.form.view.FormMenuView
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.textview.MaterialTextView
 
 class VerticalTypeset : AbstractTypeset() {
@@ -25,9 +26,17 @@ class VerticalTypeset : AbstractTypeset() {
                 child.clipToPadding = false
                 child.orientation = LinearLayoutCompat.HORIZONTAL
                 child.gravity = Gravity.CENTER_VERTICAL
-                child.addView(MaterialTextView(child.context).apply {
+                it.addView(MaterialButton(it.context).apply {
                     id = R.id.formInternalNameView
+                    gravity = Gravity.NO_GRAVITY
+                    background = null
+                    minWidth = 0
+                    minHeight = 0
+                    minimumWidth = 0
+                    minimumHeight = 0
                     setTextAppearance(formTextAppearance(R.attr.formTextAppearanceName))
+                    iconSize = FormManager.getFontRealHeight(this)
+                    iconPadding = 0
                     setPaddingRelative(
                         style.padding.startMedium, style.padding.topMedium,
                         style.padding.endMedium, style.padding.bottomMedium
@@ -41,7 +50,7 @@ class VerticalTypeset : AbstractTypeset() {
 
     override fun addView(style: AbstractStyle, parent: ViewGroup, child: View) {
         parent.addView(child, LinearLayoutCompat.LayoutParams(-1, -2).apply {
-//            topMargin = TODO()
+            topMargin = -(style.padding.topMedium + style.padding.bottomMedium) / 2
         })
     }
 

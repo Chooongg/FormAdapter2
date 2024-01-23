@@ -13,7 +13,7 @@ class InternalFormNone internal constructor(spanIndex: Int, spanSize: Int) :
 
     override val id: String = ""
 
-    override var typeset: AbstractTypeset? = NoneTypeset
+    override var typeset: AbstractTypeset? = NoneTypeset()
 
     init {
         this.spanIndex = spanIndex
