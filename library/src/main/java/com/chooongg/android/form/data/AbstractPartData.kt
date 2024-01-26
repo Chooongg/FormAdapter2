@@ -2,11 +2,11 @@ package com.chooongg.android.form.data
 
 import android.content.Context
 import androidx.annotation.MenuRes
+import com.chooongg.android.form.FormOnMenuItemClickListener
 import com.chooongg.android.form.enum.FormEnableMode
 import com.chooongg.android.form.enum.FormVisibilityMode
 import com.chooongg.android.form.item.InternalFormGroupTitle
 import com.chooongg.android.form.listener.FormOnMenuCreatedListener
-import com.chooongg.android.form.listener.FormOnMenuItemClickListener
 
 abstract class AbstractPartData : AbstractId(), IFormPart, IFormMenu {
 

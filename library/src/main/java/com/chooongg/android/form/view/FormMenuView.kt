@@ -45,12 +45,12 @@ class FormMenuView(
                 item.menu!!,
                 item.isMenuEnable(adapterEnabled),
                 item.onMenuCreatedListener
-            ) {
-                val isIntercept = item.onMenuItemClickListener?.onMenuItemClick(context, it, item)
-                if (isIntercept == true) true else {
-                    val isUse = (holder.bindingAdapter as? AbstractPart)?.adapter
-                        ?.onMenuItemClickListener?.onMenuItemClick(context, it, item)
-                    isUse == true
+            ) { menuView, menuItem ->
+                val isIntercept =
+                    item.onMenuItemClickListener?.invoke(holder.itemView, menuView, menuItem)
+                if (isIntercept != true) {
+                    (holder.bindingAdapter as? AbstractPart)?.adapter?.onMenuClickListener
+                        ?.invoke(holder.itemView, menuView, menuItem, item)
                 }
             }
         } else clearMenu()
@@ -60,7 +60,7 @@ class FormMenuView(
         @MenuRes resId: Int,
         enabled: Boolean,
         menuOnCreatedListener: FormOnMenuCreatedListener?,
-        menuOnItemClickListener: MenuItem.OnMenuItemClickListener
+        menuOnItemClickListener: (menuView: View, menuItem: MenuItem) -> Unit
     ) {
         val menu = MenuBuilder(context)
         MenuInflater(context).inflate(resId, menu)
@@ -81,7 +81,7 @@ class FormMenuView(
 
         private var items = ArrayList<MenuItemImpl>()
         private var enabled = false
-        private var onItemClickListener: MenuItem.OnMenuItemClickListener? = null
+        private var onItemClickListener: ((menuView: View, menuItem: MenuItem) -> Unit)? = null
 
         private class Holder(view: View) : ViewHolder(view)
 
@@ -89,7 +89,7 @@ class FormMenuView(
         fun setMenu(
             items: ArrayList<MenuItemImpl>?,
             enabled: Boolean,
-            onItemClickListener: MenuItem.OnMenuItemClickListener?
+            onItemClickListener: ((menuView: View, menuItem: MenuItem) -> Unit)?
         ) {
             this.items = items ?: ArrayList()
             this.enabled = enabled
@@ -105,32 +105,28 @@ class FormMenuView(
             ).apply {
                 insetTop = 0
                 insetBottom = 0
-                minWidth = 0
-                minHeight = 0
-                minimumWidth = 0
-                minimumHeight = 0
                 iconPadding = 0
                 setTextAppearance(formTextAppearance(R.attr.formTextAppearanceContent))
+                val textHeight = FormManager.getFontRealHeight(this)
+                minWidth = textHeight + style.padding.startMedium + style.padding.endMedium
+                minHeight = textHeight + style.padding.topMedium + style.padding.bottomMedium
+                minimumWidth = textHeight + style.padding.startMedium + style.padding.endMedium
+                minimumHeight = textHeight + style.padding.topMedium + style.padding.bottomMedium
+                iconSize = textHeight
                 setPaddingRelative(
                     style.padding.startMedium, style.padding.topMedium,
                     style.padding.endMedium, style.padding.bottomMedium
                 )
-                iconSize = FormManager.getFontRealHeight(this)
             })
 
         override fun onBindViewHolder(holder: Holder, position: Int) {
             val item = items[position]
             with(holder.itemView as MaterialButton) {
                 isEnabled = enabled && item.isEnabled
+                icon = item.icon
                 text = if (icon == null) item.titleCondensed else null
-//                iconTint = item.iconTintList ?: ColorStateList.valueOf(
-//                    context.obtainStyledAttributes(
-//                        intArrayOf(com.google.android.material.R.attr.colorOutline)
-//                    ).use { it.getColor(0, Color.GRAY) }
-//                )
-//                iconTintMode = item.iconTintMode
                 ViewCompat.setTooltipText(this, item.tooltipText ?: item.title)
-                setOnClickListener { onItemClickListener?.onMenuItemClick(item) }
+                setOnClickListener { onItemClickListener?.invoke(this, item) }
             }
         }
     }

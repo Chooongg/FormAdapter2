@@ -1,31 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical"
-    tools:context="com.chooongg.android.form.app.MainActivity">
+    android:orientation="vertical">
 
-    <com.chooongg.android.form.FormView
-        android:id="@+id/formView"
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="5"
-        android:text="1234567890" />
+    <androidx.slidingpanelayout.widget.SlidingPaneLayout
+        android:id="@+id/slidingPaneLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <com.google.android.material.button.MaterialButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="5"
-        android:text="1234567890"
-        app:icon="@drawable/ic_form_add"
-        app:iconPadding="4dp" />
+        <com.chooongg.android.form.FormView
+            android:id="@+id/formView"
+            android:layout_width="280dp"
+            android:layout_height="match_parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerDetailView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </androidx.slidingpanelayout.widget.SlidingPaneLayout>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

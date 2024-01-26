@@ -38,9 +38,9 @@
     <!--    <attr name="formButtonCustom3Style" format="reference" />-->
 
     <declare-styleable name="FormView">
-        <attr name="formAutoWidth" format="boolean" />
-        <attr name="formMaxItemWidth" format="integer" />
         <attr name="formColumn" format="integer" />
+        <attr name="formMarginStart" format="dimension" />
+        <attr name="formMarginEnd" format="dimension" />
     </declare-styleable>
 
 </resources>

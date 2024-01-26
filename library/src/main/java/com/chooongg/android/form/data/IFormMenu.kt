@@ -1,9 +1,9 @@
 package com.chooongg.android.form.data
 
+import com.chooongg.android.form.FormOnMenuItemClickListener
 import com.chooongg.android.form.enum.FormEnableMode
 import com.chooongg.android.form.enum.FormVisibilityMode
 import com.chooongg.android.form.listener.FormOnMenuCreatedListener
-import com.chooongg.android.form.listener.FormOnMenuItemClickListener
 
 interface IFormMenu {
 
@@ -31,7 +31,6 @@ interface IFormMenu {
      * 菜单点击时的监听
      */
     var onMenuItemClickListener: FormOnMenuItemClickListener?
-
 
     /**
      * 菜单那是否可见

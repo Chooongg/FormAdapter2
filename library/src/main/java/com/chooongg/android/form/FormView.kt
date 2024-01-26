@@ -2,8 +2,9 @@ package com.chooongg.android.form
 
 import android.content.Context
 import android.util.AttributeSet
-import androidx.core.view.updatePaddingRelative
 import androidx.recyclerview.widget.RecyclerView
+import com.chooongg.android.form.layoutManager.AbstractFormLayoutManager
+import com.chooongg.android.form.layoutManager.FormLayoutManager
 import com.chooongg.android.ktx.resDimensionPixelSize
 
 class FormView @JvmOverloads constructor(
@@ -12,21 +13,51 @@ class FormView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : RecyclerView(context, attrs, defStyleAttr) {
 
+    private var column = 0
+    private var layoutMarginStart = 0
+    private var layoutMarginEnd = 0
+
     init {
-        val a = context.obtainStyledAttributes(
-            attrs,
-            R.styleable.FormView,
-            defStyleAttr,
-            R.style.FormView
+        val a = context.obtainStyledAttributes(attrs, R.styleable.FormView, defStyleAttr, 0)
+        layoutMarginStart = a.getDimensionPixelSize(
+            R.styleable.FormView_formMarginStart,
+            resDimensionPixelSize(R.dimen.formMarginStart)
         )
-        updatePaddingRelative(
-            start = if (paddingStart != 0) paddingStart else resDimensionPixelSize(R.dimen.formMarginStart),
-            end = if (paddingEnd != 0) paddingEnd else resDimensionPixelSize(R.dimen.formMarginEnd)
+        layoutMarginEnd = a.getDimensionPixelSize(
+            R.styleable.FormView_formMarginEnd,
+            resDimensionPixelSize(R.dimen.formMarginEnd)
         )
+        super.setLayoutManager(FormLayoutManager(context).apply {
+            marginStart = layoutMarginStart
+            marginEnd = layoutMarginEnd
+        })
+        column = a.getInteger(R.styleable.FormView_formColumn, 0)
         a.recycle()
     }
 
-    override fun onMeasure(widthSpec: Int, heightSpec: Int) {
-        super.onMeasure(widthSpec, heightSpec)
+    override fun setAdapter(adapter: Adapter<*>?) {
+        if (adapter is FormAdapter && column > 0) {
+            adapter.columnCount = column
+        }
+        super.setAdapter(adapter)
+    }
+
+    override fun setLayoutManager(layout: LayoutManager?) {
+        if (layout is AbstractFormLayoutManager) {
+            layout.marginStart = layoutMarginStart
+            layout.marginEnd = layoutMarginEnd
+        }
+        super.setLayoutManager(layout)
+    }
+
+    fun setFormMargin(start: Int, end: Int) {
+        layoutMarginStart = start
+        layoutMarginEnd = end
+        if (layoutManager is AbstractFormLayoutManager) {
+            val manager = layoutManager as AbstractFormLayoutManager
+            manager.marginStart = layoutMarginStart
+            manager.marginEnd = layoutMarginEnd
+            layoutManager = manager
+        }
     }
 }

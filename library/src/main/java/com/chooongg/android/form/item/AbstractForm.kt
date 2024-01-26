@@ -1,12 +1,12 @@
 package com.chooongg.android.form.item
 
 import androidx.annotation.MenuRes
+import com.chooongg.android.form.FormOnMenuItemClickListener
 import com.chooongg.android.form.data.AbstractId
 import com.chooongg.android.form.data.IFormMenu
 import com.chooongg.android.form.enum.FormEnableMode
 import com.chooongg.android.form.enum.FormVisibilityMode
 import com.chooongg.android.form.listener.FormOnMenuCreatedListener
-import com.chooongg.android.form.listener.FormOnMenuItemClickListener
 
 abstract class AbstractForm : AbstractId(), IFormMenu {
 
@@ -25,7 +25,7 @@ abstract class AbstractForm : AbstractId(), IFormMenu {
     @MenuRes
     override var menu: Int? = null
 
-    override var menuVisibilityMode: FormVisibilityMode = FormVisibilityMode.ENABLED
+    override var menuVisibilityMode: FormVisibilityMode = FormVisibilityMode.ALWAYS
 
     override var menuEnableMode: FormEnableMode = FormEnableMode.ENABLED
 

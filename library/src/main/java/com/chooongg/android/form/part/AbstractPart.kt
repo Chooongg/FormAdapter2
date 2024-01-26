@@ -64,7 +64,7 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
 
     private fun executeUpdate() {
         val groups = getOriginalItemList()
-        val extraGroups = getExtraItemList()
+        val ignoreListCount = getIgnoreListCount()
         val tempList = ArrayList<ArrayList<BaseForm<*>>>()
         groups.forEach { group ->
             val tempGroup = ArrayList<BaseForm<*>>()
@@ -127,14 +127,24 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
             tempList2.add(tempGroup)
         }
         var localPosition = 0
+        tempList2.forEachIndexed { index, group ->
+            group.forEachIndexed { position, item ->
+                item.groupCount = tempList2.size - ignoreListCount
+                item.groupIndex = index
+                item.countInGroup = group.size
+                item.positionInGroup = position
+                item.localPosition = localPosition
+                localPosition++
+            }
+        }
         asyncDiffer.submitList(ArrayList<BaseForm<*>>().apply { tempList2.forEach { addAll(it) } }) {
-
+            notifyItemRangeChanged(0, itemCount)
         }
     }
 
     protected abstract fun getOriginalItemList(): List<List<BaseForm<*>>>
 
-    protected open fun getExtraItemList(): List<List<BaseForm<*>>>? = null
+    protected open fun getIgnoreListCount(): Int = 0
 
     abstract fun executeLinkage(isIgnoreUpdate: Boolean = false)
 
@@ -211,7 +221,10 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
         holder.style.onViewDetachedFromWindow(holder)
         holder.typeset.onViewDetachedFromWindow(holder)
         adapter.getItem4ItemViewType(holder.itemViewType).onViewDetachedFromWindow(holder)
-        logE("Form","bPosition:${holder.bindingAdapterPosition}, aPosition:${holder.absoluteAdapterPosition}, lPosition:${holder.layoutPosition}")
+        logE(
+            "Form",
+            "bPosition:${holder.bindingAdapterPosition}, aPosition:${holder.absoluteAdapterPosition}, lPosition:${holder.layoutPosition}"
+        )
     }
 
     override fun onViewRecycled(holder: FormViewHolder) {

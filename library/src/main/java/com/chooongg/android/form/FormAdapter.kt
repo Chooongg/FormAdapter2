@@ -2,7 +2,6 @@ package com.chooongg.android.form
 
 import androidx.recyclerview.widget.RecyclerView
 import com.chooongg.android.form.data.FormPartData
-import com.chooongg.android.form.listener.FormOnMenuItemClickListener
 import com.chooongg.android.form.part.FormPart
 import com.chooongg.android.form.style.AbstractStyle
 import com.chooongg.android.form.style.EmptyStyle
@@ -31,12 +30,18 @@ class FormAdapter(isEnabled: Boolean = false) : AbstractFormAdapter() {
             }
         }
 
-    var onMenuItemClickListener: FormOnMenuItemClickListener? = null
+    var onItemClickListener: FormOnItemClickListener? = null
         private set
 
+    var onMenuClickListener: FormOnMenuClickListener? = null
+        private set
 
-    fun setOnMenuItemCLickListener(listener: FormOnMenuItemClickListener?) {
-        onMenuItemClickListener = listener
+    fun setOnItemClickListener(listener: FormOnItemClickListener?) {
+        onItemClickListener = listener
+    }
+
+    fun setOnMenuClickListener(listener: FormOnMenuClickListener?) {
+        onMenuClickListener = listener
     }
 
     fun addPart(style: AbstractStyle = EmptyStyle(), block: FormPartData.() -> Unit): FormPart {

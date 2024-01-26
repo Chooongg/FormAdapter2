@@ -2,6 +2,7 @@ package com.chooongg.android.form
 
 import android.content.Context
 import android.content.res.ColorStateList
+import android.view.MenuItem
 import android.view.View
 import com.chooongg.android.form.item.BaseForm
 import com.chooongg.android.form.linkage.FormLinkage
@@ -19,7 +20,17 @@ typealias FormColorStateListBlock = Context.() -> ColorStateList?
 /**
  * 项目点击时的监听
  */
-typealias FormItemOnClickListener = (item: BaseForm<*>, view: View) -> Unit
+typealias FormOnItemClickListener = (view: View, item: BaseForm<*>) -> Unit
+
+/**
+ * 菜单点击时的监听
+ */
+typealias FormOnMenuItemClickListener = (view: View, menuView: View, menuItem: MenuItem) -> Boolean
+
+/**
+ * 菜单点击时的监听
+ */
+typealias FormOnMenuClickListener = (view: View, menuView: View, menuItem: MenuItem, item: BaseForm<*>) -> Unit
 
 /**
  * 联动Block

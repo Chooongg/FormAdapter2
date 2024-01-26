@@ -10,6 +10,9 @@ abstract class AbstractFormLayoutManager(context: Context) : GridLayoutManager(c
 
     protected var adapter: RecyclerView.Adapter<*>? = null
 
+    var marginStart: Int = 0
+    var marginEnd: Int = 0
+
     init {
         spanSizeLookup = object : SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int = onGetSpanSize(position)
@@ -24,6 +27,8 @@ abstract class AbstractFormLayoutManager(context: Context) : GridLayoutManager(c
             }
         }
     }
+
+    open fun invalidateSpanIndexCache() {}
 
     abstract fun onGetSpanSize(position: Int): Int
 
@@ -44,6 +49,22 @@ abstract class AbstractFormLayoutManager(context: Context) : GridLayoutManager(c
     override fun onDetachedFromWindow(view: RecyclerView?, recycler: RecyclerView.Recycler?) {
         super.onDetachedFromWindow(view, recycler)
         adapter = null
+    }
+
+    override fun getPaddingLeft(): Int {
+        return super.getPaddingLeft() + (if (isLayoutRTL) marginEnd else marginStart)
+    }
+
+    override fun getPaddingRight(): Int {
+        return super.getPaddingRight() + (if (isLayoutRTL) marginStart else marginEnd)
+    }
+
+    override fun getPaddingStart(): Int {
+        return super.getPaddingStart() + marginStart
+    }
+
+    override fun getPaddingEnd(): Int {
+        return super.getPaddingEnd() + marginEnd
     }
 
     override fun smoothScrollToPosition(
