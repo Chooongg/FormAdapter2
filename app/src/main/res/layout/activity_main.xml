@@ -9,21 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <androidx.slidingpanelayout.widget.SlidingPaneLayout
-        android:id="@+id/slidingPaneLayout"
+    <com.chooongg.android.form.FormView
+        android:id="@+id/formView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <com.chooongg.android.form.FormView
-            android:id="@+id/formView"
-            android:layout_width="280dp"
-            android:layout_height="match_parent" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerDetailView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </androidx.slidingpanelayout.widget.SlidingPaneLayout>
+        android:layout_height="match_parent" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

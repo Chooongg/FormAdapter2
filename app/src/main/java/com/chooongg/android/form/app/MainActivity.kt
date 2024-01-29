@@ -1,6 +1,8 @@
 package com.chooongg.android.form.app
 
 import android.os.Bundle
+import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -19,24 +21,12 @@ class MainActivity : AppCompatActivity(), FormTextAppearanceHelper {
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
-    private lateinit var windowInfoTracker: WindowInfoTracker
-
     private val formAdapter = FormAdapter(true)
-
-    private val formDetailAdapter = FormAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
-        windowInfoTracker = WindowInfoTracker.getOrCreate(this)
-        lifecycleScope.launchMain {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                windowInfoTracker.windowLayoutInfo(this@MainActivity).collect {
-                    updateUI(it)
-                }
-            }
-        }
         formAdapter.setOnItemClickListener { view, item ->
 
         }
@@ -53,15 +43,5 @@ class MainActivity : AppCompatActivity(), FormTextAppearanceHelper {
             }
         }
         binding.formView.adapter = formAdapter
-        binding.recyclerDetailView.adapter = formDetailAdapter
-    }
-
-    private fun updateUI(newLayoutInfo: WindowLayoutInfo) {
-        if (newLayoutInfo.displayFeatures.isNotEmpty()) {
-            binding.slidingPaneLayout.lockMode = SlidingPaneLayout.LOCK_MODE_UNLOCKED
-        } else {
-            binding.slidingPaneLayout.closePane()
-            binding.slidingPaneLayout.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
-        }
     }
 }

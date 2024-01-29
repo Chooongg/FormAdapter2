@@ -6,6 +6,7 @@ import android.util.TypedValue
 import android.widget.TextView
 import com.chooongg.android.form.actuator.FormDataActuator
 import com.chooongg.android.form.boundary.Boundary
+import com.chooongg.android.form.config.FormGlobalConfig
 import com.chooongg.android.form.enum.FormContentGravity
 import com.chooongg.android.form.enum.FormEmsSize
 import com.chooongg.android.form.extractor.IIconExtractor
@@ -29,6 +30,11 @@ object FormManager {
     const val FLAG_PAYLOAD_ERROR_NOTIFY = "form_flag_error_notify"
 
     /**
+     * 居中平滑滚动
+     */
+    var centerSmoothScroll: Boolean = true
+
+    /**
      * 文本提取器
      */
     private var textExtractor: ITextExtractor = NormalTextExtractor()
@@ -42,6 +48,8 @@ object FormManager {
      * 数据执行器
      */
     private val itemDataActuators = HashMap<Class<*>, FormDataActuator<*>>()
+
+    var config: FormGlobalConfig = FormGlobalConfig()
 
     /**
      * 默认值
@@ -75,11 +83,6 @@ object FormManager {
      * 默认值
      */
     open class Default {
-        /**
-         * 居中平滑滚动
-         */
-        open var centerSmoothScroll: Boolean = true
-            protected set
 
         /**
          * 名称格式化程序

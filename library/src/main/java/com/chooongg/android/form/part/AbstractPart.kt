@@ -194,13 +194,16 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
         val item = get(position)
         item.globalPosition = holder.absoluteAdapterPosition
         item.localPosition = holder.bindingAdapterPosition
+        holder.style.onBindViewHolderBefore(holder, item, adapter.isEnabled)
         if (holder.styleLayout != null) {
             holder.style.onBindViewHolder(holder, item, holder.styleLayout, adapter.isEnabled)
         }
         if (holder.typesetLayout != null) {
             holder.typeset.onBindViewHolder(holder, item, holder.typesetLayout, adapter.isEnabled)
         }
+        item.onBindViewItemClick(adapter, adapterScope, holder, adapter.isEnabled)
         item.onBindViewHolder(adapterScope, holder, holder.view, adapter.isEnabled)
+        holder.style.onBindViewHolderAfter(holder, item, adapter.isEnabled)
     }
 
     override fun onBindViewHolder(
@@ -209,10 +212,11 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
         payloads: MutableList<Any>
     ) {
         if (payloads.isEmpty()) {
-            super.onBindViewHolder(holder, position, payloads)
+            onBindViewHolder(holder, position)
             return
         }
         val item = get(position)
+        item.onBindViewItemClick(adapter, adapterScope, holder, adapter.isEnabled)
         item.globalPosition = holder.absoluteAdapterPosition
         item.localPosition = holder.bindingAdapterPosition
     }

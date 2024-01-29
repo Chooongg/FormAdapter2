@@ -4,6 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import androidx.annotation.GravityInt
+import com.chooongg.android.form.FormAdapter
 import com.chooongg.android.form.FormColorStateListBlock
 import com.chooongg.android.form.FormDataVerificationException
 import com.chooongg.android.form.FormLinkageBlock
@@ -146,7 +147,7 @@ abstract class BaseForm<CONTENT : Any>(
     /**
      * 是否响应点击事件
      */
-    open var isRespondToClickEvents: Boolean = false
+    open var isRespondToClickEvents: Boolean = true
 
     //</editor-fold>
 
@@ -329,6 +330,19 @@ abstract class BaseForm<CONTENT : Any>(
         adapterEnabled: Boolean,
         payload: Any,
     ) = Unit
+
+    open fun onBindViewItemClick(
+        adapter: FormAdapter,
+        scope: CoroutineScope,
+        holder: FormViewHolder,
+        adapterEnabled: Boolean
+    ) {
+        if (isRespondToClickEvents && isEnable(adapterEnabled)) {
+            holder.itemView.setOnClickListener {
+                adapter.onItemClickListener?.invoke(it, this)
+            }
+        } else holder.itemView.setOnClickListener(null)
+    }
 
     open fun onViewDetachedFromWindow(holder: FormViewHolder) = Unit
 

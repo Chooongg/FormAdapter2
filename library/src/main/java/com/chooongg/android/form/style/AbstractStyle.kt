@@ -3,19 +3,24 @@ package com.chooongg.android.form.style
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.StyleRes
 import com.chooongg.android.form.FormManager
 import com.chooongg.android.form.R
 import com.chooongg.android.form.boundary.FormSizeInfo
+import com.chooongg.android.form.config.EmptyConfig
+import com.chooongg.android.form.config.FormConfig
 import com.chooongg.android.form.holder.FormViewHolder
 import com.chooongg.android.form.item.BaseForm
 import com.chooongg.android.form.provider.AbstractGroupTitleProvider
 import com.chooongg.android.form.typeset.AbstractTypeset
+import com.chooongg.android.ktx.attrResourcesId
 import com.chooongg.android.ktx.resDimensionPixelSize
+import com.google.android.material.shape.ShapeAppearanceModel
 
 /**
  * 样式
  */
-abstract class AbstractStyle {
+abstract class AbstractStyle(val config: FormConfig = EmptyConfig) {
 
     var default: FormManager.Default = FormManager.default
 
@@ -28,6 +33,9 @@ abstract class AbstractStyle {
      * 组标题视图提供器
      */
     open var groupTitleProvider: AbstractGroupTitleProvider? = null
+
+    @StyleRes
+    var shapeAppearanceResId: Int? = null
 
     /**
      *
@@ -47,6 +55,8 @@ abstract class AbstractStyle {
     open fun isDecorateNoneItem(): Boolean = true
 
     private var isInstanceSizeInfo: Boolean = false
+
+    protected lateinit var shapeAppearanceModel: ShapeAppearanceModel
 
     internal fun createSizeInfo(context: Context) {
         if (isInstanceSizeInfo) return
@@ -83,12 +93,40 @@ abstract class AbstractStyle {
 
     open fun onViewAttachedToWindow(holder: FormViewHolder) = Unit
 
+    open fun onBindViewHolderBefore(
+        holder: FormViewHolder,
+        item: BaseForm<*>,
+        adapterEnabled: Boolean
+    ) {
+        if (holder.styleLayout != null) {
+            holder.itemView.clipToOutline = true
+        }
+        if (!this::shapeAppearanceModel.isInitialized) {
+            val resId = if (shapeAppearanceResId == null) {
+                holder.itemView.attrResourcesId(
+                    R.attr.formShapeAppearanceCorner, holder.itemView.attrResourcesId(
+                        com.google.android.material.R.attr.shapeAppearanceCornerMedium,
+                        0
+                    )
+                )
+            } else shapeAppearanceResId!!
+            shapeAppearanceModel =
+                ShapeAppearanceModel.builder(holder.itemView.context, resId, 0).build()
+        }
+    }
+
     abstract fun onBindViewHolder(
         holder: FormViewHolder,
         item: BaseForm<*>,
         layout: ViewGroup,
         adapterEnabled: Boolean
     )
+
+    open fun onBindViewHolderAfter(
+        holder: FormViewHolder,
+        item: BaseForm<*>,
+        adapterEnabled: Boolean
+    ) = Unit
 
     open fun onViewDetachedFromWindow(holder: FormViewHolder) = Unit
 

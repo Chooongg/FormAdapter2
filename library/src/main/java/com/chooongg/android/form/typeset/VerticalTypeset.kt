@@ -28,6 +28,7 @@ class VerticalTypeset : AbstractTypeset() {
                 child.gravity = Gravity.CENTER_VERTICAL
                 it.addView(MaterialButton(it.context).apply {
                     id = R.id.formInternalNameView
+                    isClickable = false
                     gravity = Gravity.NO_GRAVITY
                     background = null
                     minWidth = 0

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
+import com.chooongg.android.form.FormAdapter
 import com.chooongg.android.form.FormManager
 
 abstract class AbstractFormLayoutManager(context: Context) : GridLayoutManager(context, 27720) {
@@ -72,7 +73,7 @@ abstract class AbstractFormLayoutManager(context: Context) : GridLayoutManager(c
         state: RecyclerView.State,
         position: Int
     ) {
-        if (FormManager.default.centerSmoothScroll) {
+        if (FormManager.centerSmoothScroll) {
             startSmoothScroll(CenterSmoothScroller(recyclerView.context).apply {
                 targetPosition = position
             })
