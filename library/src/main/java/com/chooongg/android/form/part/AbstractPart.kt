@@ -30,7 +30,7 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
 
     internal var columnCount: Int = 0
         get() {
-            return if (field <= 0) adapter.columnCount else field
+            return if (field <= 0) adapter.columnCount ?: 1 else field
         }
 
     var adapterScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
@@ -201,6 +201,7 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
         if (holder.typesetLayout != null) {
             holder.typeset.onBindViewHolder(holder, item, holder.typesetLayout, adapter.isEnabled)
         }
+        holder.itemView.tag = item.spanSize
         item.onBindViewItemClick(adapter, adapterScope, holder, adapter.isEnabled)
         item.onBindViewHolder(adapterScope, holder, holder.view, adapter.isEnabled)
         holder.style.onBindViewHolderAfter(holder, item, adapter.isEnabled)

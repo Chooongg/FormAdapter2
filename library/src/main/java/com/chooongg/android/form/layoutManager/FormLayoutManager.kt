@@ -12,7 +12,7 @@ class FormLayoutManager(context: Context) : AbstractFormLayoutManager(context) {
             is AbstractPart -> childAdapter[pair.second].spanSize
             is FormCustomAdapterSpanLookup -> childAdapter.getSpanSize(
                 position,
-                formAdapter.columnCount
+                formAdapter.columnCount ?: 1
             )
 
             else -> spanCount
@@ -26,7 +26,7 @@ class FormLayoutManager(context: Context) : AbstractFormLayoutManager(context) {
             is AbstractPart -> childAdapter[pair.second].spanIndex
             is FormCustomAdapterSpanLookup -> childAdapter.getSpanIndex(
                 position,
-                formAdapter.columnCount
+                formAdapter.columnCount ?: 1
             )
 
             else -> spanCount

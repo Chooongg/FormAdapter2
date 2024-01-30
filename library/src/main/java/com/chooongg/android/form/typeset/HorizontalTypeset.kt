@@ -63,7 +63,7 @@ class HorizontalTypeset : AbstractTypeset() {
                 iconTint = item.iconTint?.invoke(context) ?: textColors
             } else icon = null
             setNameViewEms(holder, this)
-            text = (nameFormatter ?: FormManager.default.nameFormatter).format(context, item)
+            text = holder.style.config.nameFormatter.format(context, item)
         }
         layout.findViewById<FormMenuView>(R.id.formInternalMenuView)
             ?.configMenu(holder, item, adapterEnabled)

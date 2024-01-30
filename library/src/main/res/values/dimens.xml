@@ -20,4 +20,7 @@
     <dimen name="formPaddingTopMedium">8dp</dimen>
     <dimen name="formPaddingEndMedium">8dp</dimen>
     <dimen name="formPaddingBottomMedium">8dp</dimen>
+
+
+    <dimen name="formCardElevation">1dp</dimen>
 </resources>

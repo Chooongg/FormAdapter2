@@ -36,7 +36,7 @@ open class FormGlobalConfig {
     /**
      * 内容重力
      */
-    open var contentGravity: FormContentGravity = FormContentGravity(Gravity.NO_GRAVITY)
+    open var contentGravity: FormContentGravity = FormContentGravity(Gravity.END, Gravity.START)
         protected set
 
     /**

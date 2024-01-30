@@ -3,11 +3,9 @@ package com.chooongg.android.form.typeset
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.chooongg.android.form.FormManager
 import com.chooongg.android.form.enum.FormContentGravity
 import com.chooongg.android.form.enum.FormEmsMode
 import com.chooongg.android.form.enum.FormEmsSize
-import com.chooongg.android.form.formatter.name.AbstractNameFormatter
 import com.chooongg.android.form.helper.FormTextAppearanceHelper
 import com.chooongg.android.form.holder.FormViewHolder
 import com.chooongg.android.form.item.BaseForm
@@ -30,10 +28,8 @@ abstract class AbstractTypeset : FormTextAppearanceHelper {
     open var emsSize: FormEmsSize? = null
 
     /**
-     * 名称格式化程序
+     * 内容重力
      */
-    open var nameFormatter: AbstractNameFormatter? = null
-
     open var contentGravity: FormContentGravity? = null
 
     abstract fun onCreateViewHolder(style: AbstractStyle, parent: ViewGroup): ViewGroup?
@@ -58,8 +54,8 @@ abstract class AbstractTypeset : FormTextAppearanceHelper {
 
     fun setNameViewEms(holder: FormViewHolder, textView: TextView) {
         val part = holder.bindingAdapter as? AbstractPart
-        val size = emsSize ?: FormManager.default.emsSize
-        val isMultiColumn = (part?.adapter?.columnCount ?: 1) > 1
+        val size = emsSize ?: holder.style.config.emsSize
+        val isMultiColumn = (part?.columnCount ?: 1) > 1
         when (if (isMultiColumn) emsMode.multiColumnMode else emsMode.mode) {
             FormEmsMode.MIN -> {
                 textView.minEms = if (isMultiColumn) size.multiColumnSize else size.size
@@ -88,7 +84,6 @@ abstract class AbstractTypeset : FormTextAppearanceHelper {
         if (javaClass != other.javaClass) return false
         if (emsMode != other.emsMode) return false
         if (emsSize != other.emsSize) return false
-        if (nameFormatter != other.nameFormatter) return false
         return contentGravity == other.contentGravity
     }
 

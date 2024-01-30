@@ -1,5 +1,6 @@
 package com.chooongg.android.form
 
+import androidx.annotation.IntRange
 import androidx.recyclerview.widget.RecyclerView
 import com.chooongg.android.form.data.FormPartData
 import com.chooongg.android.form.part.FormPart
@@ -17,16 +18,19 @@ class FormAdapter(isEnabled: Boolean = false) : AbstractFormAdapter() {
         set(value) {
             if (field != value) {
                 field = value
+                update()
             }
         }
 
     /**
      * 列数
      */
-    var columnCount = 1
+    @IntRange(from = 1)
+    var columnCount: Int? = null
         set(value) {
             if (field != value) {
                 field = value
+                update()
             }
         }
 

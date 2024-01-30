@@ -15,27 +15,49 @@ abstract class FormConfig {
     /**
      * 名称格式化程序
      */
-    open val _nameFormatter: AbstractNameFormatter? = null
+    abstract val _nameFormatter: AbstractNameFormatter?
 
     /**
      * 组标题视图提供器
      */
-    open val _groupTitleProvider: AbstractGroupTitleProvider? = null
+    abstract val _groupTitleProvider: AbstractGroupTitleProvider?
 
     /**
      * EMS 值
      */
-    open val _emsSize: FormEmsSize? = null
+    abstract val _emsSize: FormEmsSize?
 
     /**
      * 内容重力
      */
-    open val _contentGravity: FormContentGravity? = null
+    abstract val _contentGravity: FormContentGravity?
 
     /**
      * 排版
      */
-    open val _typeset: AbstractTypeset? = null
+    abstract val _typeset: AbstractTypeset?
 
 
+    val nameFormatter: AbstractNameFormatter
+        get() = _nameFormatter ?: FormManager.config.nameFormatter
+
+    val groupTitleProvider: AbstractGroupTitleProvider
+        get() = _groupTitleProvider ?: FormManager.config.groupTitleProvider
+
+    val emsSize: FormEmsSize
+        get() = _emsSize ?: FormManager.config.emsSize
+
+    val contentGravity: FormContentGravity
+        get() = _contentGravity ?: FormManager.config.contentGravity
+
+    val typeset: AbstractTypeset
+        get() = _typeset ?: FormManager.config.typeset
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is FormConfig) return false
+        return other.javaClass == javaClass
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
 }

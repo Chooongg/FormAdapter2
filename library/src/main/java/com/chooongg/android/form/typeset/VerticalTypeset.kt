@@ -11,6 +11,7 @@ import com.chooongg.android.form.holder.FormViewHolder
 import com.chooongg.android.form.item.BaseForm
 import com.chooongg.android.form.style.AbstractStyle
 import com.chooongg.android.form.view.FormMenuView
+import com.chooongg.android.ktx.resDrawable
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textview.MaterialTextView
 
@@ -61,9 +62,15 @@ class VerticalTypeset : AbstractTypeset() {
         layout: ViewGroup,
         adapterEnabled: Boolean
     ) {
-        layout.findViewById<MaterialTextView>(R.id.formInternalNameView).apply {
+        layout.findViewById<MaterialButton>(R.id.formInternalNameView).apply {
+            iconGravity = item.iconGravity
+            if (item.icon != null) {
+                val drawable = resDrawable(item.icon!!)
+                icon = drawable
+                iconTint = item.iconTint?.invoke(context) ?: textColors
+            } else icon = null
             setNameViewEms(holder, this)
-            text = (nameFormatter ?: FormManager.default.nameFormatter).format(context, item)
+            text = holder.style.config.nameFormatter.format(context, item)
         }
         layout.findViewById<FormMenuView>(R.id.formInternalMenuView)
             ?.configMenu(holder, item, adapterEnabled)

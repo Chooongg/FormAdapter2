@@ -14,7 +14,6 @@
         android:id="@+id/formView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?colorSurfaceContainerLow"
-        app:formColumn="1" />
+        app:formColumn="2" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

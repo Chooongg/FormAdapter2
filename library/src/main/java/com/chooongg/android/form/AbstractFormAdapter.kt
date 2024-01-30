@@ -82,6 +82,10 @@ abstract class AbstractFormAdapter internal constructor() :
         return null
     }
 
+    fun update() {
+        partAdapters.forEach { it.update() }
+    }
+
     //<editor-fold desc="覆写 Overwrite">
 
     val partAdapters get() = concatAdapter.adapters.filterIsInstance<AbstractPart>()
@@ -130,6 +134,9 @@ abstract class AbstractFormAdapter internal constructor() :
         concatAdapter.onViewRecycled(holder)
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        if (recyclerView !is FormView) {
+            throw UnsupportedOperationException("please use FormView to bind FormAdapter!")
+        }
         super.onAttachedToRecyclerView(recyclerView)
         if (recyclerView.layoutManager !is FormLayoutManager) {
             recyclerView.layoutManager = FormLayoutManager(recyclerView.context)
@@ -155,7 +162,7 @@ abstract class AbstractFormAdapter internal constructor() :
                 stylePool.lastIndex
             } else it
         }
-        val typeset = item.typeset ?: style.default.typeset
+        val typeset = item.typeset ?: style.config.typeset
         val typesetIndex = typesetPool.indexOf(typeset).let {
             if (it < 0) {
                 typesetPool.add(typeset)

@@ -353,15 +353,15 @@ abstract class BaseForm<CONTENT : Any>(
      */
     @GravityInt
     protected fun obtainContentGravity(holder: FormViewHolder): Int {
-        val columnCount = (holder.bindingAdapter as? AbstractPart)?.adapter?.columnCount ?: 1
+        val columnCount = (holder.bindingAdapter as? AbstractPart)?.columnCount ?: 1
         return if (columnCount > 1) contentGravity?.multiColumnGravity
             ?: gravity
             ?: holder.typeset.contentGravity?.multiColumnGravity
-            ?: FormManager.default.contentGravity.multiColumnGravity
+            ?: holder.style.config.contentGravity.multiColumnGravity
         else contentGravity?.gravity
             ?: gravity
             ?: holder.typeset.contentGravity?.gravity
-            ?: FormManager.default.contentGravity.gravity
+            ?: holder.style.config.contentGravity.gravity
     }
 
     //</editor-fold>

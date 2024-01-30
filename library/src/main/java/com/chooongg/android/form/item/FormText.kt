@@ -37,6 +37,7 @@ open class FormText(name: Any?, field: String?) : BaseForm<Any>(name, field) {
             it.ellipsize = ellipsize
             it.text = FormManager.extractText(it.context, content)
             it.hint = FormManager.extractText(it.context, hint)
+            it.gravity = obtainContentGravity(holder)
         }
     }
 }

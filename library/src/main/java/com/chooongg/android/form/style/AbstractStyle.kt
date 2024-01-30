@@ -4,44 +4,33 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StyleRes
-import com.chooongg.android.form.FormManager
 import com.chooongg.android.form.R
 import com.chooongg.android.form.boundary.FormSizeInfo
 import com.chooongg.android.form.config.EmptyConfig
 import com.chooongg.android.form.config.FormConfig
 import com.chooongg.android.form.holder.FormViewHolder
 import com.chooongg.android.form.item.BaseForm
-import com.chooongg.android.form.provider.AbstractGroupTitleProvider
-import com.chooongg.android.form.typeset.AbstractTypeset
 import com.chooongg.android.ktx.attrResourcesId
 import com.chooongg.android.ktx.resDimensionPixelSize
+import com.google.android.material.shape.AbsoluteCornerSize
 import com.google.android.material.shape.ShapeAppearanceModel
 
 /**
  * 样式
  */
-abstract class AbstractStyle(val config: FormConfig = EmptyConfig) {
-
-    var default: FormManager.Default = FormManager.default
-
-    /**
-     * 排版
-     */
-    open var typeset: AbstractTypeset? = null
-
-    /**
-     * 组标题视图提供器
-     */
-    open var groupTitleProvider: AbstractGroupTitleProvider? = null
+abstract class AbstractStyle(val config: FormConfig = EmptyConfig()) {
 
     @StyleRes
     var shapeAppearanceResId: Int? = null
 
     /**
-     *
+     * 外边距信息
      */
     var margin: FormSizeInfo = FormSizeInfo()
 
+    /**
+     * 内边距信息
+     */
     var padding: FormSizeInfo = FormSizeInfo()
 
     /**
@@ -98,9 +87,6 @@ abstract class AbstractStyle(val config: FormConfig = EmptyConfig) {
         item: BaseForm<*>,
         adapterEnabled: Boolean
     ) {
-        if (holder.styleLayout != null) {
-            holder.itemView.clipToOutline = true
-        }
         if (!this::shapeAppearanceModel.isInitialized) {
             val resId = if (shapeAppearanceResId == null) {
                 holder.itemView.attrResourcesId(
@@ -126,7 +112,9 @@ abstract class AbstractStyle(val config: FormConfig = EmptyConfig) {
         holder: FormViewHolder,
         item: BaseForm<*>,
         adapterEnabled: Boolean
-    ) = Unit
+    ) {
+        holder.itemView.clipToOutline = holder.itemView.background != null
+    }
 
     open fun onViewDetachedFromWindow(holder: FormViewHolder) = Unit
 
@@ -134,11 +122,58 @@ abstract class AbstractStyle(val config: FormConfig = EmptyConfig) {
 
     fun executeAddView(parent: ViewGroup, child: View) = addView(parent, child)
 
+    protected fun getShapeAppearanceModel(view: View, item: BaseForm<*>) =
+        ShapeAppearanceModel.builder().apply {
+            if (view.layoutDirection != View.LAYOUT_DIRECTION_RTL) {
+                setTopLeftCornerSize(
+                    if (item.boundary.top != 0 && item.boundary.start != 0) {
+                        shapeAppearanceModel.topLeftCornerSize
+                    } else AbsoluteCornerSize(0f)
+                )
+                setTopRightCornerSize(
+                    if (item.boundary.top != 0 && item.boundary.end != 0) {
+                        shapeAppearanceModel.topRightCornerSize
+                    } else AbsoluteCornerSize(0f)
+                )
+                setBottomLeftCornerSize(
+                    if (item.boundary.bottom != 0 && item.boundary.start != 0) {
+                        shapeAppearanceModel.bottomLeftCornerSize
+                    } else AbsoluteCornerSize(0f)
+                )
+                setBottomRightCornerSize(
+                    if (item.boundary.bottom != 0 && item.boundary.end != 0) {
+                        shapeAppearanceModel.bottomRightCornerSize
+                    } else AbsoluteCornerSize(0f)
+                )
+            } else {
+                setTopLeftCornerSize(
+                    if (item.boundary.top != 0 && item.boundary.start != 0) {
+                        shapeAppearanceModel.topRightCornerSize
+                    } else AbsoluteCornerSize(0f)
+                )
+                setTopRightCornerSize(
+                    if (item.boundary.top != 0 && item.boundary.end != 0) {
+                        shapeAppearanceModel.topLeftCornerSize
+                    } else AbsoluteCornerSize(0f)
+                )
+                setBottomLeftCornerSize(
+                    if (item.boundary.bottom != 0 && item.boundary.start != 0) {
+                        shapeAppearanceModel.bottomRightCornerSize
+                    } else AbsoluteCornerSize(0f)
+                )
+                setBottomRightCornerSize(
+                    if (item.boundary.bottom != 0 && item.boundary.end != 0) {
+                        shapeAppearanceModel.bottomLeftCornerSize
+                    } else AbsoluteCornerSize(0f)
+                )
+            }
+        }.build()
+
     override fun equals(other: Any?): Boolean {
         if (other !is AbstractStyle) return false
-        if (javaClass != other.javaClass) return false
-        if (groupTitleProvider != other.groupTitleProvider) return false
-        return typeset == other.typeset
+        if (other.javaClass != javaClass) return false
+        if (other.shapeAppearanceResId != shapeAppearanceResId) return false
+        return other.config == config
     }
 
     override fun hashCode(): Int = javaClass.hashCode()
