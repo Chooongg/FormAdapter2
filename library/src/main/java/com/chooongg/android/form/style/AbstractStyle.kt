@@ -3,7 +3,6 @@ package com.chooongg.android.form.style
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.StyleRes
 import androidx.core.view.updateLayoutParams
 import com.chooongg.android.form.R
 import com.chooongg.android.form.boundary.Boundary
@@ -22,9 +21,6 @@ import com.google.android.material.shape.ShapeAppearanceModel
  * 样式
  */
 abstract class AbstractStyle(val config: FormConfig = EmptyConfig()) {
-
-    @StyleRes
-    var shapeAppearanceResId: Int? = null
 
     /**
      * 外边距信息
@@ -87,14 +83,14 @@ abstract class AbstractStyle(val config: FormConfig = EmptyConfig()) {
 
     open fun initializeShapeAppearanceModel(holder: FormViewHolder) {
         if (!this::shapeAppearanceModel.isInitialized) {
-            val resId = if (shapeAppearanceResId == null) {
+            val resId = if (config.shapeAppearanceResId == null) {
                 holder.itemView.attrResourcesId(
                     R.attr.formShapeAppearanceCorner, holder.itemView.attrResourcesId(
                         com.google.android.material.R.attr.shapeAppearanceCornerMedium,
                         0
                     )
                 )
-            } else shapeAppearanceResId!!
+            } else config.shapeAppearanceResId!!
             shapeAppearanceModel =
                 ShapeAppearanceModel.builder(holder.itemView.context, resId, 0).build()
         }
@@ -256,7 +252,6 @@ abstract class AbstractStyle(val config: FormConfig = EmptyConfig()) {
     override fun equals(other: Any?): Boolean {
         if (other !is AbstractStyle) return false
         if (other.javaClass != javaClass) return false
-        if (other.shapeAppearanceResId != shapeAppearanceResId) return false
         return other.config == config
     }
 

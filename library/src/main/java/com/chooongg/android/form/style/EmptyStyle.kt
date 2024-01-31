@@ -19,17 +19,19 @@ class EmptyStyle : AbstractStyle() {
         item: BaseForm<*>,
         layout: ViewGroup?,
         adapterEnabled: Boolean
-    ) = Unit
-
-    override fun onBindViewHolderAfter(
-        holder: FormViewHolder,
-        item: BaseForm<*>,
-        adapterEnabled: Boolean
     ) {
         holder.itemView.background = RippleDrawable(
             ColorStateList.valueOf(holder.itemView.attrColor(android.R.attr.colorControlHighlight)),
             null,
             MaterialShapeDrawable(shapeAppearanceModel)
         )
+    }
+
+    override fun onBindViewHolderAfter(
+        holder: FormViewHolder,
+        item: BaseForm<*>,
+        adapterEnabled: Boolean
+    ) {
+
     }
 }

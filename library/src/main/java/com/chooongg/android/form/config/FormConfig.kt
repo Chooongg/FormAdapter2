@@ -1,5 +1,6 @@
 package com.chooongg.android.form.config
 
+import androidx.annotation.StyleRes
 import com.chooongg.android.form.FormManager
 import com.chooongg.android.form.enum.FormContentGravity
 import com.chooongg.android.form.enum.FormEmsSize
@@ -11,6 +12,9 @@ import com.chooongg.android.form.typeset.AbstractTypeset
  * 配置: 属性为空时使用全局配置
  */
 abstract class FormConfig {
+
+    @StyleRes
+    open val shapeAppearanceResId: Int? = null
 
     /**
      * 名称格式化程序
@@ -56,7 +60,13 @@ abstract class FormConfig {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is FormConfig) return false
-        return other.javaClass == javaClass
+
+        if (shapeAppearanceResId != other.shapeAppearanceResId) return false
+        if (_nameFormatter != other._nameFormatter) return false
+        if (_groupTitleProvider != other._groupTitleProvider) return false
+        if (_emsSize != other._emsSize) return false
+        if (_contentGravity != other._contentGravity) return false
+        return _typeset == other._typeset
     }
 
     override fun hashCode(): Int = javaClass.hashCode()

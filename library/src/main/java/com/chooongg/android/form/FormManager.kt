@@ -12,7 +12,7 @@ import com.chooongg.android.form.extractor.NormalIconExtractor
 import com.chooongg.android.form.extractor.NormalTextExtractor
 import com.chooongg.android.form.item.BaseForm
 import com.chooongg.android.form.style.AbstractStyle
-import com.chooongg.android.form.style.CardElevatedStyle
+import com.chooongg.android.form.style.CardOutlineStyle
 import java.lang.reflect.ParameterizedType
 
 
@@ -50,7 +50,7 @@ object FormManager {
     /**
      * 默认样式
      */
-    var defaultStyle: AbstractStyle = CardElevatedStyle()
+    var defaultStyle: AbstractStyle = CardOutlineStyle()
 
     /**
      * 获取字体实际高度

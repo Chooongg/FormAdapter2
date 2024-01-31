@@ -1,5 +1,6 @@
 package com.chooongg.android.form.item
 
+import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import com.chooongg.android.form.FormManager
@@ -11,9 +12,15 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.textview.MaterialTextView
 import kotlinx.coroutines.CoroutineScope
 
-class FormInput(name: Any?, field: String?) : FormText(name, field) {
+open class FormInput(name: Any?, field: String?) : BaseForm<CharSequence>(name, field) {
 
-    override fun copyEmptyItem(): BaseForm<Any> = FormInput(null, null)
+    open var minLines: Int = 0
+
+    open var maxLines: Int = Int.MAX_VALUE
+
+    open var ellipsize: TextUtils.TruncateAt = TextUtils.TruncateAt.END
+
+    override fun copyEmptyItem(): BaseForm<CharSequence> = FormInput(null, null)
 
     override fun onCreateViewHolder(style: AbstractStyle, parent: ViewGroup): View =
         TextInputLayout(parent.context).also {
