@@ -5,7 +5,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.chooongg.android.form.data.FormPartData
 import com.chooongg.android.form.part.FormPart
 import com.chooongg.android.form.style.AbstractStyle
-import com.chooongg.android.form.style.EmptyStyle
 
 class FormAdapter(isEnabled: Boolean = false) : AbstractFormAdapter() {
 
@@ -48,7 +47,10 @@ class FormAdapter(isEnabled: Boolean = false) : AbstractFormAdapter() {
         onMenuClickListener = listener
     }
 
-    fun addPart(style: AbstractStyle = EmptyStyle(), block: FormPartData.() -> Unit): FormPart {
+    fun addPart(
+        style: AbstractStyle = FormManager.defaultStyle,
+        block: FormPartData.() -> Unit
+    ): FormPart {
         val part = FormPart(this, style)
         part.data = FormPartData().apply(block)
         concatAdapter.addAdapter(part)

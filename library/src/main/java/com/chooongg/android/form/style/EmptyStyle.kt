@@ -1,7 +1,6 @@
 package com.chooongg.android.form.style
 
 import android.content.res.ColorStateList
-import android.graphics.drawable.Drawable
 import android.graphics.drawable.RippleDrawable
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +17,7 @@ class EmptyStyle : AbstractStyle() {
     override fun onBindViewHolder(
         holder: FormViewHolder,
         item: BaseForm<*>,
-        layout: ViewGroup,
+        layout: ViewGroup?,
         adapterEnabled: Boolean
     ) = Unit
 
@@ -27,12 +26,10 @@ class EmptyStyle : AbstractStyle() {
         item: BaseForm<*>,
         adapterEnabled: Boolean
     ) {
-        if (holder.itemView.background == null) {
-            holder.itemView.background = RippleDrawable(
-                ColorStateList.valueOf(holder.itemView.attrColor(android.R.attr.colorControlHighlight)),
-                null,
-                MaterialShapeDrawable(shapeAppearanceModel)
-            )
-        }
+        holder.itemView.background = RippleDrawable(
+            ColorStateList.valueOf(holder.itemView.attrColor(android.R.attr.colorControlHighlight)),
+            null,
+            MaterialShapeDrawable(shapeAppearanceModel)
+        )
     }
 }

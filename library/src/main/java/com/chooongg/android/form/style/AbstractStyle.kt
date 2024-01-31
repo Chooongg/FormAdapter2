@@ -4,13 +4,16 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StyleRes
+import androidx.core.view.updateLayoutParams
 import com.chooongg.android.form.R
+import com.chooongg.android.form.boundary.Boundary
 import com.chooongg.android.form.boundary.FormSizeInfo
 import com.chooongg.android.form.config.EmptyConfig
 import com.chooongg.android.form.config.FormConfig
 import com.chooongg.android.form.holder.FormViewHolder
 import com.chooongg.android.form.item.BaseForm
 import com.chooongg.android.ktx.attrResourcesId
+import com.chooongg.android.ktx.isLayoutRtl
 import com.chooongg.android.ktx.resDimensionPixelSize
 import com.google.android.material.shape.AbsoluteCornerSize
 import com.google.android.material.shape.ShapeAppearanceModel
@@ -36,7 +39,7 @@ abstract class AbstractStyle(val config: FormConfig = EmptyConfig()) {
     /**
      * 是否为独立的项目
      */
-    open fun IsIndependentItem() = false
+    var isIndependentItem = false
 
     /**
      * 是否装饰空项目
@@ -82,11 +85,7 @@ abstract class AbstractStyle(val config: FormConfig = EmptyConfig()) {
 
     open fun onViewAttachedToWindow(holder: FormViewHolder) = Unit
 
-    open fun onBindViewHolderBefore(
-        holder: FormViewHolder,
-        item: BaseForm<*>,
-        adapterEnabled: Boolean
-    ) {
+    open fun initializeShapeAppearanceModel(holder: FormViewHolder) {
         if (!this::shapeAppearanceModel.isInitialized) {
             val resId = if (shapeAppearanceResId == null) {
                 holder.itemView.attrResourcesId(
@@ -101,10 +100,97 @@ abstract class AbstractStyle(val config: FormConfig = EmptyConfig()) {
         }
     }
 
+    open fun onBindViewHolderBefore(
+        holder: FormViewHolder,
+        item: BaseForm<*>,
+        adapterEnabled: Boolean
+    ) {
+        var _marginStart = 0
+        var _marginTop = 0
+        var _marginEnd = 0
+        var _marginBottom = 0
+        var _paddingStart = 0
+        var _paddingTop = 0
+        var _paddingEnd = 0
+        var _paddingBottom = 0
+        when (item.boundary.start) {
+            Boundary.GLOBAL -> {
+                _marginStart = 0
+                _paddingStart = padding.start - padding.startMedium
+            }
+
+            Boundary.MIDDLE -> {
+                _marginStart = margin.startMedium
+                _paddingStart = padding.start - padding.startMedium
+            }
+
+            Boundary.NONE -> {
+                _marginStart = 0
+                _marginStart = 0
+            }
+        }
+        when (item.boundary.end) {
+            Boundary.GLOBAL -> {
+                _marginEnd = 0
+                _paddingEnd = padding.end - padding.endMedium
+            }
+
+            Boundary.MIDDLE -> {
+                _marginEnd = margin.startMedium
+                _paddingEnd = padding.end - padding.endMedium
+            }
+
+            Boundary.NONE -> {
+                _marginEnd = 0
+                _paddingEnd = 0
+            }
+        }
+        when (item.boundary.top) {
+            Boundary.GLOBAL -> {
+                _marginTop = margin.top
+                _paddingTop = padding.top - padding.topMedium
+            }
+
+            Boundary.MIDDLE -> {
+                _marginTop = margin.topMedium
+                _paddingTop = padding.top - padding.topMedium
+            }
+
+            Boundary.NONE -> {
+                _marginTop = 0
+                _paddingTop = 0
+            }
+        }
+        when (item.boundary.bottom) {
+            Boundary.GLOBAL -> {
+                _marginBottom = margin.bottom
+                _paddingBottom = padding.bottom - padding.bottomMedium
+            }
+
+            Boundary.MIDDLE -> {
+                _marginBottom = margin.bottomMedium
+                _paddingBottom = padding.bottom - padding.bottomMedium
+            }
+
+            Boundary.NONE -> {
+                _marginBottom = 0
+                _paddingBottom = 0
+            }
+        }
+        holder.itemView.setPaddingRelative(_paddingStart, _paddingTop, _paddingEnd, _paddingBottom)
+        holder.itemView.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            if (holder.itemView.isLayoutRtl) {
+                setMargins(_marginEnd, _marginTop, _marginStart, _marginBottom)
+            } else {
+                setMargins(_marginStart, _marginTop, _marginEnd, _marginBottom)
+            }
+        }
+    }
+
     abstract fun onBindViewHolder(
         holder: FormViewHolder,
         item: BaseForm<*>,
-        layout: ViewGroup,
+        layout: ViewGroup?,
         adapterEnabled: Boolean
     )
 
@@ -112,9 +198,7 @@ abstract class AbstractStyle(val config: FormConfig = EmptyConfig()) {
         holder: FormViewHolder,
         item: BaseForm<*>,
         adapterEnabled: Boolean
-    ) {
-        holder.itemView.clipToOutline = holder.itemView.background != null
-    }
+    ) = Unit
 
     open fun onViewDetachedFromWindow(holder: FormViewHolder) = Unit
 

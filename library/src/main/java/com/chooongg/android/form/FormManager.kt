@@ -10,9 +10,9 @@ import com.chooongg.android.form.extractor.IIconExtractor
 import com.chooongg.android.form.extractor.ITextExtractor
 import com.chooongg.android.form.extractor.NormalIconExtractor
 import com.chooongg.android.form.extractor.NormalTextExtractor
-import com.chooongg.android.form.formatter.name.AbstractNameFormatter
-import com.chooongg.android.form.formatter.name.NormalNameFormatter
 import com.chooongg.android.form.item.BaseForm
+import com.chooongg.android.form.style.AbstractStyle
+import com.chooongg.android.form.style.CardElevatedStyle
 import java.lang.reflect.ParameterizedType
 
 
@@ -42,7 +42,15 @@ object FormManager {
      */
     private val itemDataActuators = HashMap<Class<*>, FormDataActuator<*>>()
 
-    var config: FormGlobalConfig = FormGlobalConfig()
+    /**
+     * 全局配置
+     */
+    var globalConfig: FormGlobalConfig = FormGlobalConfig()
+
+    /**
+     * 默认样式
+     */
+    var defaultStyle: AbstractStyle = CardElevatedStyle()
 
     /**
      * 获取字体实际高度

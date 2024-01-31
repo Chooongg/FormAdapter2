@@ -3,10 +3,10 @@ package com.chooongg.android.form.boundary
 import androidx.annotation.IntDef
 
 data class Boundary(
-    @BoundaryInt val start: Int,
-    @BoundaryInt val top: Int,
-    @BoundaryInt val end: Int,
-    @BoundaryInt val bottom: Int
+    @BoundaryInt var start: Int,
+    @BoundaryInt var top: Int,
+    @BoundaryInt var end: Int,
+    @BoundaryInt var bottom: Int
 ) {
 
     constructor() : this(NONE, NONE, NONE, NONE)

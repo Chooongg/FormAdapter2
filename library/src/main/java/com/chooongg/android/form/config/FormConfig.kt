@@ -39,19 +39,19 @@ abstract class FormConfig {
 
 
     val nameFormatter: AbstractNameFormatter
-        get() = _nameFormatter ?: FormManager.config.nameFormatter
+        get() = _nameFormatter ?: FormManager.globalConfig.nameFormatter
 
     val groupTitleProvider: AbstractGroupTitleProvider
-        get() = _groupTitleProvider ?: FormManager.config.groupTitleProvider
+        get() = _groupTitleProvider ?: FormManager.globalConfig.groupTitleProvider
 
     val emsSize: FormEmsSize
-        get() = _emsSize ?: FormManager.config.emsSize
+        get() = _emsSize ?: FormManager.globalConfig.emsSize
 
     val contentGravity: FormContentGravity
-        get() = _contentGravity ?: FormManager.config.contentGravity
+        get() = _contentGravity ?: FormManager.globalConfig.contentGravity
 
     val typeset: AbstractTypeset
-        get() = _typeset ?: FormManager.config.typeset
+        get() = _typeset ?: FormManager.globalConfig.typeset
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

@@ -103,7 +103,7 @@ abstract class BaseForm<CONTENT : Any>(
     /**
      * 自动填充
      */
-    open var autoFill = true
+    open var autoFill = false
 
     /**
      * 重力

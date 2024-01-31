@@ -21,9 +21,10 @@ class CardElevatedStyle : AbstractStyle() {
     override fun onBindViewHolder(
         holder: FormViewHolder,
         item: BaseForm<*>,
-        layout: ViewGroup,
+        layout: ViewGroup?,
         adapterEnabled: Boolean
     ) {
+        holder.itemView.clipToOutline = true
         holder.itemView.elevation = if (elevationResId != null) {
             holder.itemView.resDimension(elevationResId!!)
         } else holder.itemView.resDimension(R.dimen.formCardElevation)

@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.chooongg.android.form.layoutManager.AbstractFormLayoutManager
 import com.chooongg.android.form.layoutManager.FormLayoutManager
 import com.chooongg.android.ktx.resDimensionPixelSize
-import com.chooongg.android.ktx.showToast
 
 class FormView @JvmOverloads constructor(
     context: Context,
@@ -28,12 +27,13 @@ class FormView @JvmOverloads constructor(
             R.styleable.FormView_formMarginEnd,
             resDimensionPixelSize(R.dimen.formMarginEnd)
         )
+        column = a.getInteger(R.styleable.FormView_formColumn, 1)
+        a.recycle()
         super.setLayoutManager(FormLayoutManager(context).apply {
             marginStart = layoutMarginStart
             marginEnd = layoutMarginEnd
         })
-        column = a.getInteger(R.styleable.FormView_formColumn, 1)
-        a.recycle()
+        addItemDecoration(FormItemDecoration())
     }
 
     override fun setAdapter(adapter: Adapter<*>?) {

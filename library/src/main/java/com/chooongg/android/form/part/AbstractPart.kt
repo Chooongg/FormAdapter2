@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ListUpdateCallback
 import androidx.recyclerview.widget.RecyclerView
 import com.chooongg.android.form.FormAdapter
+import com.chooongg.android.form.boundary.Boundary
 import com.chooongg.android.form.holder.FormViewHolder
 import com.chooongg.android.form.item.BaseForm
 import com.chooongg.android.form.item.InternalFormNone
@@ -138,7 +139,61 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
             }
         }
         asyncDiffer.submitList(ArrayList<BaseForm<*>>().apply { tempList2.forEach { addAll(it) } }) {
+            calculateBoundary()
             notifyItemRangeChanged(0, itemCount)
+        }
+    }
+
+    private fun calculateBoundary() {
+        showItemList.forEachIndexed { index, item ->
+            // Start
+            item.boundary.start = if (item.spanIndex == 0) {
+                Boundary.GLOBAL
+            } else if (style.isIndependentItem) {
+                Boundary.MIDDLE
+            } else {
+                Boundary.NONE
+            }
+            // End
+            val isGroupLast = item.positionInGroup == item.countInGroup - 1
+            item.boundary.end = if ((item.spanIndex + item.spanSize >= spanCount || isGroupLast)) {
+                Boundary.GLOBAL
+            } else if (style.isIndependentItem) {
+                Boundary.MIDDLE
+            } else {
+                Boundary.NONE
+            }
+            // Top
+            item.boundary.top = if (item.positionInGroup == 0) {
+                Boundary.MIDDLE
+            } else if (item.spanIndex == 0) {
+                Boundary.NONE
+            } else {
+                var beginIndex = index - 1
+                var beginItem = get(beginIndex)
+                while (beginIndex < showItemList.lastIndex && beginItem.spanIndex != 0 && item.positionInGroup != 0) {
+                    beginIndex--
+                    beginItem = get(beginIndex)
+                }
+                beginItem.boundary.top
+            }
+        }
+        for (index in showItemList.lastIndex downTo 0) {
+            val item = get(index)
+            // Bottom
+            item.boundary.bottom = if (item.countInGroup - 1 - item.positionInGroup == 0) {
+                Boundary.MIDDLE
+            } else if (item.spanIndex + item.spanIndex >= spanCount) {
+                Boundary.NONE
+            } else {
+                var lastIndex = index
+                var lastItem = get(lastIndex)
+                while (lastIndex < showItemList.lastIndex && get(lastIndex + 1).spanIndex != 0 && lastItem.countInGroup - 1 - lastItem.positionInGroup != 0) {
+                    lastIndex++
+                    lastItem = get(lastIndex)
+                }
+                lastItem.boundary.bottom
+            }
         }
     }
 
@@ -194,10 +249,9 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
         val item = get(position)
         item.globalPosition = holder.absoluteAdapterPosition
         item.localPosition = holder.bindingAdapterPosition
+        holder.style.initializeShapeAppearanceModel(holder)
         holder.style.onBindViewHolderBefore(holder, item, adapter.isEnabled)
-        if (holder.styleLayout != null) {
-            holder.style.onBindViewHolder(holder, item, holder.styleLayout, adapter.isEnabled)
-        }
+        holder.style.onBindViewHolder(holder, item, holder.styleLayout, adapter.isEnabled)
         if (holder.typesetLayout != null) {
             holder.typeset.onBindViewHolder(holder, item, holder.typesetLayout, adapter.isEnabled)
         }

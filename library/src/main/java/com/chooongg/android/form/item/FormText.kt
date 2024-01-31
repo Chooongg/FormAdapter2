@@ -23,6 +23,12 @@ open class FormText(name: Any?, field: String?) : BaseForm<Any>(name, field) {
     override fun onCreateViewHolder(style: AbstractStyle, parent: ViewGroup): View =
         MaterialTextView(parent.context).apply {
             setTextAppearance(formTextAppearance(R.attr.formTextAppearanceContent))
+            setPaddingRelative(
+                style.padding.startMedium,
+                style.padding.topMedium,
+                style.padding.endMedium,
+                style.padding.bottomMedium
+            )
         }
 
     override fun onBindViewHolder(
