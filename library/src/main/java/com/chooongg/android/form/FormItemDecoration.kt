@@ -19,6 +19,12 @@ class FormItemDecoration : ItemDecoration() {
         val adapter = parent.adapter as? FormAdapter ?: return
         val style = adapter.getStyle4ItemViewType(holder.itemViewType)
         val item = adapter.getFormItem(holder.absoluteAdapterPosition) ?: return
+        val top = if (holder.absoluteAdapterPosition == 0) {
+            style.margin.top - style.margin.topMedium
+        } else 0
+        val bottom = if (holder.absoluteAdapterPosition == adapter.itemCount - 1) {
+            style.margin.bottom - style.margin.bottomMedium
+        } else 0
         val start = if (style.isIndependentItem) {
             when (item.boundary.start) {
                 Boundary.GLOBAL -> 0
@@ -40,9 +46,9 @@ class FormItemDecoration : ItemDecoration() {
             }
         } else 0
         if (view.isLayoutRtl) {
-            outRect.set(end, 0, start, 0)
+            outRect.set(end, top, start, bottom)
         } else {
-            outRect.set(start, 0, end, 0)
+            outRect.set(start, top, end, bottom)
         }
     }
 }
