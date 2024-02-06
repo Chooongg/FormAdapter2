@@ -7,7 +7,7 @@ import com.chooongg.android.form.holder.FormViewHolder
 import com.chooongg.android.form.style.AbstractStyle
 import kotlinx.coroutines.CoroutineScope
 
-class FormDetail:BaseForm<AbstractPartData>() {
+class FormDetail(name: Any?, field: String?) : BaseForm<AbstractPartData>(name, field) {
     override fun copyEmptyItem(): BaseForm<AbstractPartData> {
         TODO("Not yet implemented")
     }

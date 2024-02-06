@@ -280,10 +280,6 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
         holder.style.onViewDetachedFromWindow(holder)
         holder.typeset.onViewDetachedFromWindow(holder)
         adapter.getItem4ItemViewType(holder.itemViewType).onViewDetachedFromWindow(holder)
-        logE(
-            "Form",
-            "bPosition:${holder.bindingAdapterPosition}, aPosition:${holder.absoluteAdapterPosition}, lPosition:${holder.layoutPosition}"
-        )
     }
 
     override fun onViewRecycled(holder: FormViewHolder) {
