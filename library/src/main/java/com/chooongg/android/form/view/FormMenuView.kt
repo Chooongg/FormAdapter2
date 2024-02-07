@@ -49,7 +49,7 @@ class FormMenuView(
                 val isIntercept =
                     item.onMenuItemClickListener?.invoke(holder.itemView, menuView, menuItem)
                 if (isIntercept != true) {
-                    (holder.bindingAdapter as? AbstractPart)?.adapter?.onMenuClickListener
+                    (holder.bindingAdapter as? AbstractPart<*>)?.adapter?.onMenuClickListener
                         ?.invoke(holder.itemView, menuView, menuItem, item)
                 }
             }

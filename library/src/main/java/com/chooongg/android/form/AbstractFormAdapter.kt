@@ -46,7 +46,7 @@ abstract class AbstractFormAdapter internal constructor() :
         concatAdapter.registerAdapterDataObserver(dataObserver)
     }
 
-    operator fun get(field: String): Pair<AbstractPart, BaseForm<*>>? {
+    operator fun get(field: String): Pair<AbstractPart<*>, BaseForm<*>>? {
         partAdapters.forEach {
             val item = it[field]
             if (item != null) return Pair(it, item)
@@ -68,14 +68,14 @@ abstract class AbstractFormAdapter internal constructor() :
         return false
     }
 
-    fun findPart(field: String): AbstractPart? {
+    fun findPart(field: String): AbstractPart<*>? {
         partAdapters.forEach {
             if (field in it) return it
         }
         return null
     }
 
-    fun findPart(item: BaseForm<*>): AbstractPart? {
+    fun findPart(item: BaseForm<*>): AbstractPart<*>? {
         partAdapters.forEach {
             if (item in it) return it
         }
@@ -88,11 +88,11 @@ abstract class AbstractFormAdapter internal constructor() :
 
     //<editor-fold desc="覆写 Overwrite">
 
-    val partAdapters get() = concatAdapter.adapters.filterIsInstance<AbstractPart>()
+    val partAdapters get() = concatAdapter.adapters.filterIsInstance<AbstractPart<*>>()
 
     fun getFormItem(position: Int): BaseForm<*>? {
         val pair = concatAdapter.getWrappedAdapterAndPosition(position)
-        val part = pair.first as? AbstractPart ?: return null
+        val part = pair.first as? AbstractPart<*> ?: return null
         return part[pair.second]
     }
 

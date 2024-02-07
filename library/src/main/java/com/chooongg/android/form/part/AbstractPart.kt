@@ -9,19 +9,23 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ListUpdateCallback
 import androidx.recyclerview.widget.RecyclerView
 import com.chooongg.android.form.FormAdapter
+import com.chooongg.android.form.FormManager
 import com.chooongg.android.form.boundary.Boundary
+import com.chooongg.android.form.data.AbstractPartData
 import com.chooongg.android.form.holder.FormViewHolder
 import com.chooongg.android.form.item.BaseForm
 import com.chooongg.android.form.item.InternalFormNone
 import com.chooongg.android.form.style.AbstractStyle
-import com.chooongg.android.ktx.logE
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 
-abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) :
-    RecyclerView.Adapter<FormViewHolder>() {
+abstract class AbstractPart<DATA : AbstractPartData>(
+    val adapter: FormAdapter,
+    val style: AbstractStyle,
+    var data: DATA
+) : RecyclerView.Adapter<FormViewHolder>() {
 
     protected open var needBlankFill: Boolean = true
 
@@ -50,9 +54,7 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
             notifyItemMoved(fromPosition, toPosition)
 
     }, AsyncDifferConfig.Builder(object : DiffUtil.ItemCallback<BaseForm<*>>() {
-        override fun areContentsTheSame(oldItem: BaseForm<*>, newItem: BaseForm<*>) =
-            oldItem.id == newItem.id
-
+        override fun areContentsTheSame(oldItem: BaseForm<*>, newItem: BaseForm<*>) = true
         override fun areItemsTheSame(oldItem: BaseForm<*>, newItem: BaseForm<*>) =
             oldItem.id == newItem.id && oldItem.typeset == newItem.typeset
     }).build())
@@ -70,6 +72,7 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
         groups.forEach { group ->
             val tempGroup = ArrayList<BaseForm<*>>()
             group.forEach { item ->
+                item.enabled = item.isEnable(adapter.isEnabled)
                 item.resetInternalData()
                 item.initialize()
                 if (item.isVisible(adapter.isEnabled)) {
@@ -140,14 +143,24 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
         }
         asyncDiffer.submitList(ArrayList<BaseForm<*>>().apply { tempList2.forEach { addAll(it) } }) {
             calculateBoundary()
-            notifyItemRangeChanged(0, itemCount)
+            showItemList.forEachIndexed { index, item ->
+                if (item.lastEnabled != item.enabled) {
+                    notifyItemChanged(index)
+                } else {
+                    notifyItemChanged(index, FormManager.FLAG_PAYLOAD_UPDATE_CONTENT)
+                    if (item.lastBoundary != item.boundary) {
+                        notifyItemChanged(index, FormManager.FLAG_PAYLOAD_UPDATE_BOUNDARY)
+                    }
+                }
+            }
         }
     }
 
     private fun calculateBoundary() {
         showItemList.forEachIndexed { index, item ->
             // Start
-            item.boundary.start = if (item.spanIndex == 0) {
+            val boundary = Boundary()
+            boundary.start = if (item.spanIndex == 0) {
                 Boundary.GLOBAL
             } else if (style.isIndependentItem) {
                 Boundary.MIDDLE
@@ -156,7 +169,7 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
             }
             // End
             val isGroupLast = item.positionInGroup == item.countInGroup - 1
-            item.boundary.end = if ((item.spanIndex + item.spanSize >= spanCount || isGroupLast)) {
+            boundary.end = if ((item.spanIndex + item.spanSize >= spanCount || isGroupLast)) {
                 Boundary.GLOBAL
             } else if (style.isIndependentItem) {
                 Boundary.MIDDLE
@@ -164,7 +177,7 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
                 Boundary.NONE
             }
             // Top
-            item.boundary.top = if (item.positionInGroup == 0) {
+            boundary.top = if (item.positionInGroup == 0) {
                 Boundary.MIDDLE
             } else if (item.spanIndex == 0) {
                 Boundary.NONE
@@ -177,6 +190,7 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
                 }
                 beginItem.boundary.top
             }
+            item.boundary = boundary
         }
         for (index in showItemList.lastIndex downTo 0) {
             val item = get(index)
@@ -272,8 +286,27 @@ abstract class AbstractPart(val adapter: FormAdapter, val style: AbstractStyle) 
         }
         val item = get(position)
         item.onBindViewItemClick(adapter, adapterScope, holder, adapter.isEnabled)
+        payloads.forEach {
+            when (it) {
+                FormManager.FLAG_PAYLOAD_UPDATE_CONTENT -> {
+                    item.onBindViewHolder(adapterScope, holder, holder.view, adapter.isEnabled)
+                }
+
+                FormManager.FLAG_PAYLOAD_UPDATE_BOUNDARY -> {
+                    val style = adapter.getStyle4ItemViewType(holder.itemViewType)
+                    style.onBindViewHolderBefore(holder, item, adapter.isEnabled)
+                    style.onBindViewHolder(holder, item, holder.styleLayout, adapter.isEnabled)
+                    style.onBindViewHolderAfter(holder, item, adapter.isEnabled)
+                }
+
+                else -> item.onBindViewHolderOther(
+                    adapterScope, holder, holder.view, adapter.isEnabled, it
+                )
+            }
+        }
         item.globalPosition = holder.absoluteAdapterPosition
         item.localPosition = holder.bindingAdapterPosition
+
     }
 
     override fun onViewDetachedFromWindow(holder: FormViewHolder) {

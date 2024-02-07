@@ -9,8 +9,10 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import com.chooongg.android.form.FormAdapter
 import com.chooongg.android.form.FormView
 import com.chooongg.android.form.R
+import com.chooongg.android.form.addText
 import com.chooongg.android.ktx.attrColor
 import com.chooongg.android.ktx.contentView
 import com.chooongg.android.ktx.gone
@@ -23,6 +25,8 @@ import com.google.android.material.transition.platform.MaterialSharedAxis
 
 class FormDetailActivity : AppCompatActivity() {
 
+    private val formAdapter = FormAdapter()
+
     private var isHasActionBar = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,11 +37,19 @@ class FormDetailActivity : AppCompatActivity() {
         with(findViewById<MaterialToolbar>(R.id.toolbar)) {
             if (isHasActionBar) gone() else setSupportActionBar(this)
         }
+        title = "Detail"
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
-
+        findViewById<FormView>(R.id.formView).adapter = formAdapter
+        formAdapter.addPart {
+            for (i in 0..10) {
+                addText("Text") {
+                    content = "Test"
+                }
+            }
+        }
     }
 
     private fun configWindow() {

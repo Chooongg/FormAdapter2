@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import com.chooongg.android.form.FormAdapter
+import com.chooongg.android.form.addDetail
 import com.chooongg.android.form.addText
 import com.chooongg.android.form.helper.FormTextAppearanceHelper
 import com.chooongg.android.form.view.FormDetailActivity
@@ -25,19 +26,16 @@ class MainActivity : AppCompatActivity(), FormTextAppearanceHelper {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
         formAdapter.setOnItemClickListener { view, item ->
-            setExitSharedElementCallback(MaterialContainerTransformSharedElementCallback())
-            val intent = Intent(view.context, FormDetailActivity::class.java)
-            startActivity(
-                intent, ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    this, view, "FormDetail"
-                ).toBundle()
-            )
+
         }
         formAdapter.addPart {
             for (i in 0..10) {
                 addText("Text") {
                     content = "Test"
                     menu = R.menu.main
+                }
+                addDetail("Detail") {
+
                 }
             }
         }

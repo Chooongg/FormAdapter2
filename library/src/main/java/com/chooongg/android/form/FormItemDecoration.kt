@@ -5,6 +5,7 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.chooongg.android.form.boundary.Boundary
+import com.chooongg.android.form.layoutManager.AbstractFormLayoutManager
 import com.chooongg.android.ktx.isLayoutRtl
 
 class FormItemDecoration : ItemDecoration() {
@@ -19,10 +20,19 @@ class FormItemDecoration : ItemDecoration() {
         val adapter = parent.adapter as? FormAdapter ?: return
         val style = adapter.getStyle4ItemViewType(holder.itemViewType)
         val item = adapter.getFormItem(holder.absoluteAdapterPosition) ?: return
-        val top = if (holder.absoluteAdapterPosition == 0) {
+        val layoutManager = parent.layoutManager as AbstractFormLayoutManager
+        val spanGroupIndex = layoutManager.spanSizeLookup.getSpanGroupIndex(
+            holder.absoluteAdapterPosition,
+            layoutManager.spanCount
+        )
+        val top = if (spanGroupIndex == 0) {
             style.margin.top - style.margin.topMedium
         } else 0
-        val bottom = if (holder.absoluteAdapterPosition == adapter.itemCount - 1) {
+        val bottom = if (
+            layoutManager.spanSizeLookup.getSpanGroupIndex(
+                adapter.itemCount - 1, layoutManager.spanCount
+            ) == spanGroupIndex
+        ) {
             style.margin.bottom - style.margin.bottomMedium
         } else 0
         val start = if (style.isIndependentItem) {

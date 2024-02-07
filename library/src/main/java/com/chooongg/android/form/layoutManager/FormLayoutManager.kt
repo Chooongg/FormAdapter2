@@ -9,7 +9,7 @@ class FormLayoutManager(context: Context) : AbstractFormLayoutManager(context) {
         val formAdapter = adapter as? FormAdapter ?: return spanCount
         val pair = formAdapter.getWrappedAdapterAndPosition(position)
         return when (val childAdapter = pair.first) {
-            is AbstractPart -> childAdapter[pair.second].spanSize
+            is AbstractPart<*> -> childAdapter[pair.second].spanSize
             is FormCustomAdapterSpanLookup -> childAdapter.getSpanSize(
                 position,
                 formAdapter.columnCount ?: 1
@@ -23,7 +23,7 @@ class FormLayoutManager(context: Context) : AbstractFormLayoutManager(context) {
         val formAdapter = adapter as? FormAdapter ?: return spanCount
         val pair = formAdapter.getWrappedAdapterAndPosition(position)
         return when (val childAdapter = pair.first) {
-            is AbstractPart -> childAdapter[pair.second].spanIndex
+            is AbstractPart<*> -> childAdapter[pair.second].spanIndex
             is FormCustomAdapterSpanLookup -> childAdapter.getSpanIndex(
                 position,
                 formAdapter.columnCount ?: 1

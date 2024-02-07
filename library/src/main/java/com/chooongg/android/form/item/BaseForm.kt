@@ -136,7 +136,7 @@ abstract class BaseForm<CONTENT : Any>(
     /**
      * 触发联动操作
      */
-    fun triggerLinkage(part: AbstractPart) {
+    fun triggerLinkage(part: AbstractPart<*>) {
         linkageBlock?.invoke(FormLinkage(part))
     }
 
@@ -147,7 +147,7 @@ abstract class BaseForm<CONTENT : Any>(
     /**
      * 是否响应点击事件
      */
-    open var isRespondToClickEvents: Boolean = true
+    open var isRespondToClickEvents: Boolean = false
 
     //</editor-fold>
 
@@ -353,7 +353,7 @@ abstract class BaseForm<CONTENT : Any>(
      */
     @GravityInt
     protected fun obtainContentGravity(holder: FormViewHolder): Int {
-        val columnCount = (holder.bindingAdapter as? AbstractPart)?.columnCount ?: 1
+        val columnCount = (holder.bindingAdapter as? AbstractPart<*>)?.columnCount ?: 1
         return if (columnCount > 1) contentGravity?.multiColumnGravity
             ?: gravity
             ?: holder.typeset.contentGravity?.multiColumnGravity

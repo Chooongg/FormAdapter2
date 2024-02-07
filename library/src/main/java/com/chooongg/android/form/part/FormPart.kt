@@ -6,9 +6,8 @@ import com.chooongg.android.form.item.BaseForm
 import com.chooongg.android.form.linkage.FormLinkage
 import com.chooongg.android.form.style.AbstractStyle
 
-class FormPart(adapter: FormAdapter, style: AbstractStyle) : AbstractPart(adapter, style) {
-
-    var data = FormPartData().apply { partEnabled = false }
+class FormPart(adapter: FormAdapter, style: AbstractStyle, data: FormPartData) :
+    AbstractPart<FormPartData>(adapter, style, data) {
 
     override fun getOriginalItemList(): List<List<BaseForm<*>>> = listOf(data.getItems())
 

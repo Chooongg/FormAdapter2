@@ -53,7 +53,7 @@ abstract class AbstractTypeset : FormTextAppearanceHelper {
         addView(style, parent, child)
 
     fun setNameViewEms(holder: FormViewHolder, textView: TextView) {
-        val part = holder.bindingAdapter as? AbstractPart
+        val part = holder.bindingAdapter as? AbstractPart<*>
         val size = emsSize ?: holder.style.config.emsSize
         val isMultiColumn = (part?.columnCount ?: 1) > 1
         when (if (isMultiColumn) emsMode.multiColumnMode else emsMode.mode) {

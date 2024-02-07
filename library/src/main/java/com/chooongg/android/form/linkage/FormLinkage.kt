@@ -4,7 +4,7 @@ import com.chooongg.android.form.item.BaseForm
 import com.chooongg.android.form.part.AbstractPart
 
 class FormLinkage internal constructor(
-    private val part: AbstractPart,
+    private val part: AbstractPart<*>,
     private val isIgnoreUpdate: Boolean = false
 ) {
 

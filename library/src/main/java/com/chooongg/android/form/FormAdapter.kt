@@ -51,8 +51,7 @@ class FormAdapter(isEnabled: Boolean = false) : AbstractFormAdapter() {
         style: AbstractStyle = FormManager.defaultStyle,
         block: FormPartData.() -> Unit
     ): FormPart {
-        val part = FormPart(this, style)
-        part.data = FormPartData().apply(block)
+        val part = FormPart(this, style,FormPartData().apply(block))
         concatAdapter.addAdapter(part)
         part.update()
         return part
