@@ -20,6 +20,7 @@ class NormalGroupTitleProvider : AbstractGroupTitleProvider() {
             it.orientation = LinearLayoutCompat.HORIZONTAL
             it.addView(MaterialButton(it.context).apply {
                 id = R.id.formInternalNameView
+                isClickable = false
                 gravity = Gravity.NO_GRAVITY
                 background = null
                 minWidth = 0
@@ -39,6 +40,10 @@ class NormalGroupTitleProvider : AbstractGroupTitleProvider() {
             }, LinearLayoutCompat.LayoutParams(-2, -2))
         }
 
+    override fun onViewAttachedToWindow(holder: FormViewHolder) {
+        holder.style.onViewAttachedToWindow(holder)
+    }
+
     override fun onBindViewHolder(
         scope: CoroutineScope,
         holder: FormViewHolder,
@@ -57,5 +62,13 @@ class NormalGroupTitleProvider : AbstractGroupTitleProvider() {
         }
         view.findViewById<FormMenuView>(R.id.formInternalMenuView)
             ?.configMenu(holder, item, adapterEnabled)
+    }
+
+    override fun onViewDetachedFromWindow(holder: FormViewHolder) {
+        holder.style.onViewDetachedFromWindow(holder)
+    }
+
+    override fun onViewRecycled(holder: FormViewHolder) {
+        holder.style.onViewRecycled(holder)
     }
 }

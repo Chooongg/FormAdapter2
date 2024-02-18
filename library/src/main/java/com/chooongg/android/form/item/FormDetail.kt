@@ -6,25 +6,35 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.app.ActivityOptionsCompat
 import com.chooongg.android.form.FormAdapter
+import com.chooongg.android.form.FormContentFormatter
 import com.chooongg.android.form.R
-import com.chooongg.android.form.data.FormAdapterData
+import com.chooongg.android.form.data.AbstractPartData
+import com.chooongg.android.form.data.FormDetailData
 import com.chooongg.android.form.holder.FormViewHolder
 import com.chooongg.android.form.style.AbstractStyle
 import com.chooongg.android.form.typeset.AbstractTypeset
 import com.chooongg.android.form.typeset.NoneTypeset
 import com.chooongg.android.form.view.FormDetailActivity
 import com.chooongg.android.ktx.getActivity
+import com.chooongg.android.ktx.gone
+import com.chooongg.android.ktx.visible
 import com.google.android.material.textview.MaterialTextView
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import kotlinx.coroutines.CoroutineScope
 
-class FormDetail(name: Any?, field: String?) : BaseForm<FormAdapterData>(name, field) {
+class FormDetail(name: Any?, field: String?) : BaseForm<FormDetailData>(name, field) {
+
+    var contentFormatter: FormContentFormatter? = null
 
     override var isRespondToClickEvents: Boolean = true
 
     override var typeset: AbstractTypeset? = NoneTypeset()
 
-    override fun copyEmptyItem(): BaseForm<FormAdapterData> = FormDetail(null, null)
+    fun content(block: FormDetailData.() -> Unit) {
+        content = FormDetailData().apply(block)
+    }
+
+    override fun copyEmptyItem(): BaseForm<FormDetailData> = FormDetail(null, null)
 
     override fun onCreateViewHolder(style: AbstractStyle, parent: ViewGroup): View =
         LinearLayoutCompat(parent.context).also {
@@ -52,14 +62,14 @@ class FormDetail(name: Any?, field: String?) : BaseForm<FormAdapterData>(name, f
         adapterEnabled: Boolean
     ) {
         holder.style.config.groupTitleProvider.onBindViewHolder(
-            scope,
-            holder,
-            view,
-            this,
-            adapterEnabled
+            scope, holder, view, this, adapterEnabled
         )
         with(view.findViewById<MaterialTextView>(R.id.formInternalContentView)) {
-            text = "这是详情"
+            val parts = if (content != null) ArrayList<AbstractPartData>().apply {
+                content!!.getDetailParts().forEach { add(it.second) }
+            } else null
+            text = contentFormatter?.invoke(context, parts)
+            if (text != null) visible() else gone()
         }
     }
 

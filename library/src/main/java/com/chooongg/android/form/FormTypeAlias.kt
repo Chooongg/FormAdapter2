@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.view.MenuItem
 import android.view.View
+import com.chooongg.android.form.data.AbstractPartData
 import com.chooongg.android.form.item.BaseForm
 import com.chooongg.android.form.linkage.FormLinkage
 
@@ -36,3 +37,8 @@ typealias FormOnMenuClickListener = (view: View, menuView: View, menuItem: MenuI
  * 联动Block
  */
 typealias FormLinkageBlock = FormLinkage.() -> Unit
+
+/**
+ * 内容格式化程序
+ */
+typealias FormContentFormatter = Context.(parts: List<AbstractPartData>?) -> CharSequence?

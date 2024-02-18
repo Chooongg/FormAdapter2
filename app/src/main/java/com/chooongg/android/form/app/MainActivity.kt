@@ -7,6 +7,7 @@ import androidx.core.app.ActivityOptionsCompat
 import com.chooongg.android.form.FormAdapter
 import com.chooongg.android.form.addDetail
 import com.chooongg.android.form.addText
+import com.chooongg.android.form.data.FormDetailData
 import com.chooongg.android.form.helper.FormTextAppearanceHelper
 import com.chooongg.android.form.view.FormDetailActivity
 import com.chooongg.android.formAdapter.app.R
@@ -35,7 +36,36 @@ class MainActivity : AppCompatActivity(), FormTextAppearanceHelper {
                     menu = R.menu.main
                 }
                 addDetail("Detail") {
-
+                    content {
+                        initPart {
+                            addText("Text") {
+                                content = "Test"
+                                menu = R.menu.main
+                            }
+                            addText("Text") {
+                                content = "Test"
+                                menu = R.menu.main
+                            }
+                            addText("Text") {
+                                content = "Test"
+                                menu = R.menu.main
+                            }
+                        }
+                        initPart {
+                            addText("Text") {
+                                content = "Test"
+                                menu = R.menu.main
+                            }
+                            addText("Text") {
+                                content = "Test"
+                                menu = R.menu.main
+                            }
+                            addText("Text") {
+                                content = "Test"
+                                menu = R.menu.main
+                            }
+                        }
+                    }
                 }
             }
         }

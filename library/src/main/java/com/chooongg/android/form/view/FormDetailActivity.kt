@@ -10,12 +10,15 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import com.chooongg.android.form.FormAdapter
+import com.chooongg.android.form.FormManager
 import com.chooongg.android.form.FormView
 import com.chooongg.android.form.R
-import com.chooongg.android.form.addText
+import com.chooongg.android.form.data.FormPartData
+import com.chooongg.android.form.item.FormDetail
 import com.chooongg.android.ktx.attrColor
 import com.chooongg.android.ktx.contentView
 import com.chooongg.android.ktx.gone
+import com.chooongg.android.ktx.resString
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.motion.MotionUtils
 import com.google.android.material.transition.platform.MaterialArcMotion
@@ -24,6 +27,11 @@ import com.google.android.material.transition.platform.MaterialContainerTransfor
 import com.google.android.material.transition.platform.MaterialSharedAxis
 
 class FormDetailActivity : AppCompatActivity() {
+
+    internal object Controller {
+        var formDetail: FormDetail? = null
+        var resultBlock: (() -> Unit)? = null
+    }
 
     private val formAdapter = FormAdapter()
 
@@ -37,17 +45,16 @@ class FormDetailActivity : AppCompatActivity() {
         with(findViewById<MaterialToolbar>(R.id.toolbar)) {
             if (isHasActionBar) gone() else setSupportActionBar(this)
         }
-        title = "Detail"
+        title = FormManager.extractText(this, Controller.formDetail?.name)
+            ?: resString(R.string.detail)
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         findViewById<FormView>(R.id.formView).adapter = formAdapter
-        formAdapter.addPart {
-            for (i in 0..10) {
-                addText("Text") {
-                    content = "Test"
-                }
+        Controller.formDetail?.content?.getDetailParts()?.forEach {
+            when (it.second) {
+                is FormPartData -> formAdapter.addPart(it.first, it.second as FormPartData)
             }
         }
     }
@@ -102,5 +109,12 @@ class FormDetailActivity : AppCompatActivity() {
         transform.fadeMode = MaterialContainerTransform.FADE_MODE_CROSS
         transform.pathMotion = MaterialArcMotion()
         return transform
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Controller.resultBlock?.invoke()
+        Controller.formDetail = null
+        Controller.resultBlock = null
     }
 }
