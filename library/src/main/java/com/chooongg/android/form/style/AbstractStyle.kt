@@ -112,12 +112,12 @@ abstract class AbstractStyle(val config: FormConfig = EmptyConfig()) {
         when (item.boundary.start) {
             Boundary.GLOBAL -> {
                 _marginStart = 0
-                _paddingStart = padding.start - padding.startMedium
+                _paddingStart = if (item.fillEdges) padding.start - padding.startMedium else 0
             }
 
             Boundary.MIDDLE -> {
                 _marginStart = margin.startMedium
-                _paddingStart = padding.start - padding.startMedium
+                _paddingStart = if (item.fillEdges) padding.start - padding.startMedium else 0
             }
 
             Boundary.NONE -> {
@@ -128,12 +128,12 @@ abstract class AbstractStyle(val config: FormConfig = EmptyConfig()) {
         when (item.boundary.end) {
             Boundary.GLOBAL -> {
                 _marginEnd = 0
-                _paddingEnd = padding.end - padding.endMedium
+                _paddingEnd = if (item.fillEdges) padding.end - padding.endMedium else 0
             }
 
             Boundary.MIDDLE -> {
                 _marginEnd = margin.startMedium
-                _paddingEnd = padding.end - padding.endMedium
+                _paddingEnd = if (item.fillEdges) padding.end - padding.endMedium else 0
             }
 
             Boundary.NONE -> {
@@ -144,12 +144,12 @@ abstract class AbstractStyle(val config: FormConfig = EmptyConfig()) {
         when (item.boundary.top) {
             Boundary.GLOBAL -> {
                 _marginTop = margin.top
-                _paddingTop = padding.top - padding.topMedium
+                _paddingTop = if (item.fillEdges) padding.top - padding.topMedium else 0
             }
 
             Boundary.MIDDLE -> {
                 _marginTop = margin.topMedium
-                _paddingTop = padding.top - padding.topMedium
+                _paddingTop = if (item.fillEdges) padding.top - padding.topMedium else 0
             }
 
             Boundary.NONE -> {
@@ -160,12 +160,12 @@ abstract class AbstractStyle(val config: FormConfig = EmptyConfig()) {
         when (item.boundary.bottom) {
             Boundary.GLOBAL -> {
                 _marginBottom = margin.bottom
-                _paddingBottom = padding.bottom - padding.bottomMedium
+                _paddingBottom = if (item.fillEdges) padding.bottom - padding.bottomMedium else 0
             }
 
             Boundary.MIDDLE -> {
                 _marginBottom = margin.bottomMedium
-                _paddingBottom = padding.bottom - padding.bottomMedium
+                _paddingBottom = if (item.fillEdges) padding.bottom - padding.bottomMedium else 0
             }
 
             Boundary.NONE -> {

@@ -6,6 +6,7 @@ import android.view.MenuItem
 import android.view.View
 import com.chooongg.android.form.data.AbstractPartData
 import com.chooongg.android.form.item.BaseForm
+import com.chooongg.android.form.item.BaseOptionForm
 import com.chooongg.android.form.linkage.FormLinkage
 
 /**
@@ -42,3 +43,8 @@ typealias FormLinkageBlock = FormLinkage.() -> Unit
  * 内容格式化程序
  */
 typealias FormContentFormatter = Context.(parts: List<AbstractPartData>?) -> CharSequence?
+
+/**
+ * 选项加载 Block
+ */
+typealias FormOptionLoader<T> = suspend (BaseOptionForm<T>) -> List<T>?

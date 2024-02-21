@@ -24,7 +24,7 @@ import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.CoroutineScope
 import org.json.JSONObject
 
-abstract class BaseForm<CONTENT : Any>(
+abstract class BaseForm<CONTENT>(
     /**
      * 名称
      */
@@ -115,6 +115,11 @@ abstract class BaseForm<CONTENT : Any>(
      * 内容重力
      */
     open var contentGravity: FormContentGravity? = null
+
+    /**
+     * 填充边缘
+     */
+    open var fillEdges: Boolean = true
 
     //</editor-fold>
 

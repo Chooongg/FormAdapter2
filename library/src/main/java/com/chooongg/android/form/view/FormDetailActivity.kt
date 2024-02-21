@@ -9,6 +9,8 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePadding
 import com.chooongg.android.form.FormAdapter
 import com.chooongg.android.form.FormManager
 import com.chooongg.android.form.FormView
@@ -18,7 +20,9 @@ import com.chooongg.android.form.item.FormDetail
 import com.chooongg.android.ktx.attrColor
 import com.chooongg.android.ktx.contentView
 import com.chooongg.android.ktx.gone
+import com.chooongg.android.ktx.resInteger
 import com.chooongg.android.ktx.resString
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.motion.MotionUtils
 import com.google.android.material.transition.platform.MaterialArcMotion
@@ -47,6 +51,8 @@ class FormDetailActivity : AppCompatActivity() {
         }
         title = FormManager.extractText(this, Controller.formDetail?.name)
             ?: resString(R.string.detail)
+        formAdapter.columnCount =
+            resInteger(Controller.formDetail?.detailColumnRes ?: R.integer.formDetailColumn)
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -92,10 +98,18 @@ class FormDetailActivity : AppCompatActivity() {
         ViewCompat.setOnApplyWindowInsetsListener(contentView) { _, insets ->
             val inset =
                 insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
-            findViewById<CoordinatorLayout>(R.id.rootView)
-                .setPadding(inset.left, 0, inset.right, 0)
-            findViewById<FormView>(R.id.formView)
-                .setPadding(inset.left, 0, inset.right, inset.bottom)
+            findViewById<CoordinatorLayout>(R.id.rootView).apply {
+                clipChildren = false
+                clipToPadding = false
+                setPadding(inset.left, 0, inset.right, 0)
+            }
+            findViewById<AppBarLayout>(R.id.appBarLayout).apply {
+                updatePadding(left = inset.left, right = inset.right)
+                updateLayoutParams<CoordinatorLayout.LayoutParams> {
+                    leftMargin = -inset.left
+                    rightMargin = -inset.right
+                }
+            }
             insets
         }
     }
@@ -111,8 +125,8 @@ class FormDetailActivity : AppCompatActivity() {
         return transform
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun finish() {
+        super.finish()
         Controller.resultBlock?.invoke()
         Controller.formDetail = null
         Controller.resultBlock = null

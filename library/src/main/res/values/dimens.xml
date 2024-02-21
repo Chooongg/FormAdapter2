@@ -23,4 +23,6 @@
 
 
     <dimen name="formCardElevation">1dp</dimen>
+
+    <integer name="formDetailColumn">1</integer>
 </resources>

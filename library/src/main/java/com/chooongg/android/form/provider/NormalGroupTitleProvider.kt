@@ -20,6 +20,7 @@ class NormalGroupTitleProvider : AbstractGroupTitleProvider() {
             it.orientation = LinearLayoutCompat.HORIZONTAL
             it.addView(MaterialButton(it.context).apply {
                 id = R.id.formInternalNameView
+                transitionName = "name"
                 isClickable = false
                 gravity = Gravity.NO_GRAVITY
                 background = null

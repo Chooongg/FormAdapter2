@@ -3,10 +3,12 @@ package com.chooongg.android.form.item
 import android.content.Intent
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.IntegerRes
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.app.ActivityOptionsCompat
 import com.chooongg.android.form.FormAdapter
 import com.chooongg.android.form.FormContentFormatter
+import com.chooongg.android.form.FormManager
 import com.chooongg.android.form.R
 import com.chooongg.android.form.data.AbstractPartData
 import com.chooongg.android.form.data.FormDetailData
@@ -24,6 +26,15 @@ import kotlinx.coroutines.CoroutineScope
 
 class FormDetail(name: Any?, field: String?) : BaseForm<FormDetailData>(name, field) {
 
+    /**
+     * 详情列数资源
+     */
+    @IntegerRes
+    var detailColumnRes: Int? = null
+
+    /**
+     * 内容格式化工具
+     */
     var contentFormatter: FormContentFormatter? = null
 
     override var isRespondToClickEvents: Boolean = true
@@ -68,8 +79,9 @@ class FormDetail(name: Any?, field: String?) : BaseForm<FormDetailData>(name, fi
             val parts = if (content != null) ArrayList<AbstractPartData>().apply {
                 content!!.getDetailParts().forEach { add(it.second) }
             } else null
-            text = contentFormatter?.invoke(context, parts)
-            if (text != null) visible() else gone()
+            val detail = contentFormatter?.invoke(context, parts)
+            if (detail != null) visible() else gone()
+            text = detail
         }
     }
 
@@ -86,6 +98,12 @@ class FormDetail(name: Any?, field: String?) : BaseForm<FormDetailData>(name, fi
         }
         holder.itemView.setOnClickListener {
             activity.setExitSharedElementCallback(MaterialContainerTransformSharedElementCallback())
+            FormDetailActivity.Controller.formDetail = this
+            FormDetailActivity.Controller.resultBlock = {
+                adapter.notifyItemChanged(
+                    holder.absoluteAdapterPosition, FormManager.FLAG_PAYLOAD_UPDATE_CONTENT
+                )
+            }
             val intent = Intent(activity, FormDetailActivity::class.java)
             activity.startActivity(
                 intent, ActivityOptionsCompat.makeSceneTransitionAnimation(

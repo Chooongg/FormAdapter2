@@ -4,6 +4,8 @@
     <application>
         <activity
             android:name="com.chooongg.android.form.view.FormDetailActivity"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:noHistory="true"
+            android:screenOrientation="behind" />
     </application>
 </manifest>
