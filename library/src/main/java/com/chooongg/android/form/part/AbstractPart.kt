@@ -225,6 +225,8 @@ abstract class AbstractPart<DATA : AbstractPartData>(
 
     abstract operator fun contains(item: BaseForm<*>): Boolean
 
+    fun indexOfShow(item: BaseForm<*>) = showItemList.indexOf(item)
+
     override fun getItemCount(): Int = showItemList.size
 
     override fun getItemViewType(position: Int): Int =

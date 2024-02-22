@@ -13,7 +13,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.textview.MaterialTextView
 import kotlinx.coroutines.CoroutineScope
 
-open class FormInput(name: Any?, field: String?) : BaseForm<CharSequence>(name, field) {
+open class FormInput(name: Any?, field: String?) : BaseOptionForm<CharSequence>(name, field) {
 
     /**
      * 最小行数
@@ -111,5 +111,15 @@ open class FormInput(name: Any?, field: String?) : BaseForm<CharSequence>(name, 
             it.text = FormManager.extractText(it.context, content)
             it.hint = FormManager.extractText(it.context, hint)
         }
+        super.onBindViewHolder(scope, holder, view, adapterEnabled)
+    }
+
+    override fun configOption(
+        scope: CoroutineScope,
+        holder: FormViewHolder,
+        view: View,
+        adapterEnabled: Boolean
+    ) {
+
     }
 }
