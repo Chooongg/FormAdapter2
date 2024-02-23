@@ -369,5 +369,27 @@ abstract class BaseForm<CONTENT>(
             ?: holder.style.config.contentGravity.gravity
     }
 
+    protected open fun changeContentAndNotifyLinkage(
+        holder: FormViewHolder, content: CONTENT?
+    ) {
+        if (this.content != content) {
+            this.content = content
+            val adapter = holder.bindingAdapter as? AbstractPart<*> ?: return
+            linkageBlock?.invoke(FormLinkage(adapter))
+        }
+    }
+
+    protected open fun changeExtensionAndNotifyLinkage(
+        holder: FormViewHolder,
+        field: String,
+        content: CONTENT?
+    ) {
+        if (extensionContent[field] != content) {
+            extensionContent[field] = content
+            val adapter = holder.bindingAdapter as? AbstractPart<*> ?: return
+            linkageBlock?.invoke(FormLinkage(adapter))
+        }
+    }
+
     //</editor-fold>
 }

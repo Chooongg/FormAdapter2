@@ -53,16 +53,6 @@ object FormManager {
     var defaultStyle: AbstractStyle = CardOutlineStyle()
 
     /**
-     * 获取字体实际高度
-     */
-    fun getFontRealHeight(textView: TextView): Int {
-        val tempView = TextView(textView.context)
-        tempView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textView.textSize)
-        tempView.measure(0, 0)
-        return tempView.measuredHeight
-    }
-
-    /**
      * 设置文本提取器
      */
     fun setTextExtractor(textExtractor: ITextExtractor) {
@@ -88,6 +78,15 @@ object FormManager {
     fun extractIcon(context: Context, icon: Any?): Drawable? = iconExtractor.extract(context, icon)
 
     /**
+     *提取图标并修改大小
+     */
+    fun extractIconAndChangeSize(context: Context, icon: Any?, size: Int): Drawable? {
+        val drawable = iconExtractor.extract(context, icon) ?: return null
+        drawable.setBounds(0, 0, size, size)
+        return drawable
+    }
+
+    /**
      * 添加数据执行器
      */
     fun putItemDataActuator(actuator: FormDataActuator<*>) {
@@ -108,5 +107,15 @@ object FormManager {
      */
     internal fun findItemDataActuator(clazz: Class<out BaseForm<*>>): FormDataActuator<*>? {
         return itemDataActuators[clazz]
+    }
+
+    /**
+     * 获取字体实际高度
+     */
+    fun getFontRealHeight(textView: TextView): Int {
+        val tempView = TextView(textView.context)
+        tempView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textView.textSize)
+        tempView.measure(0, 0)
+        return tempView.measuredHeight
     }
 }

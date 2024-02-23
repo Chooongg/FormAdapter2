@@ -72,6 +72,15 @@ abstract class BaseOptionForm<CONTENT>(name: Any?, field: String?) :
         view: View,
         adapterEnabled: Boolean
     ) {
+        loadOption(scope, holder, view, adapterEnabled)
+    }
+
+    protected fun loadOption(
+        scope: CoroutineScope,
+        holder: FormViewHolder,
+        view: View,
+        adapterEnabled: Boolean
+    ) {
         if (isNeedToLoadOption(holder)) {
             if (optionLoader == null) {
                 optionLoadResult = OptionLoadResult.Wait()
@@ -102,7 +111,7 @@ abstract class BaseOptionForm<CONTENT>(name: Any?, field: String?) :
                     }
                 }
             }
-        }
+        } else configOption(scope, holder, view, adapterEnabled)
     }
 
     override fun onBindViewHolderOther(

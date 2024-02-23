@@ -1,8 +1,11 @@
 package com.chooongg.android.form.view
 
 import android.graphics.Color
+import android.graphics.Rect
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.Window
+import android.widget.EditText
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -20,6 +23,7 @@ import com.chooongg.android.form.item.FormDetail
 import com.chooongg.android.ktx.attrColor
 import com.chooongg.android.ktx.contentView
 import com.chooongg.android.ktx.gone
+import com.chooongg.android.ktx.hideIME
 import com.chooongg.android.ktx.resInteger
 import com.chooongg.android.ktx.resString
 import com.google.android.material.appbar.AppBarLayout
@@ -33,6 +37,7 @@ import com.google.android.material.transition.platform.MaterialSharedAxis
 class FormDetailActivity : AppCompatActivity() {
 
     internal object Controller {
+        var adapterEnabled: Boolean? = null
         var formDetail: FormDetail? = null
         var resultBlock: (() -> Unit)? = null
     }
@@ -51,13 +56,20 @@ class FormDetailActivity : AppCompatActivity() {
         }
         title = FormManager.extractText(this, Controller.formDetail?.name)
             ?: resString(R.string.detail)
+        formAdapter.isEnabled = Controller.adapterEnabled ?: false
         formAdapter.columnCount =
             resInteger(Controller.formDetail?.detailColumnRes ?: R.integer.formDetailColumn)
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
-        findViewById<FormView>(R.id.formView).adapter = formAdapter
+        findViewById<FormView>(R.id.formView).apply {
+            adapter = formAdapter
+            setOnClickListener {
+                hideIME()
+                focusedChild.clearFocus()
+            }
+        }
         Controller.formDetail?.content?.getDetailParts()?.forEach {
             when (it.second) {
                 is FormPartData -> formAdapter.addPart(it.first, it.second as FormPartData)
@@ -123,6 +135,21 @@ class FormDetailActivity : AppCompatActivity() {
         transform.fadeMode = MaterialContainerTransform.FADE_MODE_CROSS
         transform.pathMotion = MaterialArcMotion()
         return transform
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        if (ev.action == MotionEvent.ACTION_DOWN) {
+            val view = currentFocus
+            if (view is EditText) {
+                val out = Rect()
+                view.getGlobalVisibleRect(out)
+                if (!out.contains(ev.rawX.toInt(), ev.y.toInt())) {
+                    view.clearFocus()
+                    hideIME()
+                }
+            }
+        }
+        return super.dispatchTouchEvent(ev)
     }
 
     override fun finish() {

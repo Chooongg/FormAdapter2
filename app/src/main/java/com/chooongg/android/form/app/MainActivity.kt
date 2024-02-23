@@ -1,20 +1,17 @@
 package com.chooongg.android.form.app
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityOptionsCompat
 import com.chooongg.android.form.FormAdapter
 import com.chooongg.android.form.addDetail
+import com.chooongg.android.form.addInput
 import com.chooongg.android.form.addText
-import com.chooongg.android.form.data.FormDetailData
+import com.chooongg.android.form.data.FormPartData
 import com.chooongg.android.form.helper.FormTextAppearanceHelper
-import com.chooongg.android.form.view.FormDetailActivity
 import com.chooongg.android.formAdapter.app.R
 import com.chooongg.android.formAdapter.app.databinding.ActivityMainBinding
 import com.google.android.material.transition.platform.MaterialArcMotion
 import com.google.android.material.transition.platform.MaterialContainerTransform
-import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 
 class MainActivity : AppCompatActivity(), FormTextAppearanceHelper {
 
@@ -30,40 +27,112 @@ class MainActivity : AppCompatActivity(), FormTextAppearanceHelper {
 
         }
         formAdapter.addPart {
-            for (i in 0..10) {
-                addText("Text") {
-                    content = "Test"
-                    menu = R.menu.main
+            addText("Text") {
+                content = "Test"
+                menu = R.menu.main
+            }
+            addDetail("Detail") {
+                content {
+                    initPart {
+                        addInput("Input")
+                        addText("Text") {
+                            content = "Test"
+                            menu = R.menu.main
+                        }
+                        addText("Text") {
+                            content = "Test"
+                            menu = R.menu.main
+                        }
+                    }
+                    initPart {
+                        addText("Text") {
+                            content = "Test"
+                            menu = R.menu.main
+                        }
+                        addInput("Input")
+                        addText("Text") {
+                            content = "Test"
+                            menu = R.menu.main
+                        }
+                    }
                 }
-                addDetail("Detail") {
-                    content {
-                        initPart {
-                            addText("Text") {
-                                content = "Test"
-                                menu = R.menu.main
-                            }
-                            addText("Text") {
-                                content = "Test"
-                                menu = R.menu.main
-                            }
-                            addText("Text") {
-                                content = "Test"
-                                menu = R.menu.main
+                contentFormatter {
+                    val strings = ArrayList<Any>()
+                    it?.forEach {
+                        when (it) {
+                            is FormPartData -> {
+                                val find = it.getItems().find { it.name == "Input" }
+                                if (find?.content != null) {
+                                    strings.add(find.content!!)
+                                }
                             }
                         }
-                        initPart {
-                            addText("Text") {
-                                content = "Test"
-                                menu = R.menu.main
-                            }
-                            addText("Text") {
-                                content = "Test"
-                                menu = R.menu.main
-                            }
-                            addText("Text") {
-                                content = "Test"
-                                menu = R.menu.main
-                            }
+                    }
+                    val string = buildString {
+                        strings.forEachIndexed { index, s ->
+                            if (index != 0) append('\n')
+                            append("第${index + 1}个字符串：").append(s)
+                        }
+                    }
+                    if (string.isEmpty()) null else string
+                }
+            }
+
+            addDetail("Detail") {
+                content {
+                    initPart {
+                        addInput("Input")
+                        addText("Text") {
+                            content = "Test"
+                            menu = R.menu.main
+                        }
+                        addText("Text") {
+                            content = "Test"
+                            menu = R.menu.main
+                        }
+                    }
+                    initPart {
+                        addText("Text") {
+                            content = "Test"
+                            menu = R.menu.main
+                        }
+                        addInput("Input")
+                        addText("Text") {
+                            content = "Test"
+                            menu = R.menu.main
+                        }
+                    }
+                }
+            }
+
+            addDetail("Detail") {
+                content {
+                    initPart {
+                        addText("Text") {
+                            content = "Test"
+                            menu = R.menu.main
+                        }
+                        addText("Text") {
+                            content = "Test"
+                            menu = R.menu.main
+                        }
+                        addText("Text") {
+                            content = "Test"
+                            menu = R.menu.main
+                        }
+                    }
+                    initPart {
+                        addText("Text") {
+                            content = "Test"
+                            menu = R.menu.main
+                        }
+                        addText("Text") {
+                            content = "Test"
+                            menu = R.menu.main
+                        }
+                        addText("Text") {
+                            content = "Test"
+                            menu = R.menu.main
                         }
                     }
                 }

@@ -13,6 +13,7 @@ import com.chooongg.android.form.R
 import com.chooongg.android.form.data.AbstractPartData
 import com.chooongg.android.form.data.FormDetailData
 import com.chooongg.android.form.holder.FormViewHolder
+import com.chooongg.android.form.part.AbstractPart
 import com.chooongg.android.form.style.AbstractStyle
 import com.chooongg.android.form.typeset.AbstractTypeset
 import com.chooongg.android.form.typeset.NoneTypeset
@@ -32,10 +33,7 @@ class FormDetail(name: Any?, field: String?) : BaseForm<FormDetailData>(name, fi
     @IntegerRes
     var detailColumnRes: Int? = null
 
-    /**
-     * 内容格式化工具
-     */
-    var contentFormatter: FormContentFormatter? = null
+    private var contentFormatter: FormContentFormatter? = null
 
     override var isRespondToClickEvents: Boolean = true
 
@@ -43,6 +41,13 @@ class FormDetail(name: Any?, field: String?) : BaseForm<FormDetailData>(name, fi
 
     fun content(block: FormDetailData.() -> Unit) {
         content = FormDetailData().apply(block)
+    }
+
+    /**
+     * 内容格式化工具
+     */
+    fun contentFormatter(block: FormContentFormatter?) {
+        contentFormatter = block
     }
 
     override fun copyEmptyItem(): BaseForm<FormDetailData> = FormDetail(null, null)
@@ -98,11 +103,20 @@ class FormDetail(name: Any?, field: String?) : BaseForm<FormDetailData>(name, fi
         }
         holder.itemView.setOnClickListener {
             activity.setExitSharedElementCallback(MaterialContainerTransformSharedElementCallback())
+            FormDetailActivity.Controller.adapterEnabled = adapterEnabled
             FormDetailActivity.Controller.formDetail = this
             FormDetailActivity.Controller.resultBlock = {
-                adapter.notifyItemChanged(
-                    holder.absoluteAdapterPosition, FormManager.FLAG_PAYLOAD_UPDATE_CONTENT
-                )
+                val adapter = holder.bindingAdapter as? AbstractPart<*>
+                if (adapter != null) {
+                    val position = adapter.indexOfShow(this)
+                    if (position >= 0) {
+                        holder.itemView.post {
+                            adapter.notifyItemChanged(
+                                position, FormManager.FLAG_PAYLOAD_UPDATE_CONTENT
+                            )
+                        }
+                    }
+                }
             }
             val intent = Intent(activity, FormDetailActivity::class.java)
             activity.startActivity(
