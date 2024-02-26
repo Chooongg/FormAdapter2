@@ -38,6 +38,6 @@ abstract class AbstractPartData : AbstractId(), IFormPart, IFormMenu {
 
     override var onMenuItemClickListener: FormOnMenuItemClickListener? = null
 
-    abstract fun getGroupTitleItem(context: Context): InternalFormGroupTitle?
+    abstract fun getGroupTitleItem(block: (InternalFormGroupTitle) -> Unit): InternalFormGroupTitle?
 
 }

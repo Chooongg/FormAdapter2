@@ -10,7 +10,7 @@ class FormPartData : AbstractPartData(), IFormGroupData {
 
     override fun getItems(): MutableList<BaseForm<*>> = _items
 
-    override fun getGroupTitleItem(context: Context): InternalFormGroupTitle? {
+    override fun getGroupTitleItem(block: (InternalFormGroupTitle) -> Unit): InternalFormGroupTitle? {
         return if (partName != null) {
             InternalFormGroupTitle(id).also {
                 it.name = partName
