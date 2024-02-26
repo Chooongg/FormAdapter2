@@ -59,6 +59,9 @@ abstract class BaseForm<CONTENT>(
     @MaterialButton.IconGravity
     open var iconGravity: Int = MaterialButton.ICON_GRAVITY_TEXT_START
 
+    /**
+     * 图标大小
+     */
     open var iconSize: Int? = null
 
     /**

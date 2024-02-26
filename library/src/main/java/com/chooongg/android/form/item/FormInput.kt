@@ -21,6 +21,7 @@ import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import androidx.core.widget.doAfterTextChanged
 import com.chooongg.android.form.FormColorStateListBlock
+import com.chooongg.android.form.FormDataVerificationException
 import com.chooongg.android.form.FormManager
 import com.chooongg.android.form.R
 import com.chooongg.android.form.boundary.Boundary
@@ -31,6 +32,7 @@ import com.chooongg.android.form.option.FormArrayAdapter
 import com.chooongg.android.form.option.OptionLoadResult
 import com.chooongg.android.form.style.AbstractStyle
 import com.chooongg.android.ktx.resDimensionPixelSize
+import com.chooongg.android.ktx.resString
 import com.google.android.material.internal.CheckableImageButton
 import com.google.android.material.progressindicator.CircularProgressIndicatorSpec
 import com.google.android.material.progressindicator.IndeterminateDrawable
@@ -118,6 +120,23 @@ open class FormInput(name: Any?, field: String?) : BaseOptionForm<CharSequence>(
      */
     fun setStartIconOnClickListener(listener: ((item: FormInput, view: View) -> Unit)?) {
         startIconOnClickBlock = listener
+    }
+
+    override fun dataVerification() {
+        super.dataVerification()
+        if (content != null) {
+            val length = content.toString().length
+            if (minLength != null && length < minLength!!) {
+                throw FormDataVerificationException(
+                    this, FormDataVerificationException.ErrorType.MinLength(minLength!!)
+                )
+            }
+            if (maxLength != null && length > maxLength!!) {
+                throw FormDataVerificationException(
+                    this, FormDataVerificationException.ErrorType.MaxLength(maxLength!!)
+                )
+            }
+        }
     }
 
     override fun copyEmptyItem(): BaseForm<CharSequence> = FormInput(null, null)
@@ -272,6 +291,7 @@ open class FormInput(name: Any?, field: String?) : BaseOptionForm<CharSequence>(
         view.findViewById<MaterialAutoCompleteTextView>(R.id.formInternalContentChildView)
             .also { editView ->
                 if (editView.tag is TextWatcher) editView.removeTextChangedListener(editView.tag as TextWatcher)
+                editView.ellipsize = ellipsize
                 editView.setText(content)
                 editView.gravity = obtainContentGravity(holder)
                 if (maxLines <= 1) {
@@ -284,9 +304,19 @@ open class FormInput(name: Any?, field: String?) : BaseOptionForm<CharSequence>(
                     inputMode.getInputType()
                 } else inputMode.getInputType() or InputType.TYPE_TEXT_FLAG_MULTI_LINE
                 editView.transformationMethod = inputMode.getTransformationMethod()
-                editView.filters = inputMode.getFilters().apply {
-                    if (maxLength != null) add(InputFilter.LengthFilter(maxLength!!))
+                editView.filters = ArrayList(inputMode.getFilters()).apply {
+                    if (!inputMode.isHasLengthFilter() && maxLength != null) {
+                        add(InputFilter.LengthFilter(maxLength!!))
+                    }
                 }.toTypedArray()
+                editView.hint = when (placeholder) {
+                    null -> FormManager.extractText(editView.context, hint)
+                        ?: if (isEnable(adapterEnabled)) {
+                            editView.resString(R.string.formDefaultHintInput)
+                        } else editView.resString(R.string.fromDefaultHintNone)
+
+                    else -> null
+                }
                 val watcher = editView.doAfterTextChanged { editable ->
                     changeContentAndNotifyLinkage(
                         holder, if (editable.isNullOrEmpty()) null else editable

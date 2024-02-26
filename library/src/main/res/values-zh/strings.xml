@@ -1,4 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="detail">详情</string>
+
+    <string name="formDefaultGroupName">组</string>
+    <string name="formDefaultChildGroupName">子组</string>
+    <string name="fromDefaultHintNone">空</string>
+    <string name="formDefaultHintSelect">请选择</string>
+    <string name="formDefaultHintInput">请输入</string>
+
+    <string name="formDefaultGroupDelete">删除</string>
+    <string name="formDefaultGroupDeleteConfirm">删除确认</string>
+    <string name="formDefaultGroupDeleteMessage">你需要确认删除 %s</string>
+    <string name="formDefaultGroupCancel">取消</string>
+
+    <string name="formPickerOpenError">无法打开选择器</string>
+
+    <string name="formOptionsLoading">加载中</string>
+    <string name="formOptionsEmpty">没有可选项</string>
+    <string name="formOptionsError">选项加载失败</string>
+
+    <string name="formSearchHint">输入要搜索的文本</string>
+
+    <string name="formRatingFormat">%f星</string>
+
+    <string name="formErrorEmpty">%s不可为空</string>
+    <string name="formErrorFormat">%s格式错误</string>
+    <string name="formErrorLength">%s长度必须为%d</string>
+    <string name="formErrorLengthMin">%s长度不能小于%d</string>
+    <string name="formErrorLengthMax">%s长度不能大于%d</string>
+    <string name="formErrorSize">%s必须选择%d项</string>
+    <string name="formErrorSizeMin">%s最少选择%d项</string>
+    <string name="formErrorSizeMax">%s最多选择%d项</string>
 </resources>

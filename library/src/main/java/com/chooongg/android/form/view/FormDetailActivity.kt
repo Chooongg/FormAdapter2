@@ -3,12 +3,17 @@ package com.chooongg.android.form.view
 import android.graphics.Color
 import android.graphics.Rect
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.Window
 import android.widget.EditText
 import android.widget.FrameLayout
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.app.ActivityCompat.finishAfterTransition
+import androidx.core.app.ActivityCompat.setEnterSharedElementCallback
+import androidx.core.app.ActivityCompat.setExitSharedElementCallback
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -28,7 +33,6 @@ import com.chooongg.android.ktx.resInteger
 import com.chooongg.android.ktx.resString
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.motion.MotionUtils
 import com.google.android.material.transition.platform.MaterialArcMotion
 import com.google.android.material.transition.platform.MaterialContainerTransform
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
@@ -42,7 +46,7 @@ class FormDetailActivity : AppCompatActivity() {
         var resultBlock: (() -> Unit)? = null
     }
 
-    private val formAdapter = FormAdapter()
+    private val formAdapter = FormAdapter(Controller.adapterEnabled ?: false)
 
     private var isHasActionBar = false
 
@@ -54,9 +58,21 @@ class FormDetailActivity : AppCompatActivity() {
         with(findViewById<MaterialToolbar>(R.id.toolbar)) {
             if (isHasActionBar) gone() else setSupportActionBar(this)
         }
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                Controller.resultBlock?.invoke()
+                Controller.adapterEnabled = null
+                Controller.formDetail = null
+                Controller.resultBlock = null
+                finishAfterTransition()
+            }
+        })
         title = FormManager.extractText(this, Controller.formDetail?.name)
             ?: resString(R.string.detail)
-        formAdapter.isEnabled = Controller.adapterEnabled ?: false
+        supportActionBar?.apply {
+            setHomeButtonEnabled(true)
+            setDisplayHomeAsUpEnabled(true)
+        }
         formAdapter.columnCount =
             resInteger(Controller.formDetail?.detailColumnRes ?: R.integer.formDetailColumn)
     }
@@ -85,9 +101,6 @@ class FormDetailActivity : AppCompatActivity() {
             exitTransition = null
             returnTransition = MaterialSharedAxis(MaterialSharedAxis.Y, false)
             reenterTransition = null
-            transitionBackgroundFadeDuration = MotionUtils.resolveThemeDuration(
-                context, com.google.android.material.R.attr.motionDurationLong1, -1
-            ).toLong()
         }
         createEdgeToEdge()
         setExitSharedElementCallback(MaterialContainerTransformSharedElementCallback())
@@ -129,9 +142,8 @@ class FormDetailActivity : AppCompatActivity() {
     private fun buildContainerTransform(entering: Boolean): MaterialContainerTransform {
         val transform = MaterialContainerTransform(this, entering)
         transform.addTarget(android.R.id.content)
-        transform.duration = MotionUtils.resolveThemeDuration(
-            this, com.google.android.material.R.attr.motionDurationLong1, -1
-        ).toLong()
+//        transform.duration = 5000
+        transform.duration
         transform.fadeMode = MaterialContainerTransform.FADE_MODE_CROSS
         transform.pathMotion = MaterialArcMotion()
         return transform
@@ -152,10 +164,11 @@ class FormDetailActivity : AppCompatActivity() {
         return super.dispatchTouchEvent(ev)
     }
 
-    override fun finish() {
-        super.finish()
-        Controller.resultBlock?.invoke()
-        Controller.formDetail = null
-        Controller.resultBlock = null
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            onBackPressedDispatcher.onBackPressed()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

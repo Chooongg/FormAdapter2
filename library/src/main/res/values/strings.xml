@@ -1,4 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="detail">Detail</string>
+
+    <string name="formDefaultGroupName">Group</string>
+    <string name="formDefaultChildGroupName">Child Group</string>
+    <string name="fromDefaultHintNone">None</string>
+    <string name="formDefaultHintSelect">Please select</string>
+    <string name="formDefaultHintInput">Please enter</string>
+
+    <string name="formDefaultGroupDelete">Delete</string>
+    <string name="formDefaultGroupDeleteConfirm">Delete Confirmation</string>
+    <string name="formDefaultGroupDeleteMessage">You need to confirm the delete %s</string>
+    <string name="formDefaultGroupCancel">Cancel</string>
+
+    <string name="formPickerOpenError">Failed to open selector</string>
+
+    <string name="formOptionsLoading">Loading</string>
+    <string name="formOptionsEmpty">No options available</string>
+    <string name="formOptionsError">Option loading failed</string>
+
+    <string name="formSearchHint">Enter text to search</string>
+
+    <string name="formRatingFormat">%f Star</string>
+
+    <string name="formErrorEmpty">%s cannot be empty</string>
+    <string name="formErrorFormat">%s format error</string>
+    <string name="formErrorLength">%s length must be %d</string>
+    <string name="formErrorLengthMin">%s length cannot be less than %d</string>
+    <string name="formErrorLengthMax">%s length cannot be greater than %d</string>
+    <string name="formErrorSize">%s %d 2 items must be selected</string>
+    <string name="formErrorSizeMin">%s select up to %d items</string>
+    <string name="formErrorSizeMax">%s select at least %d items</string>
 </resources>

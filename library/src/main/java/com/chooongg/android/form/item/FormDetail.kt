@@ -64,7 +64,7 @@ class FormDetail(name: Any?, field: String?) : BaseForm<FormDetailData>(name, fi
                     id = R.id.formInternalContentView
                     setTextAppearance(formTextAppearance(R.attr.formTextAppearanceContent))
                     setPaddingRelative(
-                        style.padding.startMedium, style.padding.topMedium,
+                        style.padding.startMedium, 0,
                         style.padding.endMedium, style.padding.bottomMedium
                     )
                 }, LinearLayoutCompat.LayoutParams(-1, -2)
@@ -106,15 +106,16 @@ class FormDetail(name: Any?, field: String?) : BaseForm<FormDetailData>(name, fi
             FormDetailActivity.Controller.adapterEnabled = adapterEnabled
             FormDetailActivity.Controller.formDetail = this
             FormDetailActivity.Controller.resultBlock = {
-                val adapter = holder.bindingAdapter as? AbstractPart<*>
-                if (adapter != null) {
-                    val position = adapter.indexOfShow(this)
+                val part = holder.bindingAdapter as? AbstractPart<*>
+                if (part != null) {
+                    val position = part.indexOfShow(this)
                     if (position >= 0) {
-                        holder.itemView.post {
-                            adapter.notifyItemChanged(
-                                position, FormManager.FLAG_PAYLOAD_UPDATE_CONTENT
-                            )
-                        }
+                        part.update()
+//                        holder.itemView.post {
+//                            part.notifyItemChanged(
+//                                position, FormManager.FLAG_PAYLOAD_UPDATE_CONTENT
+//                            )
+//                        }
                     }
                 }
             }

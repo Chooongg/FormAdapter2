@@ -9,7 +9,9 @@ import com.chooongg.android.form.style.AbstractStyle
 class FormPart(adapter: FormAdapter, style: AbstractStyle, data: FormPartData) :
     AbstractPart<FormPartData>(adapter, style, data) {
 
-    override fun getOriginalItemList(): List<List<BaseForm<*>>> = listOf(data.getItems())
+    override fun getOriginalItemList(): List<List<BaseForm<*>>> = if (data.partEnabled) {
+        listOf(data.getItems())
+    } else emptyList()
 
     override fun executeLinkage(isIgnoreUpdate: Boolean) {
         data.getItems().forEach { it.linkageBlock?.invoke(FormLinkage(this, isIgnoreUpdate)) }

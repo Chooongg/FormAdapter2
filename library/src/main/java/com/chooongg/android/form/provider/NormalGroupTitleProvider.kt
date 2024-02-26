@@ -1,5 +1,7 @@
 package com.chooongg.android.form.provider
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -17,10 +19,10 @@ import kotlinx.coroutines.CoroutineScope
 class NormalGroupTitleProvider : AbstractGroupTitleProvider() {
     override fun onCreateViewHolder(style: AbstractStyle, parent: ViewGroup): View =
         LinearLayoutCompat(parent.context).also {
+            it.background = ColorDrawable(Color.GRAY)
             it.orientation = LinearLayoutCompat.HORIZONTAL
             it.addView(MaterialButton(it.context).apply {
                 id = R.id.formInternalNameView
-                transitionName = "name"
                 isClickable = false
                 gravity = Gravity.NO_GRAVITY
                 background = null
