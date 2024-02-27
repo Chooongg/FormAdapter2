@@ -5,15 +5,13 @@ import android.view.ViewGroup
 import com.chooongg.android.form.holder.FormViewHolder
 import com.chooongg.android.form.style.AbstractStyle
 import kotlinx.coroutines.CoroutineScope
-import java.util.UUID
 
-class InternalFormGroupTitle(id: String?) : BaseForm<CharSequence>(null, null) {
-
-    override val id: String = id ?: UUID.randomUUID().toString()
+open class InternalFormGroupTitle<CONTENT : Any> internal constructor() :
+    BaseForm<CONTENT>(null, null) {
 
     override var fillEdges: Boolean = false
 
-    override fun copyEmptyItem() = InternalFormGroupTitle(null)
+    override fun copyEmptyItem(): BaseForm<CONTENT> = InternalFormGroupTitle()
 
     override fun onCreateViewHolder(style: AbstractStyle, parent: ViewGroup): View {
         return style.config.groupTitleProvider.onCreateViewHolder(style, parent)

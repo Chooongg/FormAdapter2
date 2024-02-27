@@ -1,24 +1,18 @@
 package com.chooongg.android.form.item
 
-import android.content.Intent
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.IntegerRes
-import androidx.core.app.ActivityOptionsCompat
 import com.chooongg.android.form.FormAdapter
 import com.chooongg.android.form.FormContentFormatter
 import com.chooongg.android.form.data.FormDetailData
 import com.chooongg.android.form.holder.FormViewHolder
-import com.chooongg.android.form.part.AbstractPart
 import com.chooongg.android.form.style.AbstractStyle
 import com.chooongg.android.form.typeset.AbstractTypeset
 import com.chooongg.android.form.typeset.NoneTypeset
-import com.chooongg.android.form.view.FormDetailActivity
-import com.chooongg.android.ktx.getActivity
-import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import kotlinx.coroutines.CoroutineScope
 
-class FormDetail(name: Any?, field: String?) : BaseForm<FormDetailData>(name, field) {
+class FormDetail(name: Any?, field: String?) : InternalFormGroupTitle<FormDetailData>() {
 
     /**
      * 详情列数资源
@@ -37,6 +31,11 @@ class FormDetail(name: Any?, field: String?) : BaseForm<FormDetailData>(name, fi
     override var fillEdges: Boolean = false
 
     override var typeset: AbstractTypeset? = NoneTypeset()
+
+    init {
+        this.name = name
+        this.field = field
+    }
 
     fun content(block: FormDetailData.() -> Unit) {
         content = FormDetailData().apply(block)
