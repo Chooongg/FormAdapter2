@@ -20,6 +20,7 @@ import com.chooongg.android.form.item.BaseForm
 import com.chooongg.android.form.listener.FormOnMenuCreatedListener
 import com.chooongg.android.form.part.AbstractPart
 import com.chooongg.android.form.style.AbstractStyle
+import com.chooongg.android.ktx.doOnClick
 import com.chooongg.android.ktx.gone
 import com.chooongg.android.ktx.visible
 import com.google.android.material.button.MaterialButton
@@ -126,7 +127,7 @@ class FormMenuView(
                 icon = item.icon
                 text = if (icon == null) item.titleCondensed else null
                 ViewCompat.setTooltipText(this, item.tooltipText ?: item.title)
-                setOnClickListener { onItemClickListener?.invoke(this, item) }
+                doOnClick { onItemClickListener?.invoke(this, item) }
             }
         }
     }

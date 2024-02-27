@@ -11,11 +11,16 @@ class InternalFormGroupTitle(id: String?) : BaseForm<CharSequence>(null, null) {
 
     override val id: String = id ?: UUID.randomUUID().toString()
 
+    override var fillEdges: Boolean = false
+
     override fun copyEmptyItem() = InternalFormGroupTitle(null)
 
     override fun onCreateViewHolder(style: AbstractStyle, parent: ViewGroup): View {
-        val provider = style.config.groupTitleProvider
-        return provider.onCreateViewHolder(style, parent)
+        return style.config.groupTitleProvider.onCreateViewHolder(style, parent)
+    }
+
+    override fun onViewAttachedToWindow(holder: FormViewHolder) {
+        holder.style.config.groupTitleProvider.onViewAttachedToWindow(holder)
     }
 
     override fun onBindViewHolder(
@@ -24,7 +29,16 @@ class InternalFormGroupTitle(id: String?) : BaseForm<CharSequence>(null, null) {
         view: View,
         adapterEnabled: Boolean
     ) {
-        val provider = holder.style.config.groupTitleProvider
-        provider.onBindViewHolder(scope, holder, view, this, adapterEnabled)
+        holder.style.config.groupTitleProvider.onBindViewHolder(
+            scope, holder, view, this, adapterEnabled
+        )
+    }
+
+    override fun onViewDetachedFromWindow(holder: FormViewHolder) {
+        holder.style.config.groupTitleProvider.onViewDetachedFromWindow(holder)
+    }
+
+    override fun onViewRecycled(holder: FormViewHolder) {
+        holder.style.config.groupTitleProvider.onViewRecycled(holder)
     }
 }

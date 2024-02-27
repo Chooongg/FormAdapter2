@@ -5,7 +5,8 @@ import com.chooongg.android.form.FormManager
 import com.chooongg.android.form.enum.FormContentGravity
 import com.chooongg.android.form.enum.FormEmsSize
 import com.chooongg.android.form.formatter.name.AbstractNameFormatter
-import com.chooongg.android.form.provider.AbstractGroupTitleProvider
+import com.chooongg.android.form.provider.detail.AbstractDetailProvider
+import com.chooongg.android.form.provider.groupTitle.AbstractGroupTitleProvider
 import com.chooongg.android.form.typeset.AbstractTypeset
 
 /**
@@ -25,6 +26,11 @@ abstract class FormConfig {
      * 组标题视图提供器
      */
     abstract val _groupTitleProvider: AbstractGroupTitleProvider?
+
+    /**
+     * 详情标题视图提供器
+     */
+    abstract val _detailTitleProvider: AbstractDetailProvider?
 
     /**
      * EMS 值
@@ -47,6 +53,9 @@ abstract class FormConfig {
 
     val groupTitleProvider: AbstractGroupTitleProvider
         get() = _groupTitleProvider ?: FormManager.globalConfig.groupTitleProvider
+
+    val detailTitleProvider: AbstractDetailProvider
+        get() = _detailTitleProvider ?: FormManager.globalConfig.detailTitleProvider
 
     val emsSize: FormEmsSize
         get() = _emsSize ?: FormManager.globalConfig.emsSize

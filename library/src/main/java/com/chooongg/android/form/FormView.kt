@@ -37,13 +37,7 @@ class FormView @JvmOverloads constructor(
     }
 
     override fun setAdapter(adapter: Adapter<*>?) {
-        if (adapter is FormAdapter) {
-            if (adapter.columnCount != null) {
-                column = adapter.columnCount!!
-            } else {
-                adapter.columnCount = column
-            }
-        }
+        if (adapter is FormAdapter) adapter.setColumnCountInternal(column)
         super.setAdapter(adapter)
     }
 

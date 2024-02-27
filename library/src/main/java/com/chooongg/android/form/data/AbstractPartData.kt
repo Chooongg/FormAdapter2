@@ -38,6 +38,21 @@ abstract class AbstractPartData : AbstractId(), IFormPart, IFormMenu {
 
     override var onMenuItemClickListener: FormOnMenuItemClickListener? = null
 
-    abstract fun getGroupTitleItem(block: (InternalFormGroupTitle) -> Unit): InternalFormGroupTitle?
+    open fun getGroupTitleItem(): InternalFormGroupTitle?{
+        return if (partName != null) {
+            InternalFormGroupTitle(id).also {
+                it.name = partName
+                it.icon = icon
+                it.iconGravity = iconGravity
+                it.iconTint = iconTint
+                it.iconSize = iconSize
+                it.menu = menu
+                it.menuVisibilityMode = menuVisibilityMode
+                it.menuEnableMode = menuEnableMode
+                it.onMenuCreatedListener = onMenuCreatedListener
+                it.onMenuItemClickListener = onMenuItemClickListener
+            }
+        } else null
+    }
 
 }

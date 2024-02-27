@@ -4,13 +4,9 @@ import android.content.Intent
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.IntegerRes
-import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.app.ActivityOptionsCompat
 import com.chooongg.android.form.FormAdapter
 import com.chooongg.android.form.FormContentFormatter
-import com.chooongg.android.form.FormManager
-import com.chooongg.android.form.R
-import com.chooongg.android.form.data.AbstractPartData
 import com.chooongg.android.form.data.FormDetailData
 import com.chooongg.android.form.holder.FormViewHolder
 import com.chooongg.android.form.part.AbstractPart
@@ -19,9 +15,6 @@ import com.chooongg.android.form.typeset.AbstractTypeset
 import com.chooongg.android.form.typeset.NoneTypeset
 import com.chooongg.android.form.view.FormDetailActivity
 import com.chooongg.android.ktx.getActivity
-import com.chooongg.android.ktx.gone
-import com.chooongg.android.ktx.visible
-import com.google.android.material.textview.MaterialTextView
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import kotlinx.coroutines.CoroutineScope
 
@@ -33,9 +26,15 @@ class FormDetail(name: Any?, field: String?) : BaseForm<FormDetailData>(name, fi
     @IntegerRes
     var detailColumnRes: Int? = null
 
-    private var contentFormatter: FormContentFormatter? = null
+    /**
+     * 内容格式化工具
+     */
+    var contentFormatter: FormContentFormatter? = null
+        private set
 
     override var isRespondToClickEvents: Boolean = true
+
+    override var fillEdges: Boolean = false
 
     override var typeset: AbstractTypeset? = NoneTypeset()
 
@@ -53,23 +52,11 @@ class FormDetail(name: Any?, field: String?) : BaseForm<FormDetailData>(name, fi
     override fun copyEmptyItem(): BaseForm<FormDetailData> = FormDetail(null, null)
 
     override fun onCreateViewHolder(style: AbstractStyle, parent: ViewGroup): View =
-        LinearLayoutCompat(parent.context).also {
-            it.orientation = LinearLayoutCompat.VERTICAL
-            it.addView(
-                style.config.groupTitleProvider.onCreateViewHolder(style, it),
-                LinearLayoutCompat.LayoutParams(-1, -2)
-            )
-            it.addView(
-                MaterialTextView(it.context).apply {
-                    id = R.id.formInternalContentView
-                    setTextAppearance(formTextAppearance(R.attr.formTextAppearanceContent))
-                    setPaddingRelative(
-                        style.padding.startMedium, 0,
-                        style.padding.endMedium, style.padding.bottomMedium
-                    )
-                }, LinearLayoutCompat.LayoutParams(-1, -2)
-            )
-        }
+        style.config.detailTitleProvider.onCreateViewHolder(style, parent)
+
+    override fun onViewAttachedToWindow(holder: FormViewHolder) {
+        holder.style.config.detailTitleProvider.onViewAttachedToWindow(holder)
+    }
 
     override fun onBindViewHolder(
         scope: CoroutineScope,
@@ -77,17 +64,9 @@ class FormDetail(name: Any?, field: String?) : BaseForm<FormDetailData>(name, fi
         view: View,
         adapterEnabled: Boolean
     ) {
-        holder.style.config.groupTitleProvider.onBindViewHolder(
+        holder.style.config.detailTitleProvider.onBindViewHolder(
             scope, holder, view, this, adapterEnabled
         )
-        with(view.findViewById<MaterialTextView>(R.id.formInternalContentView)) {
-            val parts = if (content != null) ArrayList<AbstractPartData>().apply {
-                content!!.getDetailParts().forEach { add(it.second) }
-            } else null
-            val detail = contentFormatter?.invoke(context, parts)
-            if (detail != null) visible() else gone()
-            text = detail
-        }
     }
 
     override fun onBindViewItemClick(
@@ -96,35 +75,16 @@ class FormDetail(name: Any?, field: String?) : BaseForm<FormDetailData>(name, fi
         holder: FormViewHolder,
         adapterEnabled: Boolean
     ) {
-        val activity = holder.itemView.context.getActivity()
-        if (activity == null) {
-            holder.itemView.setOnClickListener(null)
-            return
-        }
-        holder.itemView.setOnClickListener {
-            activity.setExitSharedElementCallback(MaterialContainerTransformSharedElementCallback())
-            FormDetailActivity.Controller.adapterEnabled = adapterEnabled
-            FormDetailActivity.Controller.formDetail = this
-            FormDetailActivity.Controller.resultBlock = {
-                val part = holder.bindingAdapter as? AbstractPart<*>
-                if (part != null) {
-                    val position = part.indexOfShow(this)
-                    if (position >= 0) {
-                        part.update()
-//                        holder.itemView.post {
-//                            part.notifyItemChanged(
-//                                position, FormManager.FLAG_PAYLOAD_UPDATE_CONTENT
-//                            )
-//                        }
-                    }
-                }
-            }
-            val intent = Intent(activity, FormDetailActivity::class.java)
-            activity.startActivity(
-                intent, ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    activity, holder.itemView, "FormDetail"
-                ).toBundle()
-            )
-        }
+        holder.style.config.detailTitleProvider.onBindViewItemClick(
+            adapter, scope, holder, this, adapterEnabled
+        )
+    }
+
+    override fun onViewDetachedFromWindow(holder: FormViewHolder) {
+        holder.style.config.detailTitleProvider.onViewDetachedFromWindow(holder)
+    }
+
+    override fun onViewRecycled(holder: FormViewHolder) {
+        holder.style.config.detailTitleProvider.onViewRecycled(holder)
     }
 }

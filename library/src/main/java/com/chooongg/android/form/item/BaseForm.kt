@@ -20,6 +20,7 @@ import com.chooongg.android.form.linkage.FormLinkage
 import com.chooongg.android.form.part.AbstractPart
 import com.chooongg.android.form.style.AbstractStyle
 import com.chooongg.android.form.typeset.AbstractTypeset
+import com.chooongg.android.ktx.doOnClick
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.CoroutineScope
 import org.json.JSONObject
@@ -346,7 +347,7 @@ abstract class BaseForm<CONTENT>(
         adapterEnabled: Boolean
     ) {
         if (isRespondToClickEvents && isEnable(adapterEnabled)) {
-            holder.itemView.setOnClickListener {
+            holder.itemView.doOnClick {
                 adapter.onItemClickListener?.invoke(it, this)
             }
         } else holder.itemView.setOnClickListener(null)

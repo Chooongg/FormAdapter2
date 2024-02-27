@@ -11,9 +11,7 @@ class FormPart(adapter: FormAdapter, style: AbstractStyle, data: FormPartData) :
 
     override fun getOriginalItemList(): List<List<BaseForm<*>>> = if (data.partEnabled) {
         val list = ArrayList<BaseForm<*>>()
-        val title = data.getGroupTitleItem() {
-
-        }
+        val title = data.getGroupTitleItem()
         if (title != null) list.add(title)
         listOf(data.getItems())
     } else emptyList()

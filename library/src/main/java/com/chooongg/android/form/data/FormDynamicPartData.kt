@@ -1,6 +1,5 @@
 package com.chooongg.android.form.data
 
-import android.content.Context
 import androidx.annotation.IntRange
 import com.chooongg.android.form.R
 import com.chooongg.android.form.item.InternalFormGroupTitle
@@ -30,8 +29,4 @@ class FormDynamicPartData : AbstractPartData() {
      */
     @MaterialButton.IconGravity
     var addIconGravity: Int = MaterialButton.ICON_GRAVITY_TEXT_START
-
-    override fun getGroupTitleItem(context: Context) = InternalFormGroupTitle(id).also {
-
-    }
 }

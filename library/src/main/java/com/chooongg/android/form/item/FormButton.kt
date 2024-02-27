@@ -15,6 +15,7 @@ import com.chooongg.android.form.holder.FormViewHolder
 import com.chooongg.android.form.style.AbstractStyle
 import com.chooongg.android.form.typeset.AbstractTypeset
 import com.chooongg.android.form.typeset.NoneTypeset
+import com.chooongg.android.ktx.doOnClick
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.shape.ShapeAppearanceModel
 import com.google.android.material.theme.overlay.MaterialThemeOverlay
@@ -255,11 +256,10 @@ class FormButton(name: Any?, field: String?) : BaseForm<Any>(name, field) {
         holder: FormViewHolder,
         adapterEnabled: Boolean
     ) {
+        val view = holder.itemView.findViewById<MaterialButton>(R.id.formInternalContentView)
         if (isEnable(adapterEnabled)) {
-            holder.itemView.setOnClickListener {
-                adapter.onItemClickListener?.invoke(it, this)
-            }
-        } else holder.itemView.setOnClickListener(null)
+            view.doOnClick { adapter.onItemClickListener?.invoke(it, this) }
+        } else view.setOnClickListener(null)
     }
 
     protected fun getButtonStyle(context: Context, buttonStyle: ButtonStyle?): Int {

@@ -3,6 +3,8 @@
 
     <style name="Form.TextAppearance.GroupTitle" parent="TextAppearance.Material3.HeadlineMedium" />
 
+    <style name="Form.TextAppearance.DetailTitle" parent="TextAppearance.Material3.TitleLarge" />
+
     <style name="Form.TextAppearance.Name" parent="TextAppearance.Material3.BodyMedium" />
 
     <style name="Form.TextAppearance.Content" parent="TextAppearance.Material3.BodyMedium" />

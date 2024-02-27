@@ -47,6 +47,19 @@ class FormAdapter(isEnabled: Boolean = false) : AbstractFormAdapter() {
         onMenuClickListener = listener
     }
 
+    internal var isCustomColumn: Boolean = false
+
+    internal fun setColumnCountInternal(column: Int) {
+        if (!isCustomColumn) columnCount = column
+    }
+
+    fun setColumnCount(column: Int) {
+        val isDifference = columnCount != column
+        columnCount = column
+        if (isDifference) update()
+        isCustomColumn = true
+    }
+
     fun addPart(
         style: AbstractStyle = FormManager.defaultStyle,
         block: FormPartData.() -> Unit

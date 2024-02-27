@@ -202,7 +202,7 @@ abstract class AbstractStyle(val config: FormConfig = EmptyConfig()) {
 
     fun executeAddView(parent: ViewGroup, child: View) = addView(parent, child)
 
-    protected fun getShapeAppearanceModel(view: View, item: BaseForm<*>) =
+    fun getShapeAppearanceModel(view: View, item: BaseForm<*>) =
         ShapeAppearanceModel.builder().apply {
             if (view.layoutDirection != View.LAYOUT_DIRECTION_RTL) {
                 setTopLeftCornerSize(

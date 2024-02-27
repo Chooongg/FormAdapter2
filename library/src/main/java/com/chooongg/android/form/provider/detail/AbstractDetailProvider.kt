@@ -1,14 +1,15 @@
-package com.chooongg.android.form.provider
+package com.chooongg.android.form.provider.detail
 
 import android.view.View
 import android.view.ViewGroup
+import com.chooongg.android.form.FormAdapter
 import com.chooongg.android.form.helper.FormTextAppearanceHelper
 import com.chooongg.android.form.holder.FormViewHolder
-import com.chooongg.android.form.item.BaseForm
+import com.chooongg.android.form.item.FormDetail
 import com.chooongg.android.form.style.AbstractStyle
 import kotlinx.coroutines.CoroutineScope
 
-abstract class AbstractGroupTitleProvider : FormTextAppearanceHelper {
+abstract class AbstractDetailProvider : FormTextAppearanceHelper {
 
     abstract fun onCreateViewHolder(style: AbstractStyle, parent: ViewGroup): View
 
@@ -18,7 +19,15 @@ abstract class AbstractGroupTitleProvider : FormTextAppearanceHelper {
         scope: CoroutineScope,
         holder: FormViewHolder,
         view: View,
-        item: BaseForm<*>,
+        item: FormDetail,
+        adapterEnabled: Boolean
+    )
+
+    abstract fun onBindViewItemClick(
+        adapter: FormAdapter,
+        scope: CoroutineScope,
+        holder: FormViewHolder,
+        item: FormDetail,
         adapterEnabled: Boolean
     )
 

@@ -57,12 +57,13 @@ class CardOutlineStyle : AbstractStyle() {
             ).use { it.getColor(0, Color.GRAY) }
         }
         shapeDrawable.setStroke(strokeWidth, strokeColor)
-        holder.itemView.background = if (item.isRespondToClickEvents) {
+        holder.itemView.background = shapeDrawable
+        holder.itemView.foreground = if (item.isRespondToClickEvents) {
             RippleDrawable(
                 ColorStateList.valueOf(holder.itemView.attrColor(android.R.attr.colorControlHighlight)),
-                shapeDrawable, MaterialShapeDrawable(shapeAppearanceModel)
+                null, MaterialShapeDrawable(shape)
             )
-        } else shapeDrawable
+        } else null
     }
 
     override fun equals(other: Any?): Boolean {

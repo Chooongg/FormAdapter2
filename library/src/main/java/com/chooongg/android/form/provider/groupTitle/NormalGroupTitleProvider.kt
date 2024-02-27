@@ -1,4 +1,4 @@
-package com.chooongg.android.form.provider
+package com.chooongg.android.form.provider.groupTitle
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -8,8 +8,9 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.LinearLayoutCompat
 import com.chooongg.android.form.FormManager
 import com.chooongg.android.form.R
+import com.chooongg.android.form.boundary.Boundary
 import com.chooongg.android.form.holder.FormViewHolder
-import com.chooongg.android.form.item.BaseForm
+import com.chooongg.android.form.item.InternalFormGroupTitle
 import com.chooongg.android.form.style.AbstractStyle
 import com.chooongg.android.form.view.FormMenuView
 import com.chooongg.android.ktx.resDrawable
@@ -19,6 +20,7 @@ import kotlinx.coroutines.CoroutineScope
 class NormalGroupTitleProvider : AbstractGroupTitleProvider() {
     override fun onCreateViewHolder(style: AbstractStyle, parent: ViewGroup): View =
         LinearLayoutCompat(parent.context).also {
+            it.id = R.id.formInternalTitleLayout
             it.background = ColorDrawable(Color.GRAY)
             it.orientation = LinearLayoutCompat.HORIZONTAL
             it.addView(MaterialButton(it.context).apply {
@@ -43,18 +45,30 @@ class NormalGroupTitleProvider : AbstractGroupTitleProvider() {
             }, LinearLayoutCompat.LayoutParams(-2, -2))
         }
 
-    override fun onViewAttachedToWindow(holder: FormViewHolder) {
-        holder.style.onViewAttachedToWindow(holder)
-    }
-
     override fun onBindViewHolder(
         scope: CoroutineScope,
         holder: FormViewHolder,
         view: View,
-        item: BaseForm<*>,
+        item: InternalFormGroupTitle,
         adapterEnabled: Boolean
     ) {
-        view.findViewById<MaterialButton>(R.id.formInternalNameView).apply {
+        val layout = view.findViewById<LinearLayoutCompat>(R.id.formInternalTitleLayout)
+        layout.setPaddingRelative(
+            when (item.boundary.start) {
+                Boundary.NONE -> 0
+                else -> holder.style.padding.start - holder.style.padding.startMedium
+            }, when (item.boundary.top) {
+                Boundary.NONE -> 0
+                else -> holder.style.padding.top - holder.style.padding.topMedium
+            }, when (item.boundary.end) {
+                Boundary.NONE -> 0
+                else -> holder.style.padding.end - holder.style.padding.endMedium
+            }, when (item.boundary.bottom) {
+                Boundary.NONE -> 0
+                else -> holder.style.padding.bottom - holder.style.padding.bottomMedium
+            }
+        )
+        layout.findViewById<MaterialButton>(R.id.formInternalNameView).apply {
             iconGravity = item.iconGravity
             if (item.icon != null) {
                 val drawable = resDrawable(item.icon!!)
@@ -63,15 +77,7 @@ class NormalGroupTitleProvider : AbstractGroupTitleProvider() {
             } else icon = null
             text = FormManager.extractText(context, item.name)
         }
-        view.findViewById<FormMenuView>(R.id.formInternalMenuView)
+        layout.findViewById<FormMenuView>(R.id.formInternalMenuView)
             ?.configMenu(holder, item, adapterEnabled)
-    }
-
-    override fun onViewDetachedFromWindow(holder: FormViewHolder) {
-        holder.style.onViewDetachedFromWindow(holder)
-    }
-
-    override fun onViewRecycled(holder: FormViewHolder) {
-        holder.style.onViewRecycled(holder)
     }
 }

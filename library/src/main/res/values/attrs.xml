@@ -4,6 +4,7 @@
     <attr name="formShapeAppearanceCorner" format="reference" />
 
     <attr name="formTextAppearanceGroupTitle" format="reference" />
+    <attr name="formTextAppearanceDetailTitle" format="reference" />
     <attr name="formTextAppearanceName" format="reference" />
     <attr name="formTextAppearanceContent" format="reference" />
     <attr name="formTextAppearanceHint" format="reference" />

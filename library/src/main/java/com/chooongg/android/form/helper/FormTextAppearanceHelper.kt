@@ -15,6 +15,7 @@ interface FormTextAppearanceHelper {
             it.getResourceId(
                 0, when (resId) {
                     R.attr.formTextAppearanceGroupTitle -> R.style.Form_TextAppearance_GroupTitle
+                    R.attr.formTextAppearanceDetailTitle -> R.style.Form_TextAppearance_DetailTitle
                     R.attr.formTextAppearanceName -> R.style.Form_TextAppearance_Name
                     R.attr.formTextAppearanceContent -> R.style.Form_TextAppearance_Content
                     R.attr.formTextAppearanceHint -> R.style.Form_TextAppearance_Hint
