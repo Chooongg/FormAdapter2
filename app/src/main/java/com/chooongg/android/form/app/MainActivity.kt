@@ -1,5 +1,6 @@
 package com.chooongg.android.form.app
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -20,7 +21,11 @@ class MainActivity : AppCompatActivity(), FormTextAppearanceHelper {
         setSupportActionBar(binding.toolbar)
         model.initData()
         binding.formView.adapter = model.formAdapter
-        model.formAdapter.setOnItemClickListener { view, item ->
+        model.formAdapter.setOnItemClickListener { _, item ->
+            if (item.name == "Button") {
+                startActivity(Intent(this, FlexBoxDemoActivity::class.java))
+                return@setOnItemClickListener
+            }
             showToast("点击了${item.name}")
         }
     }
