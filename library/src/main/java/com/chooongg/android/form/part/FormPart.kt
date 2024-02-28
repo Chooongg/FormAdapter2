@@ -13,7 +13,8 @@ class FormPart(adapter: FormAdapter, style: AbstractStyle, data: FormPartData) :
         val list = ArrayList<BaseForm<*>>()
         val title = data.getGroupTitleItem()
         if (title != null) list.add(title)
-        listOf(data.getItems())
+        list.addAll(data.getItems())
+        listOf(list)
     } else emptyList()
 
     override fun executeLinkage(isIgnoreUpdate: Boolean) {

@@ -5,7 +5,7 @@ import com.chooongg.android.form.style.AbstractStyle
 
 class FormDetailData {
 
-    private val parts = ArrayList<Pair<AbstractStyle, AbstractPartData>>()
+    private val parts = ArrayList<Pair<AbstractStyle, AbstractGroupData>>()
 
     fun initPart(
         style: AbstractStyle = FormManager.defaultStyle,

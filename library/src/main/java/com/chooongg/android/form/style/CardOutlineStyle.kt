@@ -61,7 +61,7 @@ class CardOutlineStyle : AbstractStyle() {
         holder.itemView.foreground = if (item.isRespondToClickEvents) {
             RippleDrawable(
                 ColorStateList.valueOf(holder.itemView.attrColor(android.R.attr.colorControlHighlight)),
-                null, MaterialShapeDrawable(shape)
+                null, MaterialShapeDrawable(getClickShapeAppearanceModel(holder.itemView, item))
             )
         } else null
     }

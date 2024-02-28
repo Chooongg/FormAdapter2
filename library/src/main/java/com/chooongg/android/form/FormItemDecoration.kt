@@ -19,6 +19,7 @@ class FormItemDecoration : ItemDecoration() {
         val holder = parent.getChildViewHolder(view) ?: return
         val adapter = parent.adapter as? FormAdapter ?: return
         val style = adapter.getStyle4ItemViewType(holder.itemViewType)
+        if (holder.absoluteAdapterPosition < 0) return
         val item = adapter.getFormItem(holder.absoluteAdapterPosition) ?: return
         val layoutManager = parent.layoutManager as AbstractFormLayoutManager
         val spanGroupIndex = layoutManager.spanSizeLookup.getSpanGroupIndex(

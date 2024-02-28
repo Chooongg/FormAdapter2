@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.chooongg.android.form.FormAdapter
 import com.chooongg.android.form.FormManager
 import com.chooongg.android.form.boundary.Boundary
-import com.chooongg.android.form.data.AbstractPartData
+import com.chooongg.android.form.data.AbstractGroupData
 import com.chooongg.android.form.holder.FormViewHolder
 import com.chooongg.android.form.item.BaseForm
 import com.chooongg.android.form.item.InternalFormNone
@@ -21,7 +21,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 
-abstract class AbstractPart<DATA : AbstractPartData>(
+abstract class AbstractPart<DATA : AbstractGroupData>(
     val adapter: FormAdapter,
     val style: AbstractStyle,
     var data: DATA

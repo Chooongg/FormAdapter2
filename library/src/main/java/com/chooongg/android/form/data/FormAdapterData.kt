@@ -7,7 +7,7 @@ import com.chooongg.android.form.style.AbstractStyle
 
 class FormAdapterData(private val adapter: FormAdapter) {
 
-    private val parts = ArrayList<AbstractPartData>()
+    private val parts = ArrayList<AbstractGroupData>()
 
     fun initPart(
         style: AbstractStyle = FormManager.defaultStyle,

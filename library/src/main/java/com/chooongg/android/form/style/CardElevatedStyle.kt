@@ -1,6 +1,7 @@
 package com.chooongg.android.form.style
 
 import android.content.res.ColorStateList
+import android.graphics.drawable.RippleDrawable
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DimenRes
@@ -33,6 +34,12 @@ class CardElevatedStyle : AbstractStyle() {
             holder.itemView.attrColor(com.google.android.material.R.attr.colorSurfaceContainerLow)
         )
         holder.itemView.background = shapeDrawable
+        holder.itemView.foreground = if (item.isRespondToClickEvents) {
+            RippleDrawable(
+                ColorStateList.valueOf(holder.itemView.attrColor(android.R.attr.colorControlHighlight)),
+                null, MaterialShapeDrawable(getClickShapeAppearanceModel(holder.itemView, item))
+            )
+        } else null
     }
 
     override fun equals(other: Any?): Boolean {

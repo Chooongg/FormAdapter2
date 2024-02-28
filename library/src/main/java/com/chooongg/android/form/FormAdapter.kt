@@ -26,7 +26,7 @@ class FormAdapter(isEnabled: Boolean = false) : AbstractFormAdapter() {
      */
     @IntRange(from = 1)
     var columnCount: Int? = null
-        set(value) {
+        private set(value) {
             if (field != value) {
                 field = value
                 update()
@@ -54,10 +54,8 @@ class FormAdapter(isEnabled: Boolean = false) : AbstractFormAdapter() {
     }
 
     fun setColumnCount(column: Int) {
-        val isDifference = columnCount != column
-        columnCount = column
-        if (isDifference) update()
         isCustomColumn = true
+        columnCount = column
     }
 
     fun addPart(

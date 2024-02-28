@@ -4,7 +4,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.chooongg.android.form.helper.FormTextAppearanceHelper
 import com.chooongg.android.form.holder.FormViewHolder
-import com.chooongg.android.form.item.BaseForm
 import com.chooongg.android.form.item.InternalFormGroupTitle
 import com.chooongg.android.form.style.AbstractStyle
 import kotlinx.coroutines.CoroutineScope
@@ -19,7 +18,7 @@ abstract class AbstractGroupTitleProvider : FormTextAppearanceHelper {
         scope: CoroutineScope,
         holder: FormViewHolder,
         view: View,
-        item: InternalFormGroupTitle,
+        item: InternalFormGroupTitle<*>,
         adapterEnabled: Boolean
     )
 

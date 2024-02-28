@@ -20,10 +20,9 @@ class EmptyStyle : AbstractStyle() {
         layout: ViewGroup?,
         adapterEnabled: Boolean
     ) {
-        holder.itemView.background = RippleDrawable(
+        holder.itemView.foreground = RippleDrawable(
             ColorStateList.valueOf(holder.itemView.attrColor(android.R.attr.colorControlHighlight)),
-            null,
-            MaterialShapeDrawable(shapeAppearanceModel)
+            null, MaterialShapeDrawable(shapeAppearanceModel)
         )
     }
 

@@ -135,6 +135,114 @@ class MainViewModel : ViewModel() {
                     }
                 }
             }
+            formAdapter.addPart {
+                addDetail("Detail") {
+                    content {
+                        initPart {
+                            addInput("Input")
+                            addText("Text") {
+                                content = "Test"
+                                menu = R.menu.main
+                            }
+                            addText("Text") {
+                                content = "Test"
+                                menu = R.menu.main
+                            }
+                        }
+                        initPart {
+                            addText("Text") {
+                                content = "Test"
+                                menu = R.menu.main
+                            }
+                            addInput("Input")
+                            addText("Text") {
+                                content = "Test"
+                                menu = R.menu.main
+                            }
+                        }
+                    }
+                    contentFormatter {
+                        val strings = ArrayList<Any>()
+                        it?.forEach {
+                            when (it) {
+                                is FormPartData -> {
+                                    val find = it.getItems().find { it.name == "Input" }
+                                    if (find?.content != null) {
+                                        strings.add(find.content!!)
+                                    }
+                                }
+                            }
+                        }
+                        val string = buildString {
+                            strings.forEachIndexed { index, s ->
+                                if (index != 0) append('\n')
+                                append("第${index + 1}个字符串：").append(s)
+                            }
+                        }
+                        if (string.isEmpty()) "null" else string
+                    }
+                }
+
+                addDetail("Detail") {
+                    content {
+                        initPart {
+                            addInput("Input")
+                            addText("Text") {
+                                content = "Test"
+                                menu = R.menu.main
+                            }
+                            addText("Text") {
+                                content = "Test"
+                                menu = R.menu.main
+                            }
+                        }
+                        initPart {
+                            addText("Text") {
+                                content = "Test"
+                                menu = R.menu.main
+                            }
+                            addInput("Input")
+                            addText("Text") {
+                                content = "Test"
+                                menu = R.menu.main
+                            }
+                        }
+                    }
+                }
+
+                addDetail("Detail") {
+                    content {
+                        initPart {
+                            addText("Text") {
+                                content = "Test"
+                                menu = R.menu.main
+                            }
+                            addText("Text") {
+                                content = "Test"
+                                menu = R.menu.main
+                            }
+                            addText("Text") {
+                                content = "Test"
+                                menu = R.menu.main
+                            }
+                        }
+                        initPart {
+                            addText("Text") {
+                                content = "Test"
+                                menu = R.menu.main
+                            }
+                            addText("Text") {
+                                content = "Test"
+                                menu = R.menu.main
+                            }
+                            addText("Text") {
+                                content = "Test"
+                                menu = R.menu.main
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

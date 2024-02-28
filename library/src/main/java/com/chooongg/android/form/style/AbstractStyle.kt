@@ -249,6 +249,69 @@ abstract class AbstractStyle(val config: FormConfig = EmptyConfig()) {
             }
         }.build()
 
+    fun getClickShapeAppearanceModel(view: View, item: BaseForm<*>) =
+        ShapeAppearanceModel.builder().apply {
+            if (view.layoutDirection != View.LAYOUT_DIRECTION_RTL) {
+                setTopLeftCornerSize(
+                    when {
+                        item.boundary.top != 0 && item.boundary.start != 0 -> shapeAppearanceModel.topLeftCornerSize
+                        item.boundary.top == 0 && item.boundary.start == 0 -> shapeAppearanceModel.topLeftCornerSize
+                        else -> AbsoluteCornerSize(0f)
+                    }
+                )
+                setTopRightCornerSize(
+                    when {
+                        item.boundary.top != 0 && item.boundary.end != 0 -> shapeAppearanceModel.topRightCornerSize
+                        item.boundary.top == 0 && item.boundary.end == 0 -> shapeAppearanceModel.topRightCornerSize
+                        else -> AbsoluteCornerSize(0f)
+                    }
+                )
+                setBottomLeftCornerSize(
+                    when {
+                        item.boundary.bottom != 0 && item.boundary.start != 0 -> shapeAppearanceModel.bottomLeftCornerSize
+                        item.boundary.bottom == 0 && item.boundary.start == 0 -> shapeAppearanceModel.bottomLeftCornerSize
+                        else -> AbsoluteCornerSize(0f)
+                    }
+                )
+                setBottomRightCornerSize(
+                    when {
+                        item.boundary.bottom != 0 && item.boundary.end != 0 -> shapeAppearanceModel.bottomRightCornerSize
+                        item.boundary.bottom == 0 && item.boundary.end == 0 -> shapeAppearanceModel.bottomRightCornerSize
+                        else -> AbsoluteCornerSize(0f)
+                    }
+                )
+            } else {
+                setTopLeftCornerSize(
+                    when {
+                        item.boundary.top != 0 && item.boundary.start != 0 -> shapeAppearanceModel.topRightCornerSize
+                        item.boundary.top == 0 && item.boundary.start == 0 -> shapeAppearanceModel.topRightCornerSize
+                        else -> AbsoluteCornerSize(0f)
+                    }
+                )
+                setTopRightCornerSize(
+                    when {
+                        item.boundary.top != 0 && item.boundary.end != 0 -> shapeAppearanceModel.topLeftCornerSize
+                        item.boundary.top == 0 && item.boundary.end == 0 -> shapeAppearanceModel.topLeftCornerSize
+                        else -> AbsoluteCornerSize(0f)
+                    }
+                )
+                setBottomLeftCornerSize(
+                    when {
+                        item.boundary.bottom != 0 && item.boundary.start != 0 -> shapeAppearanceModel.bottomRightCornerSize
+                        item.boundary.bottom == 0 && item.boundary.start == 0 -> shapeAppearanceModel.bottomRightCornerSize
+                        else -> AbsoluteCornerSize(0f)
+                    }
+                )
+                setBottomRightCornerSize(
+                    when {
+                        item.boundary.bottom != 0 && item.boundary.end != 0 -> shapeAppearanceModel.bottomLeftCornerSize
+                        item.boundary.bottom == 0 && item.boundary.end == 0 -> shapeAppearanceModel.bottomLeftCornerSize
+                        else -> AbsoluteCornerSize(0f)
+                    }
+                )
+            }
+        }.build()
+
     override fun equals(other: Any?): Boolean {
         if (other !is AbstractStyle) return false
         if (other.javaClass != javaClass) return false

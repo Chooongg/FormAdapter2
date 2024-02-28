@@ -49,7 +49,7 @@ class NormalGroupTitleProvider : AbstractGroupTitleProvider() {
         scope: CoroutineScope,
         holder: FormViewHolder,
         view: View,
-        item: InternalFormGroupTitle,
+        item: InternalFormGroupTitle<*>,
         adapterEnabled: Boolean
     ) {
         val layout = view.findViewById<LinearLayoutCompat>(R.id.formInternalTitleLayout)

@@ -7,9 +7,8 @@ import com.chooongg.android.form.FormAdapter
 import com.chooongg.android.form.FormContentFormatter
 import com.chooongg.android.form.data.FormDetailData
 import com.chooongg.android.form.holder.FormViewHolder
+import com.chooongg.android.form.provider.detail.AbstractDetailProvider
 import com.chooongg.android.form.style.AbstractStyle
-import com.chooongg.android.form.typeset.AbstractTypeset
-import com.chooongg.android.form.typeset.NoneTypeset
 import kotlinx.coroutines.CoroutineScope
 
 class FormDetail(name: Any?, field: String?) : InternalFormGroupTitle<FormDetailData>() {
@@ -26,11 +25,14 @@ class FormDetail(name: Any?, field: String?) : InternalFormGroupTitle<FormDetail
     var contentFormatter: FormContentFormatter? = null
         private set
 
+    /**
+     * 提供器
+     */
+    var provider: AbstractDetailProvider? = null
+
+    override var loneLine: Boolean = false
+
     override var isRespondToClickEvents: Boolean = true
-
-    override var fillEdges: Boolean = false
-
-    override var typeset: AbstractTypeset? = NoneTypeset()
 
     init {
         this.name = name
@@ -51,10 +53,10 @@ class FormDetail(name: Any?, field: String?) : InternalFormGroupTitle<FormDetail
     override fun copyEmptyItem(): BaseForm<FormDetailData> = FormDetail(null, null)
 
     override fun onCreateViewHolder(style: AbstractStyle, parent: ViewGroup): View =
-        style.config.detailTitleProvider.onCreateViewHolder(style, parent)
+        (provider ?: style.config.detailTitleProvider).onCreateViewHolder(style, parent)
 
     override fun onViewAttachedToWindow(holder: FormViewHolder) {
-        holder.style.config.detailTitleProvider.onViewAttachedToWindow(holder)
+        (provider ?: holder.style.config.detailTitleProvider).onViewAttachedToWindow(holder)
     }
 
     override fun onBindViewHolder(
@@ -63,7 +65,7 @@ class FormDetail(name: Any?, field: String?) : InternalFormGroupTitle<FormDetail
         view: View,
         adapterEnabled: Boolean
     ) {
-        holder.style.config.detailTitleProvider.onBindViewHolder(
+        (provider ?: holder.style.config.detailTitleProvider).onBindViewHolder(
             scope, holder, view, this, adapterEnabled
         )
     }
@@ -74,16 +76,16 @@ class FormDetail(name: Any?, field: String?) : InternalFormGroupTitle<FormDetail
         holder: FormViewHolder,
         adapterEnabled: Boolean
     ) {
-        holder.style.config.detailTitleProvider.onBindViewItemClick(
+        (provider ?: holder.style.config.detailTitleProvider).onBindViewItemClick(
             adapter, scope, holder, this, adapterEnabled
         )
     }
 
     override fun onViewDetachedFromWindow(holder: FormViewHolder) {
-        holder.style.config.detailTitleProvider.onViewDetachedFromWindow(holder)
+        (provider ?: holder.style.config.detailTitleProvider).onViewDetachedFromWindow(holder)
     }
 
     override fun onViewRecycled(holder: FormViewHolder) {
-        holder.style.config.detailTitleProvider.onViewRecycled(holder)
+        (provider ?: holder.style.config.detailTitleProvider).onViewRecycled(holder)
     }
 }

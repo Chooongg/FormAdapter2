@@ -4,12 +4,18 @@ import android.view.View
 import android.view.ViewGroup
 import com.chooongg.android.form.holder.FormViewHolder
 import com.chooongg.android.form.style.AbstractStyle
+import com.chooongg.android.form.typeset.AbstractTypeset
+import com.chooongg.android.form.typeset.NoneTypeset
 import kotlinx.coroutines.CoroutineScope
 
 open class InternalFormGroupTitle<CONTENT : Any> internal constructor() :
     BaseForm<CONTENT>(null, null) {
 
+    override var loneLine: Boolean = true
+
     override var fillEdges: Boolean = false
+
+    override var typeset: AbstractTypeset? = NoneTypeset()
 
     override fun copyEmptyItem(): BaseForm<CONTENT> = InternalFormGroupTitle()
 

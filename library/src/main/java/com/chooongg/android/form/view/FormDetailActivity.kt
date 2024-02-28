@@ -11,9 +11,6 @@ import android.widget.FrameLayout
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.app.ActivityCompat.finishAfterTransition
-import androidx.core.app.ActivityCompat.setEnterSharedElementCallback
-import androidx.core.app.ActivityCompat.setExitSharedElementCallback
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -73,19 +70,16 @@ class FormDetailActivity : AppCompatActivity() {
             setHomeButtonEnabled(true)
             setDisplayHomeAsUpEnabled(true)
         }
-        formAdapter.columnCount =
-            resInteger(Controller.formDetail?.detailColumnRes ?: R.integer.formDetailColumn)
+        formAdapter.setColumnCount(
+            resInteger(
+                Controller.formDetail?.detailColumnRes ?: R.integer.formDetailColumn
+            )
+        )
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
-        findViewById<FormView>(R.id.formView).apply {
-            adapter = formAdapter
-            setOnClickListener {
-                hideIME()
-                focusedChild.clearFocus()
-            }
-        }
+        findViewById<FormView>(R.id.formView).adapter = formAdapter
         Controller.formDetail?.content?.getDetailParts()?.forEach {
             when (it.second) {
                 is FormPartData -> formAdapter.addPart(it.first, it.second as FormPartData)

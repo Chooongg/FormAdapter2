@@ -12,7 +12,7 @@ import com.chooongg.android.form.FormAdapter
 import com.chooongg.android.form.FormManager
 import com.chooongg.android.form.R
 import com.chooongg.android.form.boundary.Boundary
-import com.chooongg.android.form.data.AbstractPartData
+import com.chooongg.android.form.data.AbstractGroupData
 import com.chooongg.android.form.holder.FormViewHolder
 import com.chooongg.android.form.item.FormDetail
 import com.chooongg.android.form.part.AbstractPart
@@ -76,10 +76,6 @@ class NormalDetailProvider : AbstractDetailProvider() {
         item: FormDetail,
         adapterEnabled: Boolean
     ) {
-        if (holder.itemView.foreground != null) {
-            (holder.itemView as ViewGroup).getChildAt(0).foreground = holder.itemView.foreground
-            holder.itemView.foreground = null
-        }
         val layout = view.findViewById<LinearLayoutCompat>(R.id.formInternalTitleLayout)
         layout.findViewById<MaterialButton>(R.id.formInternalNameView).apply {
             iconGravity = item.iconGravity
@@ -93,7 +89,7 @@ class NormalDetailProvider : AbstractDetailProvider() {
         layout.findViewById<FormMenuView>(R.id.formInternalMenuView)
             ?.configMenu(holder, item, adapterEnabled)
         with(view.findViewById<MaterialTextView>(R.id.formInternalContentView)) {
-            val parts = if (item.content != null) ArrayList<AbstractPartData>().apply {
+            val parts = if (item.content != null) ArrayList<AbstractGroupData>().apply {
                 item.content!!.getDetailParts().forEach { add(it.second) }
             } else null
             val detail = item.contentFormatter?.invoke(context, parts)
@@ -139,10 +135,10 @@ class NormalDetailProvider : AbstractDetailProvider() {
         val activity = holder.itemView.context.getActivity()
         val root = holder.itemView as ViewGroup
         if (activity == null) {
-            root.getChildAt(0).setOnClickListener(null)
+            holder.itemView.setOnClickListener(null)
             return
         }
-        root.getChildAt(0).doOnClick {
+        holder.itemView.doOnClick {
             activity.setExitSharedElementCallback(MaterialContainerTransformSharedElementCallback())
             FormDetailActivity.Controller.adapterEnabled = adapterEnabled
             FormDetailActivity.Controller.formDetail = item
